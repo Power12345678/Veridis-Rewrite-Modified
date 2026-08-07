@@ -18,7 +18,7 @@ import { buildDiffResultFromChain, computeMessageSignature, isAssistantMessage, 
 import { beginAtomicMessageDisplaySwap } from './dom.js';
 import { commitCurrentMessageText, getMessageDiffBranchKey, isMessageManualFinal, setMessageTextForMvuTransaction, writeMessageDiffAiTrace } from './messageMeta.js';
 import { getCurrentChatIdentity, markHostChatDirtyFromIndex } from './platform.js';
-import { generationLifecycle, hashLifecycleText, parseStableMessagePayload } from './generationLifecycle.js';
+import { generationLifecycle, parseStableMessagePayload } from './generationLifecycle.js';
 import { showToast } from './ui.js';
 
 const responseGuard = `输出必须是一个 JSON 对象，键必须恰好为本次全部 rewrite_target 的 id，值必须是可直接替换对应标签内容的字符串；空字符串表示删除。禁止 markdown、解释和额外包装。`;
@@ -903,10 +903,7 @@ function freezeAiRewriteContentIdentity(payload, snapshotText, aiSettings) {
         messageRef,
         branchKey: getMessageDiffBranchKey(messageRef),
         xmlTag: getAiXmlScopeTag(aiSettings).tagName,
-        requestSnapshotText: scoped.text,
         requestSnapshotHash: scoped.hash,
-        expectedScopeText: scoped.text,
-        expectedScopeHash: scoped.hash,
         taskKey: '',
     };
     getContentIdentityMap().set(generationId, identity);
@@ -915,7 +912,7 @@ function freezeAiRewriteContentIdentity(payload, snapshotText, aiSettings) {
         chatId: identity.chatId,
         messageId: identity.messageId,
         contentSnapshotHash: identity.requestSnapshotHash,
-        scopedLength: identity.requestSnapshotText.length,
+        scopedLength: scoped.text.length,
         xmlTag: identity.xmlTag,
     });
     return identity;
@@ -927,7 +924,6 @@ function validateAutomaticAiRewriteContent(taskLike, options = {}) {
     const lifecycleValidation = generationLifecycle.validate(generationId, {
         chatId: getCurrentChatIdentity(),
         chat,
-        mode: 'identity',
     });
     if (!lifecycleValidation.ok) return lifecycleValidation;
 
@@ -946,31 +942,17 @@ function validateAutomaticAiRewriteContent(taskLike, options = {}) {
     if (getMessageDiffBranchKey(identity.messageRef) !== identity.branchKey) {
         return { ok: false, reason: 'branch-changed' };
     }
-    if (taskLike?.contentSnapshotHash
-        && String(taskLike.contentSnapshotHash) !== identity.requestSnapshotHash) {
-        return { ok: false, reason: 'content-snapshot-changed' };
-    }
-
-    const aiSettings = taskLike?.aiSettings || getAiSettings();
-    const currentScope = extractCurrentAiRewriteScope(identity.messageRef?.mes || '', aiSettings);
-    if (!currentScope.ok) return currentScope;
-    const matchesExpectedScope = currentScope.hash === identity.expectedScopeHash
-        && currentScope.text === identity.expectedScopeText;
     recordAiRewriteDebug('pre-run-validation', {
         generationId,
         chatId: identity.chatId,
         messageId: identity.messageId,
         requestState: lifecycleValidation.session.requestState,
-        validationMode: 'content-scope',
-        validationReason: matchesExpectedScope ? '' : 'content-scope-changed',
+        validationMode: 'target-identity',
+        validationReason: '',
         contentSnapshotHash: identity.requestSnapshotHash,
-        currentContentHash: currentScope.hash,
-        fullMessageHash: hashLifecycleText(identity.messageRef?.mes || ''),
-        tailLength: currentScope.tailLength,
         source: String(options.source || taskLike?.scheduleSource || ''),
-    }, matchesExpectedScope ? 'info' : 'warn');
-    if (!matchesExpectedScope) return { ok: false, reason: 'content-scope-changed' };
-    return { ok: true, reason: '', session: lifecycleValidation.session, message: identity.messageRef, identity, currentScope };
+    });
+    return { ok: true, reason: '', session: lifecycleValidation.session, message: identity.messageRef, identity };
 }
 
 function markStreamingAiRewriteStarted(task) {
@@ -1456,21 +1438,17 @@ function parseAiResponse(rawText, itemById, aiSettings) {
 function getTaskFreshnessIssue(task) {
     rebindStreamingTaskBranchIfStable(task);
     const { chat } = getAppContext();
-    const settings = getSettings();
     const msg = Array.isArray(chat) ? chat[task.index] : null;
     if (task.automatic === true) {
         const validation = validateAutomaticAiRewriteContent(task, { source: 'task-freshness' });
         if (!validation.ok) return `generation-${validation.reason}`;
         if (validation.session.messageId !== task.index) return 'generation-message-changed';
-    } else if (task.messageTextHashAtBuild && hashLifecycleText(msg?.mes || '') !== task.messageTextHashAtBuild) {
-        return 'message-text-changed';
     }
     if (msg !== task.messageRef) return 'message-ref-changed';
     if (!isAssistantMessage(msg)) return 'not-assistant-message';
     if (msg?.__blai_is_reverted) return 'message-reverted';
     if (getMessageDiffBranchKey(msg) !== task.branchKey) return 'branch-changed';
     if (typeof msg.mes !== 'string') return 'message-text-missing';
-    if (buildAiRewriteVersionToken(settings) !== task.versionToken) return 'settings-version-changed';
     return '';
 }
 
@@ -1632,12 +1610,6 @@ function applyAiProgramFallback(taskLike, options = {}) {
             return { applied: false, reason: validation.reason || 'generation-message-mismatch' };
         }
     }
-    if (taskLike?.messageTextHashAtBuild
-        && taskLike.automatic !== true
-        && hashLifecycleText(msg.mes || '') !== taskLike.messageTextHashAtBuild) {
-        return { applied: false, reason: 'message-text-changed' };
-    }
-
     const settings = taskLike.settings || getSettings();
     const aiSettings = taskLike.aiSettings || getAiSettings();
     const currentText = typeof msg.mes === 'string' ? msg.mes : '';
@@ -2063,7 +2035,7 @@ async function requestAiRewrite(prompt, aiSettings, signal, task = null) {
         chatId: task?.chatId || '',
         index: Number.isInteger(task?.index) ? task.index : null,
         source: task?.scheduleSource || '',
-        textHash: task?.messageTextHashAtBuild || '',
+        snapshotHash: task?.contentSnapshotHash || '',
     });
     const stopGeneration = () => {
         try {
@@ -2158,28 +2130,6 @@ function finishAutomaticTaskBeforeRun(payload, reason, state = 'stale') {
     }, 'warn');
 }
 
-export function acknowledgeAiRewriteContentMutation(payload) {
-    const generationId = String(payload?.generationId || '');
-    const identity = getContentIdentity(generationId);
-    if (!identity) return { ok: true, changed: false, reason: '' };
-    const currentScope = extractCurrentAiRewriteScope(identity.messageRef?.mes || '', getAiSettings());
-    if (!currentScope.ok) return currentScope;
-    const changed = currentScope.hash !== identity.expectedScopeHash
-        || currentScope.text !== identity.expectedScopeText;
-    identity.expectedScopeText = currentScope.text;
-    identity.expectedScopeHash = currentScope.hash;
-    recordAiRewriteDebug('content-mutation-acknowledged', {
-        generationId,
-        chatId: identity.chatId,
-        messageId: identity.messageId,
-        currentContentHash: currentScope.hash,
-        tailLength: currentScope.tailLength,
-        changed,
-        source: String(payload?.source || 'internal-cleanse'),
-    });
-    return { ok: true, changed, reason: '', currentScope };
-}
-
 export function validateAiRewriteFinalTimer(payload) {
     const generationId = String(payload?.generationId || '');
     if (!getContentIdentity(generationId)) {
@@ -2196,7 +2146,7 @@ export function validateAiRewriteFinalTimer(payload) {
     }, { source: 'final-timer' });
 }
 
-export function acknowledgeAiRewriteAllowedTailMutation(payload) {
+export function validateAiRewriteMessageTarget(payload) {
     const generationId = String(payload?.generationId || '');
     const identity = getContentIdentity(generationId);
     if (!identity) return { ok: true, changed: false, reason: '' };
@@ -2205,29 +2155,26 @@ export function acknowledgeAiRewriteAllowedTailMutation(payload) {
         chatId: String(payload?.chatId || ''),
         index: Number(payload?.messageId),
         scheduleSource: String(payload?.source || 'final-cleanse'),
-    }, { source: 'tail-acknowledgement' });
+    }, { source: 'message-acknowledgement' });
     if (!validation.ok) return validation;
 
-    const previousTextHash = validation.session.messageTextHash;
     const resolution = generationLifecycle.resolveMessage(payload, {
         generationId,
         chatId: identity.chatId,
         chat: getAppContext().chat,
-        source: 'scoped-tail-accepted',
+        source: 'message-content-accepted',
     });
     if (!resolution.ok) return resolution;
-    recordAiRewriteDebug('tail-mutation-acknowledged', {
+    recordAiRewriteDebug('message-target-confirmed', {
         generationId,
         chatId: identity.chatId,
         messageId: identity.messageId,
         contentSnapshotHash: identity.requestSnapshotHash,
-        previousFullMessageHash: previousTextHash,
-        fullMessageHash: resolution.message ? hashLifecycleText(resolution.message.mes || '') : '',
-        tailLength: validation.currentScope.tailLength,
+        messageLength: String(resolution.message?.mes || '').length,
     });
     return {
         ok: true,
-        changed: previousTextHash !== generationLifecycle.getSession(generationId)?.messageTextHash,
+        changed: false,
         reason: '',
     };
 }
@@ -2307,7 +2254,6 @@ function buildAiRewriteCandidate(payload, options = {}) {
         const validation = generationLifecycle.validate(payload.generationId, {
             chatId: getCurrentChatIdentity(),
             chat,
-            mode: 'identity',
         });
         if (!validation.ok) return { task: null, reason: `生成事务已失效：${validation.reason}` };
         if (validation.session.messageId !== index || validation.session.messageRef !== msg) {
@@ -2393,7 +2339,6 @@ function buildAiRewriteCandidate(payload, options = {}) {
             generationId: isAutomatic ? String(payload.generationId || '') : '',
             chatId: isAutomatic ? String(payload.chatId || '') : '',
             scheduleSource: isAutomatic ? String(payload.source || '') : 'manual',
-            messageTextHashAtBuild: hashLifecycleText(msg.mes || ''),
             contentSnapshotHash: contentIdentity?.requestSnapshotHash || hashString(sourceText),
         },
         reason: '',
@@ -2787,7 +2732,6 @@ async function runAiRewriteForMessage(payload, options = {}) {
         generationId: readyTask.generationId || '',
         chatId: readyTask.chatId || '',
         scheduleSource: readyTask.scheduleSource || '',
-        messageTextHashAtBuild: readyTask.messageTextHashAtBuild || '',
         contentSnapshotHash: readyTask.contentSnapshotHash || hashString(readyTask.snapshotText || ''),
     };
     markStreamingAiRewriteStarted(task);
@@ -2873,6 +2817,9 @@ async function runAiRewriteForMessage(payload, options = {}) {
     } finally {
         rewriteState.pendingKeys.delete(dedupeKey);
         getRunningTaskMetaMap().delete(dedupeKey);
+        if (rewriteState.statusDismissedTaskKey === dedupeKey) {
+            rewriteState.statusDismissedTaskKey = '';
+        }
         if (rewriteState.activeTaskKey === dedupeKey) {
             rewriteState.activeController = null;
             rewriteState.activeTaskKey = '';
@@ -2910,12 +2857,6 @@ export function adoptMvuMessageContentForAiRewrite(payload, messageContent) {
     if (identity) {
         if (identity.messageRef !== msg || identity.messageId !== parsed.messageIndex) {
             return { ok: false, reason: 'generation-message-mismatch' };
-        }
-        const nextScope = extractCurrentAiRewriteScope(nextText, getAiSettings());
-        if (!nextScope.ok
-            || nextScope.hash !== identity.expectedScopeHash
-            || nextScope.text !== identity.expectedScopeText) {
-            return { ok: false, reason: nextScope.reason || 'mvu-content-scope-changed' };
         }
     }
 

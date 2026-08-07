@@ -7,16 +7,6 @@ function normalizeMessageIndex(value) {
     return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : -1;
 }
 
-export function hashLifecycleText(value = '') {
-    const source = String(value ?? '');
-    let hash = 2166136261;
-    for (let index = 0; index < source.length; index++) {
-        hash ^= source.charCodeAt(index);
-        hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
-    }
-    return `h${(hash >>> 0).toString(16)}`;
-}
-
 export function parseStableMessagePayload(payload) {
     const candidates = [];
 
@@ -110,7 +100,6 @@ export class GenerationLifecycleRegistry {
             chatRef: Array.isArray(chat) ? chat : null,
             messageId: null,
             messageRef: null,
-            messageTextHash: '',
             internalMutationCount: 0,
             mode: String(mode || 'unknown'),
             phase: 'active',
@@ -190,7 +179,6 @@ export class GenerationLifecycleRegistry {
 
         session.messageId = messageIndex;
         session.messageRef = message;
-        session.messageTextHash = hashLifecycleText(message.mes || '');
         this.log('payload-resolved', session, {
             source: options.source || resolutionSource,
             payloadSource: resolutionSource,
@@ -228,10 +216,6 @@ export class GenerationLifecycleRegistry {
         const message = chat[session.messageId];
         if (message !== session.messageRef) return { ok: false, reason: 'message-reference-changed' };
         if (!isAssistantMessage(message)) return { ok: false, reason: 'message-not-assistant' };
-        const validationMode = String(options.mode || 'full-message');
-        if (validationMode !== 'identity' && hashLifecycleText(message.mes || '') !== session.messageTextHash) {
-            return { ok: false, reason: 'message-text-changed' };
-        }
         return { ok: true, reason: '', session, message };
     }
 
@@ -264,24 +248,20 @@ export class GenerationLifecycleRegistry {
             return { ok: false, reason: 'message-reference-changed' };
         }
 
-        const beforeTextHash = hashLifecycleText(options.beforeText || '');
-        const afterTextHash = hashLifecycleText(options.afterText || '');
-        if (beforeTextHash !== session.messageTextHash) {
-            return { ok: false, reason: 'unexpected-pre-cleanse-text' };
-        }
-        if (hashLifecycleText(message.mes || '') !== afterTextHash) {
+        const beforeText = String(options.beforeText ?? '');
+        const afterText = String(options.afterText ?? '');
+        if (String(message.mes ?? '') !== afterText) {
             return { ok: false, reason: 'message-text-not-cleanse-result' };
         }
-        if (beforeTextHash === afterTextHash) {
+        if (beforeText === afterText) {
             return { ok: true, changed: false, reason: '', session, message };
         }
 
-        session.messageTextHash = afterTextHash;
         session.internalMutationCount += 1;
         this.log('internal-message-mutation-acknowledged', session, {
             source: String(options.source || 'internal-cleanse'),
-            previousTextHash: beforeTextHash,
-            textHash: afterTextHash,
+            previousLength: beforeText.length,
+            messageLength: afterText.length,
             internalMutationCount: session.internalMutationCount,
         });
         return { ok: true, changed: true, reason: '', session, message };

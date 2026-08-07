@@ -58,7 +58,7 @@ import { buildDiffSnippetsFromText, clearTrackedDiffEntry, computeMessageSignatu
 import { getCurrentMessageOriginalMes, getMessageSwipeIndex, setCurrentSwipeText, writeMessageDiffManualFinal } from './messageMeta.js';
 import { findRelatedRulesForDiffChange } from './relatedRules.js';
 import { getCurrentChatIdentity, getMvuExtraModelTransaction, isBaiBaiToolkitInstalled, isTauriTavernHost, shouldWaitForMvuExtraModelTransaction } from './platform.js';
-import { acknowledgeAiRewriteAllowedTailMutation, acknowledgeAiRewriteContentMutation, adoptMvuMessageContentForAiRewrite, getAiRewriteDebugLogText, handleAiRewriteFinalTimerSkipped, handleAiRewriteGenerationStarted, markAiRewriteFinalCleanseReady, maybeNotifyAiRewriteReadyFromStreamingText, recordAiRewriteRuntimeDebug, requestManualAiRewriteForMessage, resetAiRewriteRuntimeState, shouldDeferFinalCleanseForAiRewrite, validateAiRewriteFinalTimer, waitForAutomaticAiRewrite } from './aiRewrite.js';
+import { adoptMvuMessageContentForAiRewrite, getAiRewriteDebugLogText, handleAiRewriteFinalTimerSkipped, handleAiRewriteGenerationStarted, markAiRewriteFinalCleanseReady, maybeNotifyAiRewriteReadyFromStreamingText, recordAiRewriteRuntimeDebug, requestManualAiRewriteForMessage, resetAiRewriteRuntimeState, shouldDeferFinalCleanseForAiRewrite, validateAiRewriteFinalTimer, validateAiRewriteMessageTarget, waitForAutomaticAiRewrite } from './aiRewrite.js';
 import { generationLifecycle } from './generationLifecycle.js';
 import { StreamingSourceCleanser } from './streamingSourceCleanser.js';
 import { classifyHostGenerationStart } from './hostGenerationEvent.js';
@@ -3262,12 +3262,12 @@ export function bindEvents() {
 
     const runFinalStreamingCleanse = (payload, options = {}) => {
         if (options.acknowledgeGenerationId) {
-            const tailAcknowledgement = acknowledgeAiRewriteAllowedTailMutation(payload);
-            if (!tailAcknowledgement.ok) {
-                recordAiRewriteRuntimeDebug('tail-mutation-rejected', {
+            const targetValidation = validateAiRewriteMessageTarget(payload);
+            if (!targetValidation.ok) {
+                recordAiRewriteRuntimeDebug('message-target-rejected', {
                     generationId: options.acknowledgeGenerationId,
                     chatId: String(payload?.chatId || ''),
-                    reason: tailAcknowledgement.reason,
+                    reason: targetValidation.reason,
                 }, 'warn');
                 return;
             }
@@ -3297,13 +3297,6 @@ export function bindEvents() {
                     index: cleanseResult.index,
                     reason: acknowledgement.reason,
                 }, 'warn');
-            } else {
-                acknowledgeAiRewriteContentMutation({
-                    generationId: options.acknowledgeGenerationId,
-                    chatId: String(payload?.chatId || ''),
-                    messageId: cleanseResult.index,
-                    source: options.acknowledgementSource || 'final-streaming-cleanse',
-                });
             }
         }
         if (options.clearRawSource === true && index >= 0) {
@@ -3466,7 +3459,7 @@ export function bindEvents() {
         if (completedMvuFinalGenerationId === resolution.generationId) return;
 
         const waitForMvuExtraModel = await shouldWaitForMvuExtraModelTransaction(resolution.messageIndex);
-        const routeValidation = generationLifecycle.validate(resolution.generationId, { mode: 'identity' });
+        const routeValidation = generationLifecycle.validate(resolution.generationId);
         if (!routeValidation.ok) {
             recordAiRewriteRuntimeDebug('mvu-route-rejected', {
                 generationId: resolution.generationId,
@@ -3487,7 +3480,6 @@ export function bindEvents() {
             return;
         }
         const timerValidationOptions = {
-            validationOptions: { mode: 'identity' },
             validate: () => validateAiRewriteFinalTimer(stablePayload),
             onSkip: (reason) => handleAiRewriteFinalTimerSkipped(stablePayload, reason),
         };
@@ -3538,7 +3530,6 @@ export function bindEvents() {
 
     if (event_types.MESSAGE_EDITED) {
         eventSource.on(event_types.MESSAGE_EDITED, (payload) => {
-            cancelAutomaticGeneration('message-edited');
             const { chat } = getAppContext();
             const index = getMessageIndexFromEvent(payload);
             const msg = Number.isInteger(index) && index >= 0 && Array.isArray(chat) ? chat[index] : null;
@@ -3678,6 +3669,9 @@ export function bindEvents() {
         const msg = Array.isArray(chat) ? chat[index] : null;
         const hasMaterializedSwipe = getMessageSwipeIndex(msg) >= 0;
         if (hasMaterializedSwipe) runFinalStreamingCleanse(index, { clearRawSource: true });
+    });
+    if (event_types.MESSAGE_DELETED) eventSource.on(event_types.MESSAGE_DELETED, () => {
+        cancelAutomaticGeneration('message-deleted');
     });
     if (event_types.PRESET_CHANGED) {
         eventSource.on(event_types.PRESET_CHANGED, (payload) => {

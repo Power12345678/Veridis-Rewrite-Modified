@@ -2562,12 +2562,20 @@ body #toast-container > .blai-ai-rewrite-toast > .toast-close-button {
 
 @media (max-width: 600px) {
     body #toast-container > .blai-ai-rewrite-toast {
-        grid-template-columns: minmax(0, 1fr) max-content !important;
-        grid-template-areas:
-            "title action"
-            "message message" !important;
-        row-gap: 4px !important;
+        grid-template-columns: max-content minmax(0, 1fr) max-content !important;
+        grid-template-areas: "title message action" !important;
+        column-gap: 8px !important;
         width: calc(100vw - 24px) !important;
+    }
+
+    body #toast-container > .blai-ai-rewrite-toast > .toast-message {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .blai-ai-toast-stop {
+        min-height: 34px !important;
+        padding: 6px 10px !important;
     }
 }
 
