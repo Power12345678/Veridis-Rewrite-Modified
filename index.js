@@ -101,6 +101,7 @@ function normalizeAiRewriteSettings(settings) {
     next.maxContextChars = Number.isFinite(Number(next.maxContextChars)) ? Math.min(Math.max(Math.round(Number(next.maxContextChars)), 1000), 60000) : defaultAiRewriteSettings.maxContextChars;
     next.maxRewriteCharsPerItem = Number.isFinite(Number(next.maxRewriteCharsPerItem)) ? Math.min(Math.max(Math.round(Number(next.maxRewriteCharsPerItem)), 50), 10000) : defaultAiRewriteSettings.maxRewriteCharsPerItem;
     next.xmlScopeTag = normalizeOptionalXmlTagNameInput(next.xmlScopeTag, defaultAiRewriteSettings.xmlScopeTag);
+    next.protectXmlComments = next.protectXmlComments === true;
     settings.aiRewrite = next;
 }
 

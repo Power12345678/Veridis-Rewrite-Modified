@@ -810,6 +810,7 @@ function syncPresetAiRewriteGenerationSettingsUI(settings) {
         const $field = $(selector);
         if (!$field.is(':focus')) $field.val(value);
     };
+    $('#blai-ai-protect-comments').prop('checked', aiSettings.protectXmlComments === true);
     setValueIfNotFocused('#blai-ai-temperature', aiSettings.temperature);
     setValueIfNotFocused('#blai-ai-timeout', getAiTimeoutSeconds(aiSettings.timeoutMs));
     setValueIfNotFocused('#blai-ai-max-retries', aiSettings.maxRetries);

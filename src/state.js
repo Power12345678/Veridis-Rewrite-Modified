@@ -62,6 +62,7 @@ export const defaultAiRewriteSettings = {
     maxRewriteCharsPerItem: 2000,
     streamingRoughPreview: true,
     xmlScopeTag: "content",
+    protectXmlComments: false,
     promptTemplate: defaultAiRewritePrompt,
     promptProtocolVersion: aiRewritePromptProtocolVersion,
 };

@@ -1443,6 +1443,7 @@ export function bindEvents() {
             if (!$field.is(':focus')) $field.val(value);
         };
         $('#blai-ai-enabled').prop('checked', aiSettings.enabled === true);
+        $('#blai-ai-protect-comments').prop('checked', aiSettings.protectXmlComments === true);
         const xmlScopeTag = normalizeOptionalXmlTagNameInput(aiSettings.xmlScopeTag, defaultAiRewriteSettings.xmlScopeTag);
         setValueIfNotFocused('#blai-ai-base-url', aiSettings.baseUrl || '');
         setValueIfNotFocused('#blai-ai-xml-scope', xmlScopeTag ? `<${xmlScopeTag}>` : '');
@@ -1659,6 +1660,10 @@ export function bindEvents() {
 
     $(document).off('input change', '#blai-ai-base-url').on('input change', '#blai-ai-base-url', function() {
         updateAiRewriteSetting('baseUrl', String($(this).val() || '').trim());
+    });
+
+    $(document).off('change', '#blai-ai-protect-comments').on('change', '#blai-ai-protect-comments', function() {
+        updateAiRewriteSetting('protectXmlComments', $(this).prop('checked') === true);
     });
 
     $(document).off('change blur', '#blai-ai-xml-scope').on('change blur', '#blai-ai-xml-scope', function() {
