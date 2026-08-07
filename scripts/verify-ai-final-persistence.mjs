@@ -9,15 +9,20 @@ import {
     commitCurrentMessageText,
     isMessageAiFinal,
     isMessageAiFinalForBranch,
+    isMessageManualFinal,
     writeMessageDiffManualFinal,
     restoreMessageAiFinal,
     writeMessageDiffAiTrace,
     writeMessageDiffMeta,
 } from '../src/messageMeta.js';
+import { getMessageIndexFromEvent } from '../src/core.js';
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, '..');
 const coreSource = fs.readFileSync(path.join(repoRoot, 'src', 'core.js'), 'utf8');
+
+assert.equal(getMessageIndexFromEvent('3'), 3, 'SillyTavern 编辑事件的字符串楼层号必须可解析');
+assert.equal(getMessageIndexFromEvent({ index: '3' }), 3, '对象形式的字符串楼层号必须可解析');
 
 const original = '<content>八股原文</content>';
 const program = '<content>程序处理稿</content>';
@@ -50,6 +55,29 @@ message.mes = '<content>用户手动编辑</content>';
 writeMessageDiffManualFinal(message);
 assert.equal(restoreMessageAiFinal(message), false, '手动最终稿不应被 AI 终稿恢复覆盖');
 assert.equal(message.mes, '<content>用户手动编辑</content>');
+
+const exactManualEditMessage = {
+    is_user: false,
+    mes: '<content>\u4ed6\u6001\u5ea6\u6781\u5176\u5f3a\u786c\u3002</content>',
+};
+writeMessageDiffMeta(
+    exactManualEditMessage,
+    'main',
+    '<content>\u4ed6\u663e\u5f97\u6781\u5176\u5f3a\u786c\u3002</content>',
+    exactManualEditMessage.mes,
+    'exact-source-signature',
+);
+writeMessageDiffAiTrace(
+    exactManualEditMessage,
+    'main',
+    '<content>\u4ed6\u6001\u5ea6\u6781\u5176\u5f3a\u786c\u3002</content>',
+    exactManualEditMessage.mes,
+);
+exactManualEditMessage.mes = '<content>\u4ed6\u6001\u5ea6\u5f3a\u786c\u3002</content>';
+writeMessageDiffManualFinal(exactManualEditMessage);
+assert.equal(isMessageManualFinal(exactManualEditMessage), true, '手动删除 AI 改写结果中的“极其”后必须标记为手动终稿');
+restoreMessageAiFinal(exactManualEditMessage);
+assert.equal(exactManualEditMessage.mes, '<content>\u4ed6\u6001\u5ea6\u5f3a\u786c\u3002</content>', '手动删改不得恢复为 AI 终稿');
 
 const swipeMessage = {
     is_user: false,

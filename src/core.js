@@ -796,7 +796,10 @@ export function refreshMessageDisplay(index, options = {}) {
  * @returns {number} 解析出的索引，失败返回 -1。
  */
 export function getMessageIndexFromEvent(payload) {
-    if (Number.isInteger(payload)) return payload;
+    const direct = typeof payload === 'number'
+        ? payload
+        : (typeof payload === 'string' && payload.trim() !== '' ? Number(payload) : NaN);
+    if (Number.isInteger(direct)) return direct;
     if (!payload || typeof payload !== 'object') return -1;
     const candidates = [payload.messageId, payload.message_id, payload.mesid, payload.index, payload.id];
     for (const value of candidates) {
