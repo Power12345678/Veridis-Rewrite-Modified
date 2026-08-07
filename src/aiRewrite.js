@@ -16,7 +16,7 @@ import { compileRegexTarget, mergeScopeTagsWithBuiltins, normalizeOptionalXmlTag
 import { getZhVariantCompatOptions, isZhDictionaryReady } from './zhConversion.js';
 import { buildDiffResultFromChain, computeMessageSignature, isAssistantMessage, writeReadyDiffCache } from './diff.js';
 import { beginAtomicMessageDisplaySwap } from './dom.js';
-import { commitCurrentMessageText, getMessageDiffBranchKey, isMessageManualFinal, setMessageTextForMvuTransaction, writeMessageDiffAiTrace } from './messageMeta.js';
+import { clearMessageDisplayText, commitCurrentMessageText, getMessageDiffBranchKey, isMessageManualFinal, setMessageTextForMvuTransaction, writeMessageDiffAiTrace } from './messageMeta.js';
 import { getCurrentChatIdentity, markHostChatDirtyFromIndex } from './platform.js';
 import { generationLifecycle, parseStableMessagePayload } from './generationLifecycle.js';
 import { showToast } from './ui.js';
@@ -1557,6 +1557,7 @@ function commitAiRewriteText(taskLike, prepared) {
             atomicSwap?.release();
             return { committed: false, reason: textCommit.reason };
         }
+        clearMessageDisplayText(msg);
         syncMessageDiffMetadata(msg, sourceText, finalText);
         writeMessageDiffAiTrace(msg, branchKey, programText, finalText);
         const signature = computeMessageSignature(msg);

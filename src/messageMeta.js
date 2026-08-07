@@ -132,7 +132,9 @@ function normalizeBranchMeta(entry) {
         aiProgramMes,
         aiFinalMes,
         hasAiTrace: entry.hasAiTrace === true || !!(aiProgramMes || aiFinalMes),
-        finalSource: entry.finalSource === 'manual' ? 'manual' : '',
+        finalSource: entry.finalSource === 'manual'
+            ? 'manual'
+            : (entry.finalSource === 'ai' ? 'ai' : ''),
         updatedAt: Number.isFinite(Number(entry.updatedAt)) ? Number(entry.updatedAt) : Date.now(),
     };
 }
@@ -227,7 +229,7 @@ export function writeMessageDiffAiTrace(msg, branchKey, programMes, finalMes) {
             aiProgramMes: nextProgramMes,
             aiFinalMes: nextFinalMes,
             hasAiTrace: true,
-            finalSource: '',
+            finalSource: 'ai',
             updatedAt: Date.now(),
         };
         changed = true;
@@ -321,6 +323,59 @@ export function getCurrentMessageOriginalMes(msg) {
 export function isMessageFinalizedForCurrentBranch(msg) {
     const meta = getMessageDiffMeta(msg);
     return !!(meta && typeof msg?.mes === 'string' && meta.lastCleanedMes && msg.mes === meta.lastCleanedMes);
+}
+
+export function clearMessageDisplayText(msg) {
+    if (!isObject(msg) || !isObject(msg.extra)) return false;
+    return deleteValue(msg.extra, 'display_text');
+}
+
+export function getMessageAiFinalMes(msg) {
+    const meta = getMessageDiffMeta(msg);
+    if (!meta?.hasAiTrace || !meta.aiFinalMes) return '';
+    return meta.aiFinalMes;
+}
+
+export function isMessageAiFinal(msg) {
+    return isMessageAiFinalForBranch(msg, getMessageDiffBranchKey(msg), msg?.mes);
+}
+
+export function isMessageAiFinalForBranch(msg, branchKey, messageText) {
+    const meta = getMessageDiffMeta(msg, branchKey);
+    const aiFinalMes = meta?.hasAiTrace && meta.aiFinalMes ? meta.aiFinalMes : '';
+    return !!(
+        aiFinalMes
+        && msg?.__blai_is_reverted !== true
+        && typeof messageText === 'string'
+        && messageText === aiFinalMes
+    );
+}
+
+/**
+ * Restore an AI final that was persisted in message metadata but replaced in
+ * the live message by an older cleanse/render path. Arbitrary user edits are
+ * left untouched; only known intermediate versions are recoverable here.
+ */
+export function restoreMessageAiFinal(msg) {
+    if (!isObject(msg) || msg.__blai_is_reverted === true || typeof msg.mes !== 'string') return false;
+
+    const meta = getMessageDiffMeta(msg);
+    const aiFinalMes = meta?.hasAiTrace && meta.aiFinalMes ? meta.aiFinalMes : '';
+    if (!aiFinalMes) return false;
+
+    const displayTextChanged = clearMessageDisplayText(msg);
+    if (meta.finalSource === 'manual') return displayTextChanged;
+    if (msg.mes === aiFinalMes) return displayTextChanged;
+
+    const recoverableTexts = new Set([
+        meta.originalMes,
+        meta.lastCleanedMes,
+        meta.aiProgramMes,
+    ].filter(Boolean));
+    if (!recoverableTexts.has(msg.mes)) return displayTextChanged;
+
+    const commit = commitCurrentMessageText(msg, aiFinalMes, getMessageDiffBranchKey(msg));
+    return displayTextChanged || (commit.ok && commit.changed);
 }
 
 export function isMessageManualFinal(msg) {
