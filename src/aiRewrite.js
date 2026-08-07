@@ -329,8 +329,8 @@ function dismissAiRewriteStatusToast(toastElement, taskKey) {
 function attachAiRewriteDismissAction(toast, taskKey) {
     const toastElement = getToastElement(toast);
     const closeButton = toastElement?.querySelector?.('.toast-close-button');
-    if (!toastElement || !closeButton || closeButton.dataset?.blaiDismissBound === 'true') return;
-    if (closeButton.dataset) closeButton.dataset.blaiDismissBound = 'true';
+    if (!toastElement || !closeButton || closeButton.dataset?.vrmDismissBound === 'true') return;
+    if (closeButton.dataset) closeButton.dataset.vrmDismissBound = 'true';
     closeButton.setAttribute('aria-label', '关闭提示');
     closeButton.setAttribute('title', '关闭提示（后台改写会继续）');
     closeButton.addEventListener('click', (event) => {
@@ -367,13 +367,13 @@ function attachAiRewriteTerminateAction(toast, taskKey) {
     if (typeof document === 'undefined') return;
     const toastElement = getToastElement(toast);
     const normalizedTaskKey = String(taskKey || '');
-    if (!toastElement || !normalizedTaskKey || toastElement.querySelector('.blai-ai-toast-actions')) return;
+    if (!toastElement || !normalizedTaskKey || toastElement.querySelector('.vrm-ai-toast-actions')) return;
 
     const actions = document.createElement('div');
-    actions.className = 'blai-ai-toast-actions';
+    actions.className = 'vrm-ai-toast-actions';
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'blai-ai-toast-stop';
+    button.className = 'vrm-ai-toast-stop';
     button.textContent = '终止';
     button.addEventListener('click', (event) => {
         event.preventDefault();
@@ -405,7 +405,7 @@ function notifyAiRewriteStatus(type, title, message, options = {}) {
             escapeHtml: true,
         });
         const toastElement = getToastElement(toast);
-        if (sticky) toastElement?.classList?.add('blai-ai-rewrite-toast');
+        if (sticky) toastElement?.classList?.add('vrm-ai-rewrite-toast');
         runtimeState.aiRewrite.statusToast = sticky ? toast : null;
         runtimeState.aiRewrite.statusTaskKey = taskKey;
         if (sticky) attachAiRewriteDismissAction(toast, taskKey);
@@ -535,7 +535,7 @@ function buildScopedDedupeSource(text, aiSettings) {
     }
     const segments = collectAiXmlScopeSegments(source, aiSettings);
     if (segments.length === 0) return source;
-    return segments.map((segment) => source.slice(segment.start, segment.end)).join('\n@@BLAI_AI_XML_SCOPE@@\n');
+    return segments.map((segment) => source.slice(segment.start, segment.end)).join('\n@@VRM_AI_XML_SCOPE@@\n');
 }
 
 function buildDedupeKey(index, msg, settings, versionToken, aiSettings, sourceText = '') {
@@ -1464,7 +1464,7 @@ function getTaskFreshnessIssue(task) {
     }
     if (msg !== task.messageRef) return 'message-ref-changed';
     if (!isAssistantMessage(msg)) return 'not-assistant-message';
-    if (msg?.__blai_is_reverted) return 'message-reverted';
+    if (msg?.__vrm_is_reverted) return 'message-reverted';
     if (getMessageDiffBranchKey(msg) !== task.branchKey) return 'branch-changed';
     if (typeof msg.mes !== 'string') return 'message-text-missing';
     return '';
@@ -1625,7 +1625,7 @@ function applyAiProgramFallback(taskLike, options = {}) {
 
     const msg = chat[index];
     if (!isAssistantMessage(msg)) return { applied: false, reason: 'not-assistant-message' };
-    if (msg?.__blai_is_reverted) return { applied: false, reason: 'message-reverted' };
+    if (msg?.__vrm_is_reverted) return { applied: false, reason: 'message-reverted' };
     if (taskLike?.messageRef && msg !== taskLike.messageRef) return { applied: false, reason: 'message-ref-changed' };
     if (taskLike?.automatic === true) {
         const validation = validateAutomaticAiRewriteContent(taskLike, { source: 'program-fallback' });
@@ -2271,7 +2271,7 @@ function buildAiRewriteCandidate(payload, options = {}) {
 
     const msg = chat[index];
     if (!isAssistantMessage(msg)) return { task: null, reason: '目标消息不是助手消息' };
-    if (msg?.__blai_is_reverted) return { task: null, reason: '目标消息已撤回净化' };
+    if (msg?.__vrm_is_reverted) return { task: null, reason: '目标消息已撤回净化' };
     const isAutomatic = payload?.automatic === true;
     if (isAutomatic) {
         const validation = generationLifecycle.validate(payload.generationId, {

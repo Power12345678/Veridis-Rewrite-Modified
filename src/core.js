@@ -865,11 +865,11 @@ function computeDiffSourceSignature(msg, sourceMes) {
     return computeMessageSignature({
         ...msg,
         mes: sourceMes,
-        __blai_original_mes: '',
-        __blai_diff_source_signature: '',
-        __blai_diff_last_cleaned_mes: '',
-        __blai_diff_branch_meta: null,
-        __blai_diff_swipe_key: '',
+        __vrm_original_mes: '',
+        __vrm_diff_source_signature: '',
+        __vrm_diff_last_cleaned_mes: '',
+        __vrm_diff_branch_meta: null,
+        __vrm_diff_swipe_key: '',
     });
 }
 
@@ -952,7 +952,7 @@ export function cleanseMessageDataAtIndex(index, options = {}) {
     if (!Array.isArray(chat) || index < 0 || index >= chat.length) return false;
     const msg = chat[index];
     if (!msg || typeof msg !== 'object') return false;
-    if (msg.__blai_is_reverted) return false;
+    if (msg.__vrm_is_reverted) return false;
 
     const isAssistant = isAssistantMessage(msg);
     if (!isAssistant) {
@@ -982,7 +982,7 @@ export function cleanseMessageDataAtIndex(index, options = {}) {
         snippets: Array.from(new Set(diffResult.snippets || [])),
         fullDiff: diffResult.fullDiff || '',
     };
-    const hasMainDiff = mainCache.snippets.length > 0 || mainCache.fullDiff.includes('blai-diff-full-modified');
+    const hasMainDiff = mainCache.snippets.length > 0 || mainCache.fullDiff.includes('vrm-diff-full-modified');
 
     if (typeof msg.mes === 'string' && cleanedText !== currentMes) {
         const textCommit = commitCurrentMessageText(msg, cleanedText, getMessageDiffBranchKey(msg));
@@ -1056,7 +1056,7 @@ export function performNonStreamingFinalCleanse(payload) {
 
     const msg = chat[index];
     if (!isAssistantMessage(msg)) return;
-    if (msg?.__blai_is_reverted) {
+    if (msg?.__vrm_is_reverted) {
         clearTrackedDiffEntry(index);
         injectDiffButtons([index]);
         return;
@@ -1121,7 +1121,7 @@ export function performIncrementalCleanse(payload, options = {}) {
     const msg = Array.isArray(chat) ? chat[index] : null;
     const assistant = isAssistantMessage(msg);
     if (!assistant) return;
-    if (msg?.__blai_is_reverted) {
+    if (msg?.__vrm_is_reverted) {
         clearTrackedDiffEntry(index);
         injectDiffButtons([index]);
         return;
@@ -1220,7 +1220,7 @@ function processGlobalCleanseMessage(msg, index, latestDiffIndices, skipUser, op
         if (isMessageAiFinal(msg) || isMessageManualFinal(msg)) return false;
     }
     let signature = assistant ? computeMessageSignature(msg) : '';
-    const isReverted = msg?.__blai_is_reverted === true;
+    const isReverted = msg?.__vrm_is_reverted === true;
 
     if (!isReverted && typeof msg?.mes === 'string') {
         const sourceMes = assistant ? resolveMessageDiffSource(msg) : msg.mes;
@@ -1251,7 +1251,7 @@ function processGlobalCleanseMessage(msg, index, latestDiffIndices, skipUser, op
     }
 
     if (assistant && latestDiffIndices.has(index) && !isReverted) {
-        const hasMainDiff = mainCache.snippets.length > 0 || mainCache.fullDiff.includes('blai-diff-full-modified');
+        const hasMainDiff = mainCache.snippets.length > 0 || mainCache.fullDiff.includes('vrm-diff-full-modified');
         writeReadyDiffCache(index, signature, mainCache, {
             preserveExistingRealDiff: true,
             persist: hasMainDiff || msgChanged,

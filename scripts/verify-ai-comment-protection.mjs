@@ -37,7 +37,7 @@ assert.match(aiRewriteSource, /protectXmlComments/u);
 assert.match(aiRewriteSource, /collectXmlCommentRanges/u);
 assert.match(aiRewriteSource, /rangeOverlapsAny\(start, end, commentRanges\)/u);
 assert.match(aiRewriteSource, /applyWithXmlCommentsProtected/u);
-assert.match(templateSource, /id="blai-ai-protect-comments"/u);
+assert.match(templateSource, /id="vrm-ai-protect-comments"/u);
 assert.match(eventsSource, /updateAiRewriteSetting\('protectXmlComments'/u);
 
 console.log('AI HTML/XML 注释保护验证通过');

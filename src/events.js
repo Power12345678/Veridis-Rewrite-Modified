@@ -162,13 +162,13 @@ function getSelectedIndexesFromState(rules) {
 }
 
 function syncBatchSelectionStateFromDom(rules) {
-    const indexes = $('.batch-item-checkbox:checked').map(function() { return Number($(this).data('index')); }).get().filter((idx) => Number.isInteger(idx) && idx >= 0 && idx < rules.length);
+    const indexes = $('.vrm-batch-item-checkbox:checked').map(function() { return Number($(this).data('index')); }).get().filter((idx) => Number.isInteger(idx) && idx >= 0 && idx < rules.length);
     runtimeState.batchSelectedRuleIds = getRuleIdsByIndexes(rules, indexes);
 }
 
 function applyBatchSelectionStateToDom(rules) {
     const selectedSet = new Set(runtimeState.batchSelectedRuleIds || []);
-    $('.batch-item-checkbox').each(function() {
+    $('.vrm-batch-item-checkbox').each(function() {
         const idx = Number($(this).data('index'));
         const rule = rules[idx];
         const checked = Boolean(rule) && selectedSet.has(ensureRuleObjectId(rule));
@@ -177,7 +177,7 @@ function applyBatchSelectionStateToDom(rules) {
 }
 
 function getBatchOperationContext(clickedIndex, rules) {
-    const isBatchMode = $('#blai-purifier-popup').hasClass('blai-is-batch-mode');
+    const isBatchMode = $('#vrm-purifier-popup').hasClass('vrm-is-batch-mode');
     const selectedIndexes = getSelectedIndexesFromState(rules);
     const selectedSet = new Set(selectedIndexes);
     const shouldBatch = isBatchMode && selectedIndexes.length > 1 && selectedSet.has(clickedIndex);
@@ -234,9 +234,9 @@ function hasPresetContentChanges(currentRules, savedPresetEntry, currentAiRewrit
 }
 
 function renderTagsPreserveBatchSelection() {
-    const shell = document.getElementById('blai-purifier-popup');
+    const shell = document.getElementById('vrm-purifier-popup');
     const activeElement = document.activeElement;
-    if (activeElement instanceof HTMLElement && activeElement.closest('#blai-tags-container')) {
+    if (activeElement instanceof HTMLElement && activeElement.closest('#vrm-tags-container')) {
         activeElement.blur();
     }
     if (shell) shell.scrollTop = 0;
@@ -311,7 +311,7 @@ export function initRealtimeInterceptor() {
     syncPersonaDescriptionProtectionControl();
     const personaProtectionIntervalId = setInterval(syncPersonaDescriptionProtectionControl, 1000);
     window.addEventListener('beforeunload', () => clearInterval(personaProtectionIntervalId), { once: true });
-    window.addEventListener('blai:realtime-beauty-frame', (event) => {
+    window.addEventListener('vrm:realtime-beauty-frame', (event) => {
         if (runtimeState.isStreamingGeneration !== true || getRealtimeMaskMode() !== 'tavern-helper') return;
         replayStreamingPresentation(event?.detail?.messageIndex);
     });
@@ -346,7 +346,7 @@ export function initRealtimeInterceptor() {
         return mode === 'simple-visual' ? 'simple-visual' : 'tavern-helper';
     };
 
-    const streamingProcessorPatchKey = '__blai_streaming_source_cleanser';
+    const streamingProcessorPatchKey = '__vrm_streaming_source_cleanser';
 
     const getCurrentStreamingProcessor = () => {
         const getter = getAppContext().getStreamingProcessor;
@@ -594,13 +594,13 @@ export function bindEvents() {
     }
 
     function getImportPresetName() {
-        return String($('#blai-import-preset-name').val() || '').trim();
+        return String($('#vrm-import-preset-name').val() || '').trim();
     }
 
     function closeImportChoiceModal() {
         runtimeState.importPresetDraft = null;
-        $('#blai-preset-import-choice-modal')
-            .removeClass('blai-is-open')
+        $('#vrm-preset-import-choice-modal')
+            .removeClass('vrm-is-open')
             .attr('aria-hidden', 'true')
             .hide();
     }
@@ -617,18 +617,18 @@ export function bindEvents() {
             defaultName: presetName,
             aiRewrite: normalizePresetAiRewriteSettings(aiRewriteSettings),
         };
-        $('#blai-import-preset-name').val(presetName);
+        $('#vrm-import-preset-name').val(presetName);
         const aiSummary = runtimeState.importPresetDraft.aiRewrite ? '，包含 AI 生成限制' : '';
-        $('#blai-import-choice-summary').text(`已读取 ${normalizedRules.length} 个规则分组${aiSummary}。只导入不会修改当前规则；切换使用和临时预览会替换当前规则并重新净化。`);
-        const $modal = $('#blai-preset-import-choice-modal');
+        $('#vrm-import-choice-summary').text(`已读取 ${normalizedRules.length} 个规则分组${aiSummary}。只导入不会修改当前规则；切换使用和临时预览会替换当前规则并重新净化。`);
+        const $modal = $('#vrm-preset-import-choice-modal');
         $modal.detach().appendTo(document.body);
         $modal
             .attr('aria-hidden', 'false')
-            .addClass('blai-is-open')
+            .addClass('vrm-is-open')
             .css('display', 'flex');
         // iOS browsers sometimes need a layout pass after the file picker returns.
         $modal[0]?.getBoundingClientRect();
-        window.setTimeout(() => $('#blai-import-preset-name').trigger('focus').trigger('select'), 50);
+        window.setTimeout(() => $('#vrm-import-preset-name').trigger('focus').trigger('select'), 50);
     }
 
     function confirmBeforeImportChoiceIfUnsaved() {
@@ -643,12 +643,12 @@ export function bindEvents() {
         const name = getImportPresetName();
         if (!name) {
             alert('请填写预设名称。');
-            $('#blai-import-preset-name').trigger('focus');
+            $('#vrm-import-preset-name').trigger('focus');
             return '';
         }
         if (settings.presets?.[name]) {
             alert('存档名称已存在，请换一个名称。');
-            $('#blai-import-preset-name').trigger('focus').trigger('select');
+            $('#vrm-import-preset-name').trigger('focus').trigger('select');
             return '';
         }
         return name;
@@ -746,13 +746,13 @@ export function bindEvents() {
     const { extension_settings, saveSettingsDebounced, eventSource, event_types } = getAppContext();
     const formatRegexTargetError = (error) => `第 ${error.line} 行：${error.message}`;
     const clearRegexTargetValidationState = () => {
-        $('#blai-modal-sub-target').removeClass('blai-invalid').removeAttr('aria-invalid');
-        $('#blai-modal-sub-target-error').removeClass('is-visible').text('');
+        $('#vrm-modal-sub-target').removeClass('vrm-invalid').removeAttr('aria-invalid');
+        $('#vrm-modal-sub-target-error').removeClass('is-visible').text('');
     };
     const applyRegexTargetValidationError = (error) => {
         const message = formatRegexTargetError(error);
-        $('#blai-modal-sub-target').addClass('blai-invalid').attr('aria-invalid', 'true');
-        $('#blai-modal-sub-target-error').addClass('is-visible').text(message);
+        $('#vrm-modal-sub-target').addClass('vrm-invalid').attr('aria-invalid', 'true');
+        $('#vrm-modal-sub-target-error').addClass('is-visible').text(message);
         return message;
     };
     const subruleModeUIMap = {
@@ -774,80 +774,80 @@ export function bindEvents() {
         },
     };
     const validateRegexTargetField = (options = {}) => {
-        const mode = String($('#blai-modal-sub-mode').val() || '');
+        const mode = String($('#vrm-modal-sub-mode').val() || '');
         if (mode !== 'regex') {
             clearRegexTargetValidationState();
             return { ok: true, parsed: [] };
         }
 
-        const result = validateRegexTargetInput($('#blai-modal-sub-target').val());
+        const result = validateRegexTargetInput($('#vrm-modal-sub-target').val());
         if (result.ok) {
             clearRegexTargetValidationState();
             return result;
         }
 
         const uiMessage = applyRegexTargetValidationError(result.error);
-        if (options.focus === true) $('#blai-modal-sub-target').trigger('focus');
+        if (options.focus === true) $('#vrm-modal-sub-target').trigger('focus');
         if (options.toast === true) showToast(`正则规则有误：${uiMessage}`);
         return { ...result, uiMessage };
     };
     const applySubruleModeUI = (rawMode) => {
         const mode = subruleModeUIMap[rawMode] ? rawMode : 'simple';
         const config = subruleModeUIMap[mode];
-        const previousMode = String($('#blai-modal-sub-mode').data('current-mode') || '');
+        const previousMode = String($('#vrm-modal-sub-mode').data('current-mode') || '');
         if (previousMode && previousMode !== mode) {
             const previousReplacements = getSingleRuleReplacementValues(previousMode);
             setSingleRuleReplacementEditor(mode, previousReplacements);
         }
-        $('#blai-modal-sub-mode').data('current-mode', mode);
-        $('#blai-modal-sub-target').attr('placeholder', config.targetPlaceholder);
-        $('#blai-modal-sub-rep').attr('placeholder', config.replacementPlaceholder);
+        $('#vrm-modal-sub-mode').data('current-mode', mode);
+        $('#vrm-modal-sub-target').attr('placeholder', config.targetPlaceholder);
+        $('#vrm-modal-sub-rep').attr('placeholder', config.replacementPlaceholder);
         if (mode === 'regex') {
-            $('#blai-modal-sub-rep')
+            $('#vrm-modal-sub-rep')
                 .data('regex-default-placeholder', config.replacementPlaceholder)
                 .data('regex-edit-placeholder', config.regexEditPlaceholder || config.replacementPlaceholder);
-            const activeEditIndex = Number($('#blai-modal-sub-rep').data('regex-edit-index'));
-            $('#blai-modal-sub-regex-recognize').text(activeEditIndex >= 0 ? '更新替换项' : '按行识别');
-            $('#blai-modal-sub-rep').attr('placeholder', activeEditIndex >= 0
+            const activeEditIndex = Number($('#vrm-modal-sub-rep').data('regex-edit-index'));
+            $('#vrm-modal-sub-regex-recognize').text(activeEditIndex >= 0 ? '更新替换项' : '按行识别');
+            $('#vrm-modal-sub-rep').attr('placeholder', activeEditIndex >= 0
                 ? (config.regexEditPlaceholder || config.replacementPlaceholder)
                 : config.replacementPlaceholder);
         } else {
-            $('#blai-modal-sub-rep')
+            $('#vrm-modal-sub-rep')
                 .removeData('regex-default-placeholder')
                 .removeData('regex-edit-placeholder');
         }
-        $('#blai-modal-sub-mode-hint').text(config.hint);
+        $('#vrm-modal-sub-mode-hint').text(config.hint);
         validateRegexTargetField();
     };
     const applySubruleRewriteModeUI = () => {
-        const rewriteMode = $('#blai-modal-sub-rewrite-mode').val() === 'ai' ? 'ai' : 'program';
+        const rewriteMode = $('#vrm-modal-sub-rewrite-mode').val() === 'ai' ? 'ai' : 'program';
         const isAiMode = rewriteMode === 'ai';
-        $('#blai-modal-sub-rep-label').text(isAiMode ? '流式临时替换 / API 参考候选' : '替换为');
-        $('#blai-modal-sub-rewrite-hint').text(isAiMode
+        $('#vrm-modal-sub-rep-label').text(isAiMode ? '流式临时替换 / API 参考候选' : '替换为');
+        $('#vrm-modal-sub-rewrite-hint').text(isAiMode
             ? '生成中只做视觉预览，生成结束后把命中片段发给配置的 AI 接口局部改写。'
             : '沿用当前本地替换逻辑，生成结束后直接写入消息数据。');
-        $('#blai-modal-sub-ai-prompt-field').prop('hidden', !isAiMode);
-        $('#blai-modal-sub-ai-prompt').prop('disabled', !isAiMode);
-        $('#blai-modal-sub-ai-prompt-hint').text('只填写这条规则命中时的特殊处理；通用风格仍由全局提示词控制。');
+        $('#vrm-modal-sub-ai-prompt-field').prop('hidden', !isAiMode);
+        $('#vrm-modal-sub-ai-prompt').prop('disabled', !isAiMode);
+        $('#vrm-modal-sub-ai-prompt-hint').text('只填写这条规则命中时的特殊处理；通用风格仍由全局提示词控制。');
     };
     const clearScopeTagValidationState = () => {
-        $('#blai-scope-tag-input').removeClass('blai-invalid').removeAttr('aria-invalid');
-        $('#blai-scope-tag-error').removeClass('is-visible').text('');
+        $('#vrm-scope-tag-input').removeClass('vrm-invalid').removeAttr('aria-invalid');
+        $('#vrm-scope-tag-error').removeClass('is-visible').text('');
     };
     const applyScopeTagValidationError = (message) => {
-        $('#blai-scope-tag-input').addClass('blai-invalid').attr('aria-invalid', 'true');
-        $('#blai-scope-tag-error').addClass('is-visible').text(message);
+        $('#vrm-scope-tag-input').addClass('vrm-invalid').attr('aria-invalid', 'true');
+        $('#vrm-scope-tag-error').addClass('is-visible').text(message);
     };
-    const getScopeTagEditId = () => String($('#blai-scope-tag-input').data('scope-edit-id') || '');
+    const getScopeTagEditId = () => String($('#vrm-scope-tag-input').data('scope-edit-id') || '');
     const resetScopeTagEditor = () => {
-        $('#blai-scope-tag-input').val('').data('scope-edit-id', '');
-        $('#blai-scope-tag-label-input').val('');
-        $('#blai-scope-tag-group-select').val(DEFAULT_SCOPE_TAG_GROUP_ID);
-        $('#blai-scope-tag-editor-modal')
-            .removeClass('blai-is-open')
+        $('#vrm-scope-tag-input').val('').data('scope-edit-id', '');
+        $('#vrm-scope-tag-label-input').val('');
+        $('#vrm-scope-tag-group-select').val(DEFAULT_SCOPE_TAG_GROUP_ID);
+        $('#vrm-scope-tag-editor-modal')
+            .removeClass('vrm-is-open')
             .attr('aria-hidden', 'true');
-        $('#blai-scope-tag-action-menu').prop('hidden', true);
-        $('#blai-scope-tag-menu-open').attr('aria-expanded', 'false');
+        $('#vrm-scope-tag-action-menu').prop('hidden', true);
+        $('#vrm-scope-tag-menu-open').attr('aria-expanded', 'false');
         clearScopeTagValidationState();
         renderScopeTagsModal();
     };
@@ -857,8 +857,8 @@ export function bindEvents() {
         return `<${trimmed.replace(/[<>]/g, '')}>`;
     };
     const buildScopeTagInputFromEditor = () => {
-        const rawTagText = String($('#blai-scope-tag-input').val() || '').trim();
-        const labelText = String($('#blai-scope-tag-label-input').val() || '').trim();
+        const rawTagText = String($('#vrm-scope-tag-input').val() || '').trim();
+        const labelText = String($('#vrm-scope-tag-label-input').val() || '').trim();
         if (!rawTagText) return '';
         if (rawTagText.includes('//')) {
             const [tagPart, ...labelParts] = rawTagText.split('//');
@@ -879,14 +879,14 @@ export function bindEvents() {
     const renderScopeTagGroupOptions = (selectedGroupId = DEFAULT_SCOPE_TAG_GROUP_ID) => {
         const groups = getScopeTagGroups();
         const resolvedGroupId = resolveScopeTagGroupId(selectedGroupId);
-        const $select = $('#blai-scope-tag-group-select');
+        const $select = $('#vrm-scope-tag-group-select');
         $select.empty();
         groups.forEach((group) => {
             $('<option>').val(group.id).text(group.name).appendTo($select);
         });
         $select.val(resolvedGroupId);
     };
-    const getSelectedScopeTagGroupId = () => resolveScopeTagGroupId($('#blai-scope-tag-group-select').val());
+    const getSelectedScopeTagGroupId = () => resolveScopeTagGroupId($('#vrm-scope-tag-group-select').val());
     const normalizeScopeTagsToKnownGroups = (scopeTags) => {
         const groupIds = getScopeTagGroupIds();
         return normalizeScopeTagList(scopeTags).map((tag) => {
@@ -895,25 +895,25 @@ export function bindEvents() {
         });
     };
     const closeScopeTagActionMenu = () => {
-        $('#blai-scope-tag-action-menu').prop('hidden', true);
-        $('#blai-scope-tag-menu-open').attr('aria-expanded', 'false');
+        $('#vrm-scope-tag-action-menu').prop('hidden', true);
+        $('#vrm-scope-tag-menu-open').attr('aria-expanded', 'false');
     };
     const openScopeTagEditor = (scopeTag = null) => {
         const formattedInput = scopeTag ? formatScopeTagInput(scopeTag) : '';
         const tagSource = formattedInput.split('//')[0]?.trim() || '';
         const tagName = tagSource.match(/^<([^<>/\s]+)>$/)?.[1] || tagSource;
         renderScopeTagGroupOptions(scopeTag?.groupId || DEFAULT_SCOPE_TAG_GROUP_ID);
-        $('#blai-scope-tag-input')
+        $('#vrm-scope-tag-input')
             .val(scopeTag ? tagName : '')
             .data('scope-edit-id', scopeTag?.id || '');
-        $('#blai-scope-tag-label-input').val(scopeTag?.label || '');
+        $('#vrm-scope-tag-label-input').val(scopeTag?.label || '');
         clearScopeTagValidationState();
         renderScopeTagsModal();
-        $('#blai-scope-tag-editor-modal')
-            .addClass('blai-is-open')
+        $('#vrm-scope-tag-editor-modal')
+            .addClass('vrm-is-open')
             .attr('aria-hidden', 'false');
         window.setTimeout(() => {
-            $('#blai-scope-tag-input').trigger('focus');
+            $('#vrm-scope-tag-input').trigger('focus');
         }, 20);
     };
     const setScopeTagMode = (mode) => {
@@ -940,13 +940,13 @@ export function bindEvents() {
         });
         saveSettingsDebounced();
         renderScopeTagsModal();
-        renderScopeTagGroupOptions($('#blai-scope-tag-group-select').val() || DEFAULT_SCOPE_TAG_GROUP_ID);
+        renderScopeTagGroupOptions($('#vrm-scope-tag-group-select').val() || DEFAULT_SCOPE_TAG_GROUP_ID);
         if (options.focusGroupId) {
             window.setTimeout(() => {
                 const escapedGroupId = typeof CSS !== 'undefined' && typeof CSS.escape === 'function'
                     ? CSS.escape(options.focusGroupId)
                     : String(options.focusGroupId).replace(/["\\]/g, '\\$&');
-                $(`#blai-scope-tags-list .blai-scope-group-name-input[data-group-id="${escapedGroupId}"]`).trigger('focus').trigger('select');
+                $(`#vrm-scope-tags-list .vrm-scope-group-name-input[data-group-id="${escapedGroupId}"]`).trigger('focus').trigger('select');
             }, 20);
         }
     };
@@ -969,7 +969,7 @@ export function bindEvents() {
         const parsed = parseScopeTagInput(rawInput);
         if (!parsed.ok) {
             applyScopeTagValidationError(parsed.error.message);
-            $('#blai-scope-tag-input').trigger('focus');
+            $('#vrm-scope-tag-input').trigger('focus');
             return false;
         }
 
@@ -979,7 +979,7 @@ export function bindEvents() {
         const duplicate = scopeTags.find((tag) => tag.startTag === parsed.value.startTag && tag.id !== editId);
         if (duplicate) {
             applyScopeTagValidationError('该范围标签已存在，无需重复添加。');
-            $('#blai-scope-tag-input').trigger('focus');
+            $('#vrm-scope-tag-input').trigger('focus');
             return false;
         }
 
@@ -1012,26 +1012,26 @@ export function bindEvents() {
         return true;
     };
 
-    $(document).off('click', '#blai-wand-btn, #blai-wand-btn-panel, #blai-extension-settings-entry').on('click', '#blai-wand-btn, #blai-wand-btn-panel, #blai-extension-settings-entry', () => {
+    $(document).off('click', '#vrm-wand-btn, #vrm-wand-btn-panel, #vrm-extension-settings-entry').on('click', '#vrm-wand-btn, #vrm-wand-btn-panel, #vrm-extension-settings-entry', () => {
         updateToolbarUI();
         updateLegacyPurifierWarning();
         showResponsivePage('overview');
         renderTags();
         renderScopeTagsModal();
-        $('#blai-purifier-popup').css('display', 'grid').hide().fadeIn(200);
+        $('#vrm-purifier-popup').css('display', 'grid').hide().fadeIn(200);
     });
 
-    $(document).off('click', '#blai-purifier-popup [data-page-target]').on('click', '#blai-purifier-popup [data-page-target]', function(e) {
+    $(document).off('click', '#vrm-purifier-popup [data-page-target]').on('click', '#vrm-purifier-popup [data-page-target]', function(e) {
         e.preventDefault();
         const pageId = String($(this).attr('data-page-target') || 'overview');
         showResponsivePage(pageId);
         if (pageId === 'clean') renderScopeTagsModal();
     });
 
-    $(document).off('click', '#blai-purifier-popup [data-clean-tab]').on('click', '#blai-purifier-popup [data-clean-tab]', function(e) {
+    $(document).off('click', '#vrm-purifier-popup [data-clean-tab]').on('click', '#vrm-purifier-popup [data-clean-tab]', function(e) {
         e.preventDefault();
         const tabId = String($(this).attr('data-clean-tab') || 'settings');
-        const $cleanPage = $('#blai-purifier-popup .page-panel[data-page="clean"]');
+        const $cleanPage = $('#vrm-purifier-popup .page-panel[data-page="clean"]');
         $cleanPage.find('[data-clean-tab]')
             .removeClass('is-active')
             .attr('aria-selected', 'false');
@@ -1041,18 +1041,18 @@ export function bindEvents() {
         if (tabId === 'tags') renderScopeTagsModal();
     });
 
-    $(document).off('click', '#blai-purifier-popup [data-blai-click-proxy]').on('click', '#blai-purifier-popup [data-blai-click-proxy]', function(e) {
+    $(document).off('click', '#vrm-purifier-popup [data-vrm-click-proxy]').on('click', '#vrm-purifier-popup [data-vrm-click-proxy]', function(e) {
         e.preventDefault();
-        const selector = String($(this).attr('data-blai-click-proxy') || '');
+        const selector = String($(this).attr('data-vrm-click-proxy') || '');
         const target = selector ? document.querySelector(selector) : null;
-        $('#blai-character-bind-toggle').attr('aria-expanded', 'false');
-        if ($(this).attr('data-blai-toggle-binding') === 'true' && $(this).attr('aria-pressed') === 'true') {
-            document.querySelector('#blai-unbind-current-character')?.click();
+        $('#vrm-character-bind-toggle').attr('aria-expanded', 'false');
+        if ($(this).attr('data-vrm-toggle-binding') === 'true' && $(this).attr('aria-pressed') === 'true') {
+            document.querySelector('#vrm-unbind-current-character')?.click();
             return;
         }
         if (target && target.disabled) {
             const $target = $(target);
-            const message = String($target.find('.blai-bind-menu-note').text() || $target.attr('title') || '当前操作不可用').trim();
+            const message = String($target.find('.vrm-bind-menu-note').text() || $target.attr('title') || '当前操作不可用').trim();
             showToast(message);
             refreshCharacterBindingUI();
             return;
@@ -1060,7 +1060,7 @@ export function bindEvents() {
         if (target) target.click();
     });
 
-    $(document).off('click', '#blai-rule-sort-toggle').on('click', '#blai-rule-sort-toggle', function(e) {
+    $(document).off('click', '#vrm-rule-sort-toggle').on('click', '#vrm-rule-sort-toggle', function(e) {
         e.preventDefault();
         const rules = extension_settings[extensionName].rules || [];
         rules.reverse();
@@ -1070,7 +1070,7 @@ export function bindEvents() {
         showToast('分组顺序已反转');
     });
 
-    $(document).off('click', '#blai-ai-copy-log').on('click', '#blai-ai-copy-log', async function(e) {
+    $(document).off('click', '#vrm-ai-copy-log').on('click', '#vrm-ai-copy-log', async function(e) {
         e.preventDefault();
         const logText = getAiRewriteDebugLogText();
         if (!logText || logText === '[]') {
@@ -1090,32 +1090,32 @@ export function bindEvents() {
         }
     });
 
-    $(document).off('click', '#blai-ai-api-check').on('click', '#blai-ai-api-check', function(e) {
+    $(document).off('click', '#vrm-ai-api-check').on('click', '#vrm-ai-api-check', function(e) {
         e.preventDefault();
         void runAiModelsHealthCheck({ silent: false });
     });
 
-    $(document).off('click', '#blai-close-legacy-plugin').on('click', '#blai-close-legacy-plugin', function(e) {
+    $(document).off('click', '#vrm-close-legacy-plugin').on('click', '#vrm-close-legacy-plugin', function(e) {
         e.preventDefault();
         const detected = updateLegacyPurifierWarning();
         const legacyEntry = document.getElementById('bl-extension-settings-entry') || document.getElementById('bl-wand-btn');
         if (legacyEntry) {
-            $('#blai-purifier-popup').fadeOut(120);
+            $('#vrm-purifier-popup').fadeOut(120);
             legacyEntry.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            legacyEntry.classList.remove('blai-legacy-target-flash');
+            legacyEntry.classList.remove('vrm-legacy-target-flash');
             void legacyEntry.offsetWidth;
-            legacyEntry.classList.add('blai-legacy-target-flash');
-            window.setTimeout(() => legacyEntry.classList.remove('blai-legacy-target-flash'), 1800);
+            legacyEntry.classList.add('vrm-legacy-target-flash');
+            window.setTimeout(() => legacyEntry.classList.remove('vrm-legacy-target-flash'), 1800);
         }
         showToast(detected
             ? '请关闭旧插件 Veridis-Keyword-filtering-main 后刷新页面'
             : '未检测到旧版 purifier');
     });
 
-    $(document).off('click', '#blai-close-btn').on('click', '#blai-close-btn', () => {
+    $(document).off('click', '#vrm-close-btn').on('click', '#vrm-close-btn', () => {
         if (checkUnsavedChanges()) {
             if (confirm(`预设 "${extension_settings[extensionName].activePreset}" 有未保存的规则或 AI 生成限制改动，是否保存？\n点击【确定】保存，点击【取消】直接关闭放弃改动。`)) {
-                $('#blai-preset-save').click();
+                $('#vrm-preset-save').click();
             } else {
                 // 放弃保存时回滚到已保存状态，避免脏数据残留。
                 applyPresetByName(extension_settings[extensionName].activePreset, { skipRender: true });
@@ -1123,7 +1123,7 @@ export function bindEvents() {
         }
         closeRuleSearchModal({ reset: true });
         closeScopeTagsModal({ reset: true });
-        $('#blai-purifier-popup').fadeOut(200);
+        $('#vrm-purifier-popup').fadeOut(200);
     });
     const settings = extension_settings[extensionName];
     normalizeZhVariantSettings(settings);
@@ -1138,7 +1138,7 @@ export function bindEvents() {
         clearRuleSearchEditFlow();
     };
     const submitRuleSearch = () => {
-        runtimeState.ruleSearchDraftKeyword = String($('#blai-rule-search-input').val() || '');
+        runtimeState.ruleSearchDraftKeyword = String($('#vrm-rule-search-input').val() || '');
         runtimeState.ruleSearchKeyword = runtimeState.ruleSearchDraftKeyword.trim();
         runtimeState.ruleSearchHasSearched = runtimeState.ruleSearchKeyword.length > 0;
         runtimeState.ruleSearchExpandedMenuKey = '';
@@ -1151,7 +1151,7 @@ export function bindEvents() {
         } = options;
         const rules = extension_settings[extensionName].rules || [];
         const isCreatingNewRule = runtimeState.currentEditingIndex === -1;
-        const nameVal = String($('#blai-edit-name').val() || '').trim();
+        const nameVal = String($('#vrm-edit-name').val() || '').trim();
         const validSubrules = runtimeState.currentEditingSubrules.filter(sub => sub.targets && sub.targets.length > 0);
 
         if (validSubrules.length === 0) {
@@ -1205,11 +1205,11 @@ export function bindEvents() {
             dark: 'fa-moon',
         };
         settings.themeMode = normalized;
-        $('#blai-purifier-popup, .blai-modal-shell, #blai-rule-transfer-modal, #blai-diff-modal, #blai-rule-search-modal, #blai-preset-import-choice-modal, .blai-toast, #blai-loading-overlay, #blai-scope-tag-editor-modal').attr('data-blai-theme', normalized);
-        $('#blai-theme-toggle, #blai-purifier-popup [data-blai-click-proxy="#blai-theme-toggle"]')
+        $('#vrm-purifier-popup, .vrm-modal-shell, #vrm-rule-transfer-modal, #vrm-diff-modal, #vrm-rule-search-modal, #vrm-preset-import-choice-modal, .vrm-toast, #vrm-loading-overlay, #vrm-scope-tag-editor-modal').attr('data-vrm-theme', normalized);
+        $('#vrm-theme-toggle, #vrm-purifier-popup [data-vrm-click-proxy="#vrm-theme-toggle"]')
             .attr('title', `当前主题：${labels[normalized]}，点击切换`)
             .attr('aria-label', `当前主题：${labels[normalized]}，点击切换`);
-        $('#blai-theme-toggle i, #blai-purifier-popup [data-blai-click-proxy="#blai-theme-toggle"] i').attr('class', `fas ${icons[normalized]}`);
+        $('#vrm-theme-toggle i, #vrm-purifier-popup [data-vrm-click-proxy="#vrm-theme-toggle"] i').attr('class', `fas ${icons[normalized]}`);
     };
     const syncZhCompatToggle = () => {
         const packageStatus = getZhDictionaryPackageStatus(settings);
@@ -1225,12 +1225,12 @@ export function bindEvents() {
             options.tw ? '台繁' : '',
             options.hk ? '港繁' : '',
         ].filter(Boolean).join('、') || '标准简繁';
-        $('#blai-zh-dict-status-chip').text(enabled ? '已启用' : packageStatus.ready ? '已安装' : '未安装');
-        $('#blai-zh-dict-install-open')
+        $('#vrm-zh-dict-status-chip').text(enabled ? '已启用' : packageStatus.ready ? '已安装' : '未安装');
+        $('#vrm-zh-dict-install-open')
             .toggleClass('accent', !enabled)
             .attr('title', enabled ? '增强简繁词典已启用' : packageStatus.ready ? '增强简繁词典已安装，点击启用' : '下载并启用增强简繁词典');
-        $('#blai-zh-compat-toggle')
-            .toggleClass('blai-bind-active', enabled)
+        $('#vrm-zh-compat-toggle')
+            .toggleClass('vrm-bind-active', enabled)
             .toggleClass('accent', enabled)
             .text(enabled ? '关闭' : '开启')
             .attr('aria-pressed', String(enabled))
@@ -1284,12 +1284,12 @@ export function bindEvents() {
     };
     const setAiApiCheckState = (state, label, title = '') => {
         const normalizedState = state || 'idle';
-        $('#blai-ai-api-check')
+        $('#vrm-ai-api-check')
             .attr('data-state', normalizedState)
             .attr('title', title || '通过酒馆助手拉取模型列表，不发送聊天消息。')
             .attr('aria-label', `模型列表：${label}`);
-        $('#blai-ai-api-status').text(label);
-        $('#blai-ai-model-fetch')
+        $('#vrm-ai-api-status').text(label);
+        $('#vrm-ai-model-fetch')
             .toggleClass('accent', normalizedState === 'ok')
             .prop('disabled', normalizedState === 'checking')
             .text(normalizedState === 'checking' ? '拉取中' : '拉取模型')
@@ -1308,7 +1308,7 @@ export function bindEvents() {
         return [...new Set(options.map((value) => String(value || '').trim()).filter(Boolean))];
     };
     const syncAiModelSelect = (aiSettings) => {
-        const $select = $('#blai-ai-model');
+        const $select = $('#vrm-ai-model');
         if (!$select.length) return;
         const selectedModel = String(aiSettings.model || '').trim();
         const fetchedModels = normalizeAiModelOptions(aiSettings.modelOptions);
@@ -1342,7 +1342,7 @@ export function bindEvents() {
         return JSON.stringify(normalizeAiApiPresetSnapshot(activePreset)) !== JSON.stringify(normalizeAiApiPresetSnapshot(aiSettings));
     };
     const syncAiApiPresetSelect = (aiSettings) => {
-        const $select = $('#blai-ai-api-preset');
+        const $select = $('#vrm-ai-api-preset');
         if (!$select.length) return;
         const activeName = String(aiSettings.activeApiPreset || '');
         const presetNames = Object.keys(aiSettings.apiPresets || {});
@@ -1355,7 +1355,7 @@ export function bindEvents() {
             fragment.appendChild(new Option(label, name));
         });
         $select.empty().append(fragment).val(activeName || '');
-        $('#blai-ai-api-preset-delete').prop('disabled', !activeName);
+        $('#vrm-ai-api-preset-delete').prop('disabled', !activeName);
     };
     const saveCurrentAiApiPreset = (options = {}) => {
         const aiSettings = ensureAiRewriteSettings();
@@ -1442,24 +1442,24 @@ export function bindEvents() {
             const $field = $(selector);
             if (!$field.is(':focus')) $field.val(value);
         };
-        $('#blai-ai-enabled').prop('checked', aiSettings.enabled === true);
-        $('#blai-ai-protect-comments').prop('checked', aiSettings.protectXmlComments === true);
+        $('#vrm-ai-enabled').prop('checked', aiSettings.enabled === true);
+        $('#vrm-ai-protect-comments').prop('checked', aiSettings.protectXmlComments === true);
         const xmlScopeTag = normalizeOptionalXmlTagNameInput(aiSettings.xmlScopeTag, defaultAiRewriteSettings.xmlScopeTag);
-        setValueIfNotFocused('#blai-ai-base-url', aiSettings.baseUrl || '');
-        setValueIfNotFocused('#blai-ai-xml-scope', xmlScopeTag ? `<${xmlScopeTag}>` : '');
-        setValueIfNotFocused('#blai-ai-api-key', aiSettings.apiKey || '');
+        setValueIfNotFocused('#vrm-ai-base-url', aiSettings.baseUrl || '');
+        setValueIfNotFocused('#vrm-ai-xml-scope', xmlScopeTag ? `<${xmlScopeTag}>` : '');
+        setValueIfNotFocused('#vrm-ai-api-key', aiSettings.apiKey || '');
         syncAiApiPresetSelect(aiSettings);
         syncAiModelSelect(aiSettings);
-        setValueIfNotFocused('#blai-ai-temperature', aiSettings.temperature);
-        setValueIfNotFocused('#blai-ai-timeout', getAiTimeoutSeconds(aiSettings.timeoutMs));
-        setValueIfNotFocused('#blai-ai-max-retries', aiSettings.maxRetries);
-        setValueIfNotFocused('#blai-ai-max-items', aiSettings.maxItemsPerRequest);
-        setValueIfNotFocused('#blai-ai-max-context', aiSettings.maxContextChars);
-        setValueIfNotFocused('#blai-ai-max-rewrite', aiSettings.maxRewriteCharsPerItem);
-        setValueIfNotFocused('#blai-ai-prompt', aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
-        setValueIfNotFocused('#blai-ai-prompt-expanded', aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
+        setValueIfNotFocused('#vrm-ai-temperature', aiSettings.temperature);
+        setValueIfNotFocused('#vrm-ai-timeout', getAiTimeoutSeconds(aiSettings.timeoutMs));
+        setValueIfNotFocused('#vrm-ai-max-retries', aiSettings.maxRetries);
+        setValueIfNotFocused('#vrm-ai-max-items', aiSettings.maxItemsPerRequest);
+        setValueIfNotFocused('#vrm-ai-max-context', aiSettings.maxContextChars);
+        setValueIfNotFocused('#vrm-ai-max-rewrite', aiSettings.maxRewriteCharsPerItem);
+        setValueIfNotFocused('#vrm-ai-prompt', aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
+        setValueIfNotFocused('#vrm-ai-prompt-expanded', aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
         if (aiSettings.enabled !== true) setAiApiCheckState('disabled', '未启用', 'AI 改写未启用，开启后再拉取模型列表。');
-        $('#blai-ai-http-warning').prop('hidden', isLocalHttpUrl(aiSettings.baseUrl));
+        $('#vrm-ai-http-warning').prop('hidden', isLocalHttpUrl(aiSettings.baseUrl));
     };
     const updateAiRewriteSetting = (key, value, options = {}) => {
         const aiSettings = ensureAiRewriteSettings();
@@ -1486,24 +1486,24 @@ export function bindEvents() {
     };
     const openAiPromptEditor = () => {
         const aiSettings = ensureAiRewriteSettings();
-        $('#blai-ai-prompt-expanded').val(aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
-        $('#blai-ai-prompt-modal').addClass('blai-is-open');
-        window.setTimeout(() => $('#blai-ai-prompt-expanded').trigger('focus'), 0);
+        $('#vrm-ai-prompt-expanded').val(aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
+        $('#vrm-ai-prompt-modal').addClass('vrm-is-open');
+        window.setTimeout(() => $('#vrm-ai-prompt-expanded').trigger('focus'), 0);
     };
     const closeAiPromptEditor = () => {
-        $('#blai-ai-prompt-modal').removeClass('blai-is-open');
+        $('#vrm-ai-prompt-modal').removeClass('vrm-is-open');
     };
     const applyAiPromptEditor = () => {
-        const value = String($('#blai-ai-prompt-expanded').val() || defaultAiRewriteSettings.promptTemplate);
-        $('#blai-ai-prompt').val(value);
+        const value = String($('#vrm-ai-prompt-expanded').val() || defaultAiRewriteSettings.promptTemplate);
+        $('#vrm-ai-prompt').val(value);
         updateAiRewriteSetting('promptTemplate', value, { markRulesDirty: false });
         closeAiPromptEditor();
     };
     const runZhDictionaryInstall = async () => {
         if (zhDictionaryInstallAbortController) return;
         settings.zhVariantCompatOptions = {
-            tw: $('#blai-zh-dict-tw').prop('checked') === true,
-            hk: $('#blai-zh-dict-hk').prop('checked') === true,
+            tw: $('#vrm-zh-dict-tw').prop('checked') === true,
+            hk: $('#vrm-zh-dict-hk').prop('checked') === true,
         };
         settings.zhVariantCompatEnabled = false;
         saveSettingsDebounced();
@@ -1543,7 +1543,7 @@ export function bindEvents() {
     syncAiRewriteSettingsUI();
     syncRealtimeMaskModeUI();
 
-    $(document).off('click', '#blai-theme-toggle').on('click', '#blai-theme-toggle', function(e) {
+    $(document).off('click', '#vrm-theme-toggle').on('click', '#vrm-theme-toggle', function(e) {
         e.preventDefault();
         e.stopPropagation();
         const modes = ['auto', 'light', 'dark'];
@@ -1554,7 +1554,7 @@ export function bindEvents() {
         showToast(`已切换主题：${nextMode === 'auto' ? '跟随酒馆' : nextMode === 'light' ? '白色主题' : '暗色主题'}`);
     });
 
-    $(document).off('click', '.blai-realtime-mask-option').on('click', '.blai-realtime-mask-option', function(e) {
+    $(document).off('click', '.vrm-realtime-mask-option').on('click', '.vrm-realtime-mask-option', function(e) {
         e.preventDefault();
         const mode = String($(this).attr('data-mode') || '');
         if (!['simple-visual', 'tavern-helper'].includes(mode)) return;
@@ -1570,7 +1570,7 @@ export function bindEvents() {
         showToast(mode === 'simple-visual' ? '实时屏蔽：简单视觉屏蔽' : '实时屏蔽：酒馆助手实时渲染');
     });
 
-    $(document).off('click', '#blai-zh-dict-install-open').on('click', '#blai-zh-dict-install-open', function(e) {
+    $(document).off('click', '#vrm-zh-dict-install-open').on('click', '#vrm-zh-dict-install-open', function(e) {
         e.preventDefault();
         if (settings.zhVariantCompatEnabled === true && isZhDictionaryReady(settings)) {
             showToast('增强简繁词典已启用');
@@ -1580,13 +1580,13 @@ export function bindEvents() {
         openZhDictionaryInstallPrompt();
     });
 
-    $(document).off('click.blaiBindMenu').on('click.blaiBindMenu', function(e) {
-        if ($(e.target).closest('.blai-bind-menu-wrap').length > 0) return;
-        $('#blai-bind-menu').prop('hidden', true);
-        $('#blai-character-bind-toggle').attr('aria-expanded', 'false');
+    $(document).off('click.vrmBindMenu').on('click.vrmBindMenu', function(e) {
+        if ($(e.target).closest('.vrm-bind-menu-wrap').length > 0) return;
+        $('#vrm-bind-menu').prop('hidden', true);
+        $('#vrm-character-bind-toggle').attr('aria-expanded', 'false');
     });
 
-    $(document).off('click', '#blai-zh-compat-toggle').on('click', '#blai-zh-compat-toggle', function(e) {
+    $(document).off('click', '#vrm-zh-compat-toggle').on('click', '#vrm-zh-compat-toggle', function(e) {
         e.preventDefault();
         if (settings.zhVariantCompatEnabled === true && isZhDictionaryReady(settings)) {
             settings.zhVariantCompatEnabled = false;
@@ -1602,17 +1602,17 @@ export function bindEvents() {
         openZhDictionaryInstallPrompt();
     });
 
-    $(document).off('click', '#blai-zh-dict-close, #blai-zh-dict-cancel').on('click', '#blai-zh-dict-close, #blai-zh-dict-cancel', function(e) {
+    $(document).off('click', '#vrm-zh-dict-close, #vrm-zh-dict-cancel').on('click', '#vrm-zh-dict-close, #vrm-zh-dict-cancel', function(e) {
         e.preventDefault();
         closeZhDictionaryModal();
     });
 
-    $(document).off('click', '#blai-zh-dict-download').on('click', '#blai-zh-dict-download', function(e) {
+    $(document).off('click', '#vrm-zh-dict-download').on('click', '#vrm-zh-dict-download', function(e) {
         e.preventDefault();
         runZhDictionaryInstall();
     });
 
-    $(document).off('change', '#blai-ai-enabled').on('change', '#blai-ai-enabled', function() {
+    $(document).off('change', '#vrm-ai-enabled').on('change', '#vrm-ai-enabled', function() {
         const enabled = $(this).prop('checked') === true;
         const aiSettings = ensureAiRewriteSettings();
         aiSettings.enabledDefaultApplied = true;
@@ -1620,7 +1620,7 @@ export function bindEvents() {
         updateAiRewriteSetting('enabled', enabled);
     });
 
-    $(document).off('change', '#blai-ai-api-preset').on('change', '#blai-ai-api-preset', function() {
+    $(document).off('change', '#vrm-ai-api-preset').on('change', '#vrm-ai-api-preset', function() {
         const aiSettings = ensureAiRewriteSettings();
         const nextName = String($(this).val() || '');
         if (!nextName || nextName === aiSettings.activeApiPreset) {
@@ -1635,17 +1635,17 @@ export function bindEvents() {
         applyAiApiPreset(nextName);
     });
 
-    $(document).off('click', '#blai-ai-api-preset-new').on('click', '#blai-ai-api-preset-new', function(e) {
+    $(document).off('click', '#vrm-ai-api-preset-new').on('click', '#vrm-ai-api-preset-new', function(e) {
         e.preventDefault();
         saveCurrentAiApiPreset({ forceNew: true });
     });
 
-    $(document).off('click', '#blai-ai-api-preset-save').on('click', '#blai-ai-api-preset-save', function(e) {
+    $(document).off('click', '#vrm-ai-api-preset-save').on('click', '#vrm-ai-api-preset-save', function(e) {
         e.preventDefault();
         saveCurrentAiApiPreset();
     });
 
-    $(document).off('click', '#blai-ai-api-preset-delete').on('click', '#blai-ai-api-preset-delete', function(e) {
+    $(document).off('click', '#vrm-ai-api-preset-delete').on('click', '#vrm-ai-api-preset-delete', function(e) {
         e.preventDefault();
         const aiSettings = ensureAiRewriteSettings();
         const name = String(aiSettings.activeApiPreset || '');
@@ -1658,15 +1658,15 @@ export function bindEvents() {
         showToast(`已删除 API 预设：${name}`);
     });
 
-    $(document).off('input change', '#blai-ai-base-url').on('input change', '#blai-ai-base-url', function() {
+    $(document).off('input change', '#vrm-ai-base-url').on('input change', '#vrm-ai-base-url', function() {
         updateAiRewriteSetting('baseUrl', String($(this).val() || '').trim());
     });
 
-    $(document).off('change', '#blai-ai-protect-comments').on('change', '#blai-ai-protect-comments', function() {
+    $(document).off('change', '#vrm-ai-protect-comments').on('change', '#vrm-ai-protect-comments', function() {
         updateAiRewriteSetting('protectXmlComments', $(this).prop('checked') === true);
     });
 
-    $(document).off('change blur', '#blai-ai-xml-scope').on('change blur', '#blai-ai-xml-scope', function() {
+    $(document).off('change blur', '#vrm-ai-xml-scope').on('change blur', '#vrm-ai-xml-scope', function() {
         const rawValue = String($(this).val() || '').trim();
         if (!rawValue) {
             updateAiRewriteSetting('xmlScopeTag', '');
@@ -1681,55 +1681,55 @@ export function bindEvents() {
         updateAiRewriteSetting('xmlScopeTag', parsed.value.tagName);
     });
 
-    $(document).off('input change', '#blai-ai-api-key').on('input change', '#blai-ai-api-key', function() {
+    $(document).off('input change', '#vrm-ai-api-key').on('input change', '#vrm-ai-api-key', function() {
         updateAiRewriteSetting('apiKey', String($(this).val() || ''), { markRulesDirty: false });
     });
 
-    $(document).off('input change', '#blai-ai-model').on('input change', '#blai-ai-model', function() {
+    $(document).off('input change', '#vrm-ai-model').on('input change', '#vrm-ai-model', function() {
         updateAiRewriteSetting('model', String($(this).val() || '').trim(), { markRulesDirty: false });
     });
 
-    $(document).off('input change', '#blai-ai-temperature, #blai-ai-timeout, #blai-ai-max-retries, #blai-ai-max-items, #blai-ai-max-context, #blai-ai-max-rewrite').on('input change', '#blai-ai-temperature, #blai-ai-timeout, #blai-ai-max-retries, #blai-ai-max-items, #blai-ai-max-context, #blai-ai-max-rewrite', function() {
+    $(document).off('input change', '#vrm-ai-temperature, #vrm-ai-timeout, #vrm-ai-max-retries, #vrm-ai-max-items, #vrm-ai-max-context, #vrm-ai-max-rewrite').on('input change', '#vrm-ai-temperature, #vrm-ai-timeout, #vrm-ai-max-retries, #vrm-ai-max-items, #vrm-ai-max-context, #vrm-ai-max-rewrite', function() {
         const id = String(this.id || '');
         const value = Number($(this).val());
         const keyMap = {
-            'blai-ai-temperature': 'temperature',
-            'blai-ai-timeout': 'timeoutMs',
-            'blai-ai-max-retries': 'maxRetries',
-            'blai-ai-max-items': 'maxItemsPerRequest',
-            'blai-ai-max-context': 'maxContextChars',
-            'blai-ai-max-rewrite': 'maxRewriteCharsPerItem',
+            'vrm-ai-temperature': 'temperature',
+            'vrm-ai-timeout': 'timeoutMs',
+            'vrm-ai-max-retries': 'maxRetries',
+            'vrm-ai-max-items': 'maxItemsPerRequest',
+            'vrm-ai-max-context': 'maxContextChars',
+            'vrm-ai-max-rewrite': 'maxRewriteCharsPerItem',
         };
-        const normalizedValue = id === 'blai-ai-timeout'
+        const normalizedValue = id === 'vrm-ai-timeout'
             ? Math.min(Math.max(Math.round(value || 0), 1), 120) * 1000
             : value;
         updateAiRewriteSetting(keyMap[id], normalizedValue, { markRulesDirty: false });
     });
 
-    $(document).off('input change', '#blai-ai-prompt').on('input change', '#blai-ai-prompt', function() {
+    $(document).off('input change', '#vrm-ai-prompt').on('input change', '#vrm-ai-prompt', function() {
         updateAiRewriteSetting('promptTemplate', String($(this).val() || defaultAiRewriteSettings.promptTemplate), { markRulesDirty: false });
     });
 
-    $(document).off('click', '#blai-ai-prompt-expand').on('click', '#blai-ai-prompt-expand', function(e) {
+    $(document).off('click', '#vrm-ai-prompt-expand').on('click', '#vrm-ai-prompt-expand', function(e) {
         e.preventDefault();
         openAiPromptEditor();
     });
 
-    $(document).off('click', '#blai-ai-prompt-modal-close, #blai-ai-prompt-modal-cancel').on('click', '#blai-ai-prompt-modal-close, #blai-ai-prompt-modal-cancel', function(e) {
+    $(document).off('click', '#vrm-ai-prompt-modal-close, #vrm-ai-prompt-modal-cancel').on('click', '#vrm-ai-prompt-modal-close, #vrm-ai-prompt-modal-cancel', function(e) {
         e.preventDefault();
         closeAiPromptEditor();
     });
 
-    $(document).off('click', '#blai-ai-prompt-modal').on('click', '#blai-ai-prompt-modal', function(e) {
+    $(document).off('click', '#vrm-ai-prompt-modal').on('click', '#vrm-ai-prompt-modal', function(e) {
         if (e.target === this) closeAiPromptEditor();
     });
 
-    $(document).off('click', '#blai-ai-prompt-modal-apply').on('click', '#blai-ai-prompt-modal-apply', function(e) {
+    $(document).off('click', '#vrm-ai-prompt-modal-apply').on('click', '#vrm-ai-prompt-modal-apply', function(e) {
         e.preventDefault();
         applyAiPromptEditor();
     });
 
-    $(document).off('keydown', '#blai-ai-prompt-expanded').on('keydown', '#blai-ai-prompt-expanded', function(e) {
+    $(document).off('keydown', '#vrm-ai-prompt-expanded').on('keydown', '#vrm-ai-prompt-expanded', function(e) {
         if (e.key === 'Escape') {
             e.preventDefault();
             closeAiPromptEditor();
@@ -1741,21 +1741,21 @@ export function bindEvents() {
         }
     });
 
-    $(document).off('click', '#blai-ai-api-key-reveal').on('click', '#blai-ai-api-key-reveal', function(e) {
+    $(document).off('click', '#vrm-ai-api-key-reveal').on('click', '#vrm-ai-api-key-reveal', function(e) {
         e.preventDefault();
-        const $input = $('#blai-ai-api-key');
+        const $input = $('#vrm-ai-api-key');
         const nextType = $input.attr('type') === 'password' ? 'text' : 'password';
         $input.attr('type', nextType);
         $(this).find('i').attr('class', nextType === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash');
     });
 
-    $(document).off('click', '#blai-ai-api-key-clear').on('click', '#blai-ai-api-key-clear', function(e) {
+    $(document).off('click', '#vrm-ai-api-key-clear').on('click', '#vrm-ai-api-key-clear', function(e) {
         e.preventDefault();
         updateAiRewriteSetting('apiKey', '', { markRulesDirty: false });
         showToast('API Key 已清空');
     });
 
-    $(document).off('click', '#blai-ai-model-fetch').on('click', '#blai-ai-model-fetch', function(e) {
+    $(document).off('click', '#vrm-ai-model-fetch').on('click', '#vrm-ai-model-fetch', function(e) {
         e.preventDefault();
         void runAiModelsHealthCheck({ silent: false });
     });
@@ -1768,14 +1768,14 @@ export function bindEvents() {
 
     const syncSkipUserToggle = () => {
         const enabled = settings.skipUserMessages === true;
-        $('#blai-skip-user-toggle')
+        $('#vrm-skip-user-toggle')
             .toggleClass('accent', enabled)
             .attr('aria-pressed', String(enabled))
             .text(enabled ? '开启' : '关闭');
     };
     syncSkipUserToggle();
 
-    $(document).off('click', '#blai-skip-user-toggle').on('click', '#blai-skip-user-toggle', function(e) {
+    $(document).off('click', '#vrm-skip-user-toggle').on('click', '#vrm-skip-user-toggle', function(e) {
         e.preventDefault();
         settings.skipUserMessages = settings.skipUserMessages !== true;
         saveSettingsDebounced();
@@ -1784,7 +1784,7 @@ export function bindEvents() {
         showToast(settings.skipUserMessages ? '已跳过用户消息' : '已恢复净化用户消息');
     });
 
-    $(document).off('click', '.blai-persona-description-protect-toggle').on('click', '.blai-persona-description-protect-toggle', function(e) {
+    $(document).off('click', '.vrm-persona-description-protect-toggle').on('click', '.vrm-persona-description-protect-toggle', function(e) {
         e.preventDefault();
         settings.protectPersonaDescription = settings.protectPersonaDescription !== true;
         saveSettingsDebounced();
@@ -1792,15 +1792,15 @@ export function bindEvents() {
         showToast(settings.protectPersonaDescription ? '用户设定描述已保护' : '用户设定描述已取消保护');
     });
 
-    $(document).off('click', '#blai-preset-search').on('click', '#blai-preset-search', () => {
+    $(document).off('click', '#vrm-preset-search').on('click', '#vrm-preset-search', () => {
         openRuleSearchModal();
     });
 
-    $(document).off('click', '#blai-rule-search-back').on('click', '#blai-rule-search-back', () => {
+    $(document).off('click', '#vrm-rule-search-back').on('click', '#vrm-rule-search-back', () => {
         closeRuleSearchModal({ reset: true });
     });
 
-    $(document).off('input', '#blai-rule-search-input').on('input', '#blai-rule-search-input', function() {
+    $(document).off('input', '#vrm-rule-search-input').on('input', '#vrm-rule-search-input', function() {
         runtimeState.ruleSearchDraftKeyword = String($(this).val() || '');
         syncRuleSearchInputUi();
         if (runtimeState.ruleSearchDraftKeyword.trim() !== '') return;
@@ -1810,98 +1810,98 @@ export function bindEvents() {
         renderRuleSearchModal();
     });
 
-    $(document).off('keydown', '#blai-rule-search-input').on('keydown', '#blai-rule-search-input', function(e) {
+    $(document).off('keydown', '#vrm-rule-search-input').on('keydown', '#vrm-rule-search-input', function(e) {
         if (e.key !== 'Enter') return;
         e.preventDefault();
         submitRuleSearch();
     });
 
-    $(document).off('click', '#blai-rule-search-submit').on('click', '#blai-rule-search-submit', () => {
+    $(document).off('click', '#vrm-rule-search-submit').on('click', '#vrm-rule-search-submit', () => {
         submitRuleSearch();
     });
 
-    $(document).off('click', '#blai-rule-search-clear').on('click', '#blai-rule-search-clear', () => {
+    $(document).off('click', '#vrm-rule-search-clear').on('click', '#vrm-rule-search-clear', () => {
         resetRuleSearchQueryState();
         syncRuleSearchInputUi({ syncValue: true });
         renderRuleSearchModal();
-        $('#blai-rule-search-input').trigger('focus');
+        $('#vrm-rule-search-input').trigger('focus');
     });
 
-    $(document).off('click', '#blai-scope-tags-btn').on('click', '#blai-scope-tags-btn', () => {
+    $(document).off('click', '#vrm-scope-tags-btn').on('click', '#vrm-scope-tags-btn', () => {
         openScopeTagsModal();
     });
 
-    $(document).off('click', '#blai-scope-tag-menu-open').on('click', '#blai-scope-tag-menu-open', function(e) {
+    $(document).off('click', '#vrm-scope-tag-menu-open').on('click', '#vrm-scope-tag-menu-open', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        const $menu = $('#blai-scope-tag-action-menu');
+        const $menu = $('#vrm-scope-tag-action-menu');
         const nextHidden = !$menu.prop('hidden');
         $menu.prop('hidden', nextHidden);
         $(this).attr('aria-expanded', String(!nextHidden));
     });
 
-    $(document).off('click', '#blai-scope-tag-add-open').on('click', '#blai-scope-tag-add-open', () => {
+    $(document).off('click', '#vrm-scope-tag-add-open').on('click', '#vrm-scope-tag-add-open', () => {
         closeScopeTagActionMenu();
         openScopeTagEditor();
     });
 
-    $(document).off('click', '#blai-scope-group-add').on('click', '#blai-scope-group-add', () => {
+    $(document).off('click', '#vrm-scope-group-add').on('click', '#vrm-scope-group-add', () => {
         closeScopeTagActionMenu();
         const group = { id: createScopeTagGroupId(), name: '未命名分组' };
-        $('#blai-scope-tags-list').addClass('blai-is-group-manage-mode');
+        $('#vrm-scope-tags-list').addClass('vrm-is-group-manage-mode');
         persistScopeTagGroups([...getScopeTagGroups(), group], { focusGroupId: group.id });
     });
 
     const saveQuickScopeTag = () => {
-        const rawInput = String($('#blai-scope-quick-input').val() || '').trim();
+        const rawInput = String($('#vrm-scope-quick-input').val() || '').trim();
         if (!rawInput) {
             showToast('先输入范围标签');
-            $('#blai-scope-quick-input').trigger('focus');
+            $('#vrm-scope-quick-input').trigger('focus');
             return;
         }
         renderScopeTagGroupOptions(DEFAULT_SCOPE_TAG_GROUP_ID);
-        $('#blai-scope-tag-input')
+        $('#vrm-scope-tag-input')
             .val(rawInput)
             .data('scope-edit-id', '');
-        $('#blai-scope-tag-label-input').val('');
-        $('#blai-scope-tag-group-select').val(DEFAULT_SCOPE_TAG_GROUP_ID);
-        if (saveScopeTag()) $('#blai-scope-quick-input').val('');
+        $('#vrm-scope-tag-label-input').val('');
+        $('#vrm-scope-tag-group-select').val(DEFAULT_SCOPE_TAG_GROUP_ID);
+        if (saveScopeTag()) $('#vrm-scope-quick-input').val('');
     };
 
-    $(document).off('click', '#blai-scope-tag-add-quick').on('click', '#blai-scope-tag-add-quick', (e) => {
+    $(document).off('click', '#vrm-scope-tag-add-quick').on('click', '#vrm-scope-tag-add-quick', (e) => {
         e.preventDefault();
         saveQuickScopeTag();
     });
 
-    $(document).off('keydown', '#blai-scope-quick-input').on('keydown', '#blai-scope-quick-input', function(e) {
+    $(document).off('keydown', '#vrm-scope-quick-input').on('keydown', '#vrm-scope-quick-input', function(e) {
         if (e.key !== 'Enter') return;
         e.preventDefault();
         saveQuickScopeTag();
     });
 
-    $(document).off('click', '#blai-scope-group-manage-open').on('click', '#blai-scope-group-manage-open', () => {
+    $(document).off('click', '#vrm-scope-group-manage-open').on('click', '#vrm-scope-group-manage-open', () => {
         closeScopeTagActionMenu();
-        $('#blai-scope-tags-list').toggleClass('blai-is-group-manage-mode');
+        $('#vrm-scope-tags-list').toggleClass('vrm-is-group-manage-mode');
         renderScopeTagsModal();
     });
 
-    $(document).off('click', '#blai-scope-tags-expand-all').on('click', '#blai-scope-tags-expand-all', () => {
+    $(document).off('click', '#vrm-scope-tags-expand-all').on('click', '#vrm-scope-tags-expand-all', () => {
         settings.scopeTagCollapsedGroups = [];
         saveSettingsDebounced();
         renderScopeTagsModal();
     });
 
-    $(document).off('click', '#blai-scope-tags-collapse-all').on('click', '#blai-scope-tags-collapse-all', () => {
+    $(document).off('click', '#vrm-scope-tags-collapse-all').on('click', '#vrm-scope-tags-collapse-all', () => {
         settings.scopeTagCollapsedGroups = getScopeTagGroups().map((group) => group.id);
         saveSettingsDebounced();
         renderScopeTagsModal();
     });
 
-    $(document).off('click', '.blai-scope-tag-group-head').on('click', '.blai-scope-tag-group-head', function(e) {
-        if ($(this).hasClass('blai-is-managing')) return;
+    $(document).off('click', '.vrm-scope-tag-group-head').on('click', '.vrm-scope-tag-group-head', function(e) {
+        if ($(this).hasClass('vrm-is-managing')) return;
         e.preventDefault();
-        if ($(e.target).closest('.blai-scope-tag-group-toggle').length > 0) return;
-        const groupId = String($(this).closest('.blai-scope-tag-group').attr('data-group-id') || '');
+        if ($(e.target).closest('.vrm-scope-tag-group-toggle').length > 0) return;
+        const groupId = String($(this).closest('.vrm-scope-tag-group').attr('data-group-id') || '');
         if (!groupId) return;
         const groups = getScopeTagGroups();
         const collapsed = new Set(normalizeScopeTagCollapsedGroupList(settings.scopeTagCollapsedGroups, groups));
@@ -1912,7 +1912,7 @@ export function bindEvents() {
         renderScopeTagsModal();
     });
 
-    $(document).off('click', '.blai-scope-tag-group-toggle').on('click', '.blai-scope-tag-group-toggle', function(e) {
+    $(document).off('click', '.vrm-scope-tag-group-toggle').on('click', '.vrm-scope-tag-group-toggle', function(e) {
         e.preventDefault();
         e.stopPropagation();
         const groupId = String($(this).attr('data-group-id') || '');
@@ -1931,7 +1931,7 @@ export function bindEvents() {
         showToast(nextEnabled ? '已启用该分组' : '已关闭该分组');
     });
 
-    $(document).off('input', '.blai-scope-group-name-input').on('input', '.blai-scope-group-name-input', function() {
+    $(document).off('input', '.vrm-scope-group-name-input').on('input', '.vrm-scope-group-name-input', function() {
         const groupId = String($(this).attr('data-group-id') || '');
         const nextName = String($(this).val() || '').trim();
         if (!groupId || !nextName) return;
@@ -1939,17 +1939,17 @@ export function bindEvents() {
             group.id === groupId ? { ...group, name: nextName } : group
         )));
         saveSettingsDebounced();
-        renderScopeTagGroupOptions($('#blai-scope-tag-group-select').val() || DEFAULT_SCOPE_TAG_GROUP_ID);
+        renderScopeTagGroupOptions($('#vrm-scope-tag-group-select').val() || DEFAULT_SCOPE_TAG_GROUP_ID);
     });
 
-    $(document).off('blur', '.blai-scope-group-name-input').on('blur', '.blai-scope-group-name-input', function() {
+    $(document).off('blur', '.vrm-scope-group-name-input').on('blur', '.vrm-scope-group-name-input', function() {
         if (String($(this).val() || '').trim()) return;
         const groupId = String($(this).attr('data-group-id') || '');
         const group = getScopeTagGroups().find((item) => item.id === groupId);
         if (group) $(this).val(group.name);
     });
 
-    $(document).off('keydown', '.blai-scope-group-name-input').on('keydown', '.blai-scope-group-name-input', function(e) {
+    $(document).off('keydown', '.vrm-scope-group-name-input').on('keydown', '.vrm-scope-group-name-input', function(e) {
         if (e.key !== 'Enter') return;
         e.preventDefault();
         $(this).trigger('blur');
@@ -1964,15 +1964,15 @@ export function bindEvents() {
         persistScopeTagGroups(groups);
     };
 
-    $(document).off('click', '.blai-scope-group-move-up').on('click', '.blai-scope-group-move-up', function() {
+    $(document).off('click', '.vrm-scope-group-move-up').on('click', '.vrm-scope-group-move-up', function() {
         moveScopeGroup(String($(this).attr('data-group-id') || ''), 'up');
     });
 
-    $(document).off('click', '.blai-scope-group-move-down').on('click', '.blai-scope-group-move-down', function() {
+    $(document).off('click', '.vrm-scope-group-move-down').on('click', '.vrm-scope-group-move-down', function() {
         moveScopeGroup(String($(this).attr('data-group-id') || ''), 'down');
     });
 
-    $(document).off('click', '.blai-scope-group-delete').on('click', '.blai-scope-group-delete', function() {
+    $(document).off('click', '.vrm-scope-group-delete').on('click', '.vrm-scope-group-delete', function() {
         const groupId = String($(this).attr('data-group-id') || '');
         if (!groupId || groupId === DEFAULT_SCOPE_TAG_GROUP_ID) return;
         const group = getScopeTagGroups().find((item) => item.id === groupId);
@@ -1989,39 +1989,39 @@ export function bindEvents() {
         persistScopeTagGroups(getScopeTagGroups().filter((item) => item.id !== groupId));
     });
 
-    $(document).off('click', '#blai-scope-tag-mode-toggle').on('click', '#blai-scope-tag-mode-toggle', () => {
+    $(document).off('click', '#vrm-scope-tag-mode-toggle').on('click', '#vrm-scope-tag-mode-toggle', () => {
         setScopeTagMode(settings.scopeTagMode === 'cleanse-inside' ? 'protect' : 'cleanse-inside');
     });
 
-    $(document).off('click', '#blai-scope-mode-protect, #blai-scope-mode-cleanse').on('click', '#blai-scope-mode-protect, #blai-scope-mode-cleanse', function() {
+    $(document).off('click', '#vrm-scope-mode-protect, #vrm-scope-mode-cleanse').on('click', '#vrm-scope-mode-protect, #vrm-scope-mode-cleanse', function() {
         setScopeTagMode(String($(this).data('mode') || 'protect'));
     });
 
-    $(document).off('click', '#blai-scope-tags-close').on('click', '#blai-scope-tags-close', () => {
+    $(document).off('click', '#vrm-scope-tags-close').on('click', '#vrm-scope-tags-close', () => {
         closeScopeTagsModal({ reset: true });
     });
 
-    $(document).off('click', '#blai-scope-tag-reset').on('click', '#blai-scope-tag-reset', () => {
+    $(document).off('click', '#vrm-scope-tag-reset').on('click', '#vrm-scope-tag-reset', () => {
         resetScopeTagEditor();
     });
 
-    $(document).off('click', '#blai-scope-tag-save').on('click', '#blai-scope-tag-save', () => {
+    $(document).off('click', '#vrm-scope-tag-save').on('click', '#vrm-scope-tag-save', () => {
         saveScopeTag();
     });
 
-    $(document).off('keydown', '#blai-scope-tag-label-input').on('keydown', '#blai-scope-tag-label-input', function(e) {
+    $(document).off('keydown', '#vrm-scope-tag-label-input').on('keydown', '#vrm-scope-tag-label-input', function(e) {
         if (e.key !== 'Enter') return;
         e.preventDefault();
         saveScopeTag();
     });
 
-    $(document).off('keydown', '#blai-scope-tag-input').on('keydown', '#blai-scope-tag-input', function(e) {
+    $(document).off('keydown', '#vrm-scope-tag-input').on('keydown', '#vrm-scope-tag-input', function(e) {
         if (e.key !== 'Enter') return;
         e.preventDefault();
         saveScopeTag();
     });
 
-    $(document).off('click', '.blai-rule-search-menu-toggle').on('click', '.blai-rule-search-menu-toggle', function(e) {
+    $(document).off('click', '.vrm-rule-search-menu-toggle').on('click', '.vrm-rule-search-menu-toggle', function(e) {
         e.preventDefault();
         e.stopPropagation();
         const nextKey = String($(this).data('key') || '');
@@ -2029,7 +2029,7 @@ export function bindEvents() {
         renderRuleSearchModal();
     });
 
-    $(document).off('click', '.blai-rule-search-menu-item').on('click', '.blai-rule-search-menu-item', function(e) {
+    $(document).off('click', '.vrm-rule-search-menu-item').on('click', '.vrm-rule-search-menu-item', function(e) {
         e.preventDefault();
         e.stopPropagation();
         const action = String($(this).data('action') || '');
@@ -2053,23 +2053,23 @@ export function bindEvents() {
         }
     });
 
-    $(document).off('click', '#blai-rule-search-modal').on('click', '#blai-rule-search-modal', function(e) {
-        if ($(e.target).closest('.blai-rule-search-menu-wrap').length > 0) return;
+    $(document).off('click', '#vrm-rule-search-modal').on('click', '#vrm-rule-search-modal', function(e) {
+        if ($(e.target).closest('.vrm-rule-search-menu-wrap').length > 0) return;
         if (!runtimeState.ruleSearchExpandedMenuKey) return;
         runtimeState.ruleSearchExpandedMenuKey = '';
         renderRuleSearchModal();
     });
 
-    $(document).off('click', '#blai-scope-tags-modal').on('click', '#blai-scope-tags-modal', function(e) {
-        if ($(e.target).closest('.blai-scope-tag-menu-wrap').length === 0) closeScopeTagActionMenu();
-        if (e.target && e.target.id === 'blai-scope-tags-modal') closeScopeTagsModal({ reset: true });
+    $(document).off('click', '#vrm-scope-tags-modal').on('click', '#vrm-scope-tags-modal', function(e) {
+        if ($(e.target).closest('.vrm-scope-tag-menu-wrap').length === 0) closeScopeTagActionMenu();
+        if (e.target && e.target.id === 'vrm-scope-tags-modal') closeScopeTagsModal({ reset: true });
     });
 
-    $(document).off('click', '#blai-scope-tag-editor-modal').on('click', '#blai-scope-tag-editor-modal', function(e) {
-        if (e.target && e.target.id === 'blai-scope-tag-editor-modal') resetScopeTagEditor();
+    $(document).off('click', '#vrm-scope-tag-editor-modal').on('click', '#vrm-scope-tag-editor-modal', function(e) {
+        if (e.target && e.target.id === 'vrm-scope-tag-editor-modal') resetScopeTagEditor();
     });
 
-    $(document).off('click', '.blai-scope-tag-chip-main, .blai-scope-tag-edit').on('click', '.blai-scope-tag-chip-main, .blai-scope-tag-edit', function(e) {
+    $(document).off('click', '.vrm-scope-tag-chip-main, .vrm-scope-tag-edit').on('click', '.vrm-scope-tag-chip-main, .vrm-scope-tag-edit', function(e) {
         e.preventDefault();
         const tagId = String($(this).attr('data-id') || '');
         const scopeTag = mergeScopeTagsWithBuiltins(settings.scopeTags, settings.scopeTagBuiltinDismissed).find((tag) => tag.id === tagId);
@@ -2077,7 +2077,7 @@ export function bindEvents() {
         openScopeTagEditor(scopeTag);
     });
 
-    $(document).off('change', '.blai-scope-tag-toggle').on('change', '.blai-scope-tag-toggle', function() {
+    $(document).off('change', '.vrm-scope-tag-toggle').on('change', '.vrm-scope-tag-toggle', function() {
         const tagId = String($(this).attr('data-id') || '');
         const checked = $(this).prop('checked');
         const currentScopeTags = mergeScopeTagsWithBuiltins(settings.scopeTags, settings.scopeTagBuiltinDismissed);
@@ -2090,7 +2090,7 @@ export function bindEvents() {
         persistScopeTags(scopeTags);
     });
 
-    $(document).off('click', '.blai-scope-tag-del').on('click', '.blai-scope-tag-del', function(e) {
+    $(document).off('click', '.vrm-scope-tag-del').on('click', '.vrm-scope-tag-del', function(e) {
         e.preventDefault();
         const tagId = String($(this).attr('data-id') || '');
         const scopeTags = mergeScopeTagsWithBuiltins(settings.scopeTags, settings.scopeTagBuiltinDismissed);
@@ -2110,35 +2110,35 @@ export function bindEvents() {
         showToast('范围标签已删除');
     });
 
-    $(document).off('click', '#blai-batch-toggle').on('click', '#blai-batch-toggle', function() {
-        const $popup = $('#blai-purifier-popup');
-        const isBatchMode = !$popup.hasClass('blai-is-batch-mode');
-        $popup.toggleClass('blai-is-batch-mode', isBatchMode);
-        $('#blai-batch-operations').toggle(isBatchMode);
-        $popup.find('.blai-batch-checkbox-label').toggle(isBatchMode);
-        $(this).toggleClass('blai-active', isBatchMode);
+    $(document).off('click', '#vrm-batch-toggle').on('click', '#vrm-batch-toggle', function() {
+        const $popup = $('#vrm-purifier-popup');
+        const isBatchMode = !$popup.hasClass('vrm-is-batch-mode');
+        $popup.toggleClass('vrm-is-batch-mode', isBatchMode);
+        $('#vrm-batch-operations').toggle(isBatchMode);
+        $popup.find('.vrm-batch-checkbox-label').toggle(isBatchMode);
+        $(this).toggleClass('vrm-active', isBatchMode);
         if (!isBatchMode) {
-            $('.batch-item-checkbox').prop('checked', false);
+            $('.vrm-batch-item-checkbox').prop('checked', false);
             runtimeState.batchSelectedRuleIds = [];
         }
     });
 
-    $(document).off('click', '#blai-btn-select-all').on('click', '#blai-btn-select-all', () => {
-        $('.batch-item-checkbox').prop('checked', true);
+    $(document).off('click', '#vrm-btn-select-all').on('click', '#vrm-btn-select-all', () => {
+        $('.vrm-batch-item-checkbox').prop('checked', true);
         syncBatchSelectionStateFromDom(extension_settings[extensionName].rules || []);
     });
 
-    $(document).off('click', '#blai-btn-select-invert').on('click', '#blai-btn-select-invert', () => {
-        $('.batch-item-checkbox').each(function() { $(this).prop('checked', !$(this).prop('checked')); });
+    $(document).off('click', '#vrm-btn-select-invert').on('click', '#vrm-btn-select-invert', () => {
+        $('.vrm-batch-item-checkbox').each(function() { $(this).prop('checked', !$(this).prop('checked')); });
         syncBatchSelectionStateFromDom(extension_settings[extensionName].rules || []);
     });
 
-    $(document).off('click', '#blai-btn-batch-transfer').on('click', '#blai-btn-batch-transfer', () => {
+    $(document).off('click', '#vrm-btn-batch-transfer').on('click', '#vrm-btn-batch-transfer', () => {
         const selectedIndexes = getSelectedIndexesFromState(extension_settings[extensionName].rules || []);
         if (selectedIndexes.length > 0) openTransferModal(selectedIndexes);
     });
 
-    $(document).off('click', '#blai-btn-batch-delete').on('click', '#blai-btn-batch-delete', () => {
+    $(document).off('click', '#vrm-btn-batch-delete').on('click', '#vrm-btn-batch-delete', () => {
         const rules = extension_settings[extensionName].rules || [];
         const selectedIndexes = getSelectedIndexesFromState(rules);
         if (selectedIndexes.length <= 0 || !confirm(`确定要删除选中的 ${selectedIndexes.length} 个规则分组吗？`)) return;
@@ -2149,7 +2149,7 @@ export function bindEvents() {
         }
     });
 
-    $(document).off('change', '.batch-item-checkbox').on('change', '.batch-item-checkbox', () => syncBatchSelectionStateFromDom(extension_settings[extensionName].rules || []));
+    $(document).off('change', '.vrm-batch-item-checkbox').on('change', '.vrm-batch-item-checkbox', () => syncBatchSelectionStateFromDom(extension_settings[extensionName].rules || []));
 
     const getDiffMessageByIndex = (index) => {
         const { chat } = getAppContext();
@@ -2157,20 +2157,20 @@ export function bindEvents() {
     };
 
     const closeDiffActionsMenu = () => {
-        $('#blai-diff-actions-menu').prop('hidden', true);
-        $('#blai-diff-menu-toggle').attr('aria-expanded', 'false');
+        $('#vrm-diff-actions-menu').prop('hidden', true);
+        $('#vrm-diff-menu-toggle').attr('aria-expanded', 'false');
     };
 
     const openDiffActionsMenu = () => {
-        $('#blai-diff-actions-menu').prop('hidden', false);
-        $('#blai-diff-menu-toggle').attr('aria-expanded', 'true');
+        $('#vrm-diff-actions-menu').prop('hidden', false);
+        $('#vrm-diff-menu-toggle').attr('aria-expanded', 'true');
     };
 
     const syncDiffLimitControlState = () => {
         const currentSettings = extension_settings[extensionName];
         const normalized = normalizeDiffTrackedMessageLimit(currentSettings.diffTrackedMessageLimit);
         currentSettings.diffTrackedMessageLimit = normalized;
-        $('#blai-diff-limit-input')
+        $('#vrm-diff-limit-input')
             .attr('min', minTrackedDiffMessages)
             .attr('max', maxTrackedDiffMessages)
             .val(normalized);
@@ -2179,7 +2179,7 @@ export function bindEvents() {
     const applyDiffLimitDraft = () => {
         const currentSettings = extension_settings[extensionName];
         const previous = normalizeDiffTrackedMessageLimit(currentSettings.diffTrackedMessageLimit);
-        const next = normalizeDiffTrackedMessageLimit($('#blai-diff-limit-input').val());
+        const next = normalizeDiffTrackedMessageLimit($('#vrm-diff-limit-input').val());
         currentSettings.diffTrackedMessageLimit = next;
         syncDiffLimitControlState();
         if (next === previous) return;
@@ -2192,22 +2192,22 @@ export function bindEvents() {
     };
 
     const closeDiffRelatedModal = ({ clearSelection = true } = {}) => {
-        $('#blai-diff-related-body').empty();
-        $('#blai-diff-related-modal').hide();
-        if (clearSelection) $('#blai-diff-modal-content .blai-diff-change-selected').removeClass('blai-diff-change-selected');
+        $('#vrm-diff-related-body').empty();
+        $('#vrm-diff-related-modal').hide();
+        if (clearSelection) $('#vrm-diff-modal-content .vrm-diff-change-selected').removeClass('vrm-diff-change-selected');
     };
 
     const syncDiffRelatedModeState = () => {
         const enabled = runtimeState.diffRelatedRuleMode === true;
-        $('#blai-diff-modal').toggleClass('blai-diff-related-mode', enabled);
-        $('#blai-diff-related-mode-icon').attr('class', enabled ? 'fa-solid fa-crosshairs blai-related-active-icon' : 'fa-solid fa-crosshairs');
-        $('#blai-diff-related-mode-text').text(enabled ? '相关规则：开启' : '相关规则：关闭');
-        $('#blai-diff-related-mode-toggle').attr('title', enabled ? '关闭相关规则模式' : '点击差异文本后推测相关规则');
+        $('#vrm-diff-modal').toggleClass('vrm-diff-related-mode', enabled);
+        $('#vrm-diff-related-mode-icon').attr('class', enabled ? 'fa-solid fa-crosshairs vrm-related-active-icon' : 'fa-solid fa-crosshairs');
+        $('#vrm-diff-related-mode-text').text(enabled ? '相关规则：开启' : '相关规则：关闭');
+        $('#vrm-diff-related-mode-toggle').attr('title', enabled ? '关闭相关规则模式' : '点击差异文本后推测相关规则');
         if (!enabled) closeDiffRelatedModal();
     };
 
     const readDiffChangeNumber = (element, name) => {
-        const value = Number(element?.getAttribute?.(`data-blai-${name}`));
+        const value = Number(element?.getAttribute?.(`data-vrm-${name}`));
         return Number.isFinite(value) ? value : null;
     };
 
@@ -2218,7 +2218,7 @@ export function bindEvents() {
                 node = node[direction];
                 continue;
             }
-            if (node.nodeType === Node.ELEMENT_NODE && node.matches?.('del.blai-diff-change, ins.blai-diff-change')) return node;
+            if (node.nodeType === Node.ELEMENT_NODE && node.matches?.('del.vrm-diff-change, ins.vrm-diff-change')) return node;
             return null;
         }
         return null;
@@ -2236,7 +2236,7 @@ export function bindEvents() {
         const pair = getDiffComparisonForMessage(index);
         if (!pair || !element) return null;
 
-        const clickedType = element.getAttribute('data-blai-diff-type') || (element.tagName === 'DEL' ? 'delete' : 'insert');
+        const clickedType = element.getAttribute('data-vrm-diff-type') || (element.tagName === 'DEL' ? 'delete' : 'insert');
         const clickedText = String(element.textContent || '');
         const previousChange = getAdjacentDiffChangeElement(element, 'previousSibling');
         const nextChange = getAdjacentDiffChangeElement(element, 'nextSibling');
@@ -2274,17 +2274,17 @@ export function bindEvents() {
     };
 
     const renderRelatedRulesModal = (change, candidates) => {
-        const $modal = $('#blai-diff-related-modal');
-        const $body = $('#blai-diff-related-body');
+        const $modal = $('#vrm-diff-related-modal');
+        const $body = $('#vrm-diff-related-body');
         if (!$modal.length || !$body.length) return;
         const clickedText = change?.clickedText ? escapeHtml(change.clickedText).slice(0, 120) : '（空）';
         if (!Array.isArray(candidates) || candidates.length === 0) {
             $body.html(`
-                <div class="blai-diff-related-head">
+                <div class="vrm-diff-related-head">
                     <strong><i class="fa-solid fa-crosshairs"></i> 未找到明显相关规则</strong>
                     <span>点击文本：${clickedText}</span>
                 </div>
-                <div class="blai-diff-related-note">这是相关规则推测，不保证为实际触发规则。</div>
+                <div class="vrm-diff-related-note">这是相关规则推测，不保证为实际触发规则。</div>
             `);
             $modal.css('display', 'flex');
             return;
@@ -2295,24 +2295,24 @@ export function bindEvents() {
                 ? candidate.reasons.slice(0, 2).join('，')
                 : '相关文本命中';
             return `
-                <button type="button" class="blai-diff-related-candidate" data-rule-index="${candidate.ruleIndex}" data-subrule-index="${candidate.subRuleIndex}">
-                    <span class="blai-diff-related-candidate-main">
-                        <span class="blai-tag blai-badge-compact">${escapeHtml(candidate.modeLabel || candidate.mode || '规则')}</span>
+                <button type="button" class="vrm-diff-related-candidate" data-rule-index="${candidate.ruleIndex}" data-subrule-index="${candidate.subRuleIndex}">
+                    <span class="vrm-diff-related-candidate-main">
+                        <span class="vrm-tag vrm-badge-compact">${escapeHtml(candidate.modeLabel || candidate.mode || '规则')}</span>
                         <strong>${escapeHtml(candidate.groupName || `合集 ${candidate.ruleIndex + 1}`)}</strong>
                     </span>
-                    <span class="blai-diff-related-candidate-preview">${escapeHtml(summarizeCandidateTargets(candidate))}</span>
-                    <span class="blai-diff-related-candidate-reason">${escapeHtml(reasons)} · 分数 ${Math.round(candidate.score)}</span>
+                    <span class="vrm-diff-related-candidate-preview">${escapeHtml(summarizeCandidateTargets(candidate))}</span>
+                    <span class="vrm-diff-related-candidate-reason">${escapeHtml(reasons)} · 分数 ${Math.round(candidate.score)}</span>
                 </button>
             `;
         }).join('');
 
         $body.html(`
-            <div class="blai-diff-related-head">
+            <div class="vrm-diff-related-head">
                 <strong><i class="fa-solid fa-crosshairs"></i> 可能相关规则</strong>
                 <span>点击文本：${clickedText}</span>
             </div>
-            <div class="blai-diff-related-note">相关规则推测，不保证为实际触发规则。最多显示 10 条。</div>
-            <div class="blai-diff-related-list">${items}</div>
+            <div class="vrm-diff-related-note">相关规则推测，不保证为实际触发规则。最多显示 10 条。</div>
+            <div class="vrm-diff-related-list">${items}</div>
         `);
         $modal.css('display', 'flex');
     };
@@ -2329,23 +2329,23 @@ export function bindEvents() {
         const isFullMode = mode === 'full';
         const nextText = isFullMode ? '切回片段' : '全文模式';
         const nextTitle = isFullMode ? '切回片段模式' : '切换到全文模式';
-        $('#blai-diff-mode-text').text(nextText);
-        $('#blai-diff-mode-icon').attr('class', isFullMode ? 'fa-solid fa-list-ul' : 'fa-solid fa-file-lines');
-        $('#blai-diff-mode-toggle').attr('title', nextTitle).attr('aria-label', nextTitle);
+        $('#vrm-diff-mode-text').text(nextText);
+        $('#vrm-diff-mode-icon').attr('class', isFullMode ? 'fa-solid fa-list-ul' : 'fa-solid fa-file-lines');
+        $('#vrm-diff-mode-toggle').attr('title', nextTitle).attr('aria-label', nextTitle);
     };
 
     const syncDiffPositionMenuState = (settings) => {
         const shouldExposeTopButton = settings.diffButtonInExtraMenu === true;
-        $('#blai-diff-menu-pos-icon').attr('class', shouldExposeTopButton ? 'fa-solid fa-thumbtack' : 'fa-solid fa-ellipsis');
-        $('#blai-diff-menu-pos-text').text(shouldExposeTopButton ? '顶部按钮：外显' : '顶部按钮：收纳');
-        $('#blai-diff-menu-pos-toggle').attr('title', shouldExposeTopButton ? '将顶部按钮恢复为外显' : '将顶部按钮收纳进菜单');
+        $('#vrm-diff-menu-pos-icon').attr('class', shouldExposeTopButton ? 'fa-solid fa-thumbtack' : 'fa-solid fa-ellipsis');
+        $('#vrm-diff-menu-pos-text').text(shouldExposeTopButton ? '顶部按钮：外显' : '顶部按钮：收纳');
+        $('#vrm-diff-menu-pos-toggle').attr('title', shouldExposeTopButton ? '将顶部按钮恢复为外显' : '将顶部按钮收纳进菜单');
     };
 
     const syncDiffBottomMenuState = (settings) => {
         const isBottomVisible = settings.showBottomDiffButton !== false;
-        $('#blai-diff-menu-bottom-icon').attr('class', isBottomVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye');
-        $('#blai-diff-menu-bottom-text').text(isBottomVisible ? '尾部按钮：隐藏' : '尾部按钮：显示');
-        $('#blai-diff-menu-bottom-toggle').attr('title', isBottomVisible ? '隐藏消息尾部按钮' : '显示消息尾部按钮');
+        $('#vrm-diff-menu-bottom-icon').attr('class', isBottomVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye');
+        $('#vrm-diff-menu-bottom-text').text(isBottomVisible ? '尾部按钮：隐藏' : '尾部按钮：显示');
+        $('#vrm-diff-menu-bottom-toggle').attr('title', isBottomVisible ? '隐藏消息尾部按钮' : '显示消息尾部按钮');
     };
 
     const syncDiffPreferenceMenuState = () => {
@@ -2358,17 +2358,17 @@ export function bindEvents() {
     syncDiffLimitControlState();
 
     const syncDiffRevertToggleState = (msg) => {
-        const isReverted = msg?.__blai_is_reverted === true;
+        const isReverted = msg?.__vrm_is_reverted === true;
         const revertTitle = isReverted ? '重新净化文本' : '撤回净化并保护原文';
-        $('#blai-diff-revert-icon').attr('class', isReverted ? 'fas fa-wand-magic-sparkles' : 'fas fa-rotate-left');
-        $('#blai-diff-revert-text').text(isReverted ? '重新净化' : '撤回净化');
-        $('#blai-diff-revert-toggle').attr('title', revertTitle);
-        $('#blai-diff-mode-toggle').toggle(!isReverted);
+        $('#vrm-diff-revert-icon').attr('class', isReverted ? 'fas fa-wand-magic-sparkles' : 'fas fa-rotate-left');
+        $('#vrm-diff-revert-text').text(isReverted ? '重新净化' : '撤回净化');
+        $('#vrm-diff-revert-toggle').attr('title', revertTitle);
+        $('#vrm-diff-mode-toggle').toggle(!isReverted);
     };
 
     const syncDiffAiRewriteButtonState = (msg) => {
-        const isReverted = msg?.__blai_is_reverted === true;
-        $('#blai-diff-ai-rewrite').attr('title', isReverted ? '请先重新净化文本' : '对当前消息手动执行 AI 改写');
+        const isReverted = msg?.__vrm_is_reverted === true;
+        $('#vrm-diff-ai-rewrite').attr('title', isReverted ? '请先重新净化文本' : '对当前消息手动执行 AI 改写');
     };
 
     const refreshMessageAfterRevertToggle = (index, msg) => {
@@ -2376,7 +2376,7 @@ export function bindEvents() {
         if (!Number.isInteger(index) || index < 0 || !Array.isArray(chat) || !msg) return;
         const finishRefresh = () => {
             const messageNode = getMessageDomNode(index);
-            if (messageNode && msg.__blai_is_reverted !== true) purifyDOM(messageNode);
+            if (messageNode && msg.__vrm_is_reverted !== true) purifyDOM(messageNode);
             injectDiffButtons([index]);
             renderDiffModalContent(index);
         };
@@ -2400,9 +2400,9 @@ export function bindEvents() {
         const msg = getDiffMessageByIndex(index);
         if (!Number.isInteger(index) || index < 0 || !msg || typeof msg !== 'object') return;
 
-        if (msg.__blai_is_reverted === true) {
+        if (msg.__vrm_is_reverted === true) {
             const sourceMes = typeof msg.mes === 'string' ? msg.mes : '';
-            delete msg.__blai_is_reverted;
+            delete msg.__vrm_is_reverted;
             cleanseMessageDataAtIndex(index, { diffSourceMes: sourceMes, allowManualFinal: true });
         } else {
             const originalMes = getCurrentMessageOriginalMes(msg);
@@ -2410,7 +2410,7 @@ export function bindEvents() {
                 msg.mes = originalMes;
                 setCurrentSwipeText(msg, originalMes);
             }
-            msg.__blai_is_reverted = true;
+            msg.__vrm_is_reverted = true;
             clearTrackedDiffEntry(index);
         }
 
@@ -2425,7 +2425,7 @@ export function bindEvents() {
             showToast('未找到可改写的助手消息');
             return;
         }
-        if (msg.__blai_is_reverted === true) {
+        if (msg.__vrm_is_reverted === true) {
             showToast('请先重新净化文本，再执行 AI 改写');
             return;
         }
@@ -2439,22 +2439,22 @@ export function bindEvents() {
         closeDiffRelatedModal();
         runtimeState.diffRelatedRuleMode = false;
         syncDiffRelatedModeState();
-        $('#blai-diff-modal').hide();
+        $('#vrm-diff-modal').hide();
     };
 
     function renderDiffModalContent(index) {
         const settings = extension_settings[extensionName];
         const mode = settings.diffViewMode || 'snippet';
         const msg = getDiffMessageByIndex(index);
-        const contentEl = $('#blai-diff-modal-content');
+        const contentEl = $('#vrm-diff-modal-content');
         closeDiffRelatedModal();
         syncDiffPreferenceMenuState();
         syncDiffModeToggleState(mode);
         syncDiffRevertToggleState(msg);
         syncDiffAiRewriteButtonState(msg);
 
-        if (msg?.__blai_is_reverted) {
-            contentEl.html('<div class="blai-diff-empty"><i class="fas fa-shield-halved" style="margin-right:6px;"></i>此消息已撤回并处于免净化保护状态，当前显示为原始文本。点击 <i class="fas fa-wand-magic-sparkles blai-diff-inline-icon"></i> 重新净化文本。</div>');
+        if (msg?.__vrm_is_reverted) {
+            contentEl.html('<div class="vrm-diff-empty"><i class="fas fa-shield-halved" style="margin-right:6px;"></i>此消息已撤回并处于免净化保护状态，当前显示为原始文本。点击 <i class="fas fa-wand-magic-sparkles vrm-diff-inline-icon"></i> 重新净化文本。</div>');
             return;
         }
 
@@ -2463,48 +2463,48 @@ export function bindEvents() {
         const cached = getDiffSnippetsForMessage(index);
 
         if (state.status !== 'ready') {
-            contentEl.html('<div class="blai-diff-loading"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>');
+            contentEl.html('<div class="vrm-diff-loading"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>');
             return;
         }
         if (mode === 'full') {
-            contentEl.html(`<div class="blai-diff-full-text">${cached.fullDiff || '<div class="blai-diff-empty">当前消息未触发差异。</div>'}</div>`);
+            contentEl.html(`<div class="vrm-diff-full-text">${cached.fullDiff || '<div class="vrm-diff-empty">当前消息未触发差异。</div>'}</div>`);
         } else {
-            contentEl.html(cached.snippets.length > 0 ? cached.snippets.join('<hr class="blai-diff-divider">') : '<div class="blai-diff-empty">当前消息未触发差异。</div>');
+            contentEl.html(cached.snippets.length > 0 ? cached.snippets.join('<hr class="vrm-diff-divider">') : '<div class="vrm-diff-empty">当前消息未触发差异。</div>');
         }
     }
 
     runtimeState.diffModalRefresh = (index) => {
         if (runtimeState.currentDiffIndex === undefined) return;
         if (index !== undefined && index !== runtimeState.currentDiffIndex) return;
-        if ($('#blai-diff-modal').is(':visible')) renderDiffModalContent(runtimeState.currentDiffIndex);
+        if ($('#vrm-diff-modal').is(':visible')) renderDiffModalContent(runtimeState.currentDiffIndex);
     };
 
-    $(document).off('click', '.blai-diff-btn').on('click', '.blai-diff-btn', function() {
+    $(document).off('click', '.vrm-diff-btn').on('click', '.vrm-diff-btn', function() {
         const index = Number($(this).attr('data-index'));
         if (!Number.isInteger(index) || index < 0) return;
         runtimeState.currentDiffIndex = index;
         closeDiffRelatedModal();
         renderDiffModalContent(index);
         closeDiffActionsMenu();
-        $('#blai-diff-modal').css('display', 'flex');
+        $('#vrm-diff-modal').css('display', 'flex');
     });
 
-    $(document).off('click', '#blai-diff-menu-toggle').on('click', '#blai-diff-menu-toggle', function(e) {
+    $(document).off('click', '#vrm-diff-menu-toggle').on('click', '#vrm-diff-menu-toggle', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        if ($('#blai-diff-actions-menu').prop('hidden')) openDiffActionsMenu();
+        if ($('#vrm-diff-actions-menu').prop('hidden')) openDiffActionsMenu();
         else closeDiffActionsMenu();
     });
 
-    $(document).off('click', '#blai-diff-actions-menu').on('click', '#blai-diff-actions-menu', function(e) {
+    $(document).off('click', '#vrm-diff-actions-menu').on('click', '#vrm-diff-actions-menu', function(e) {
         e.stopPropagation();
     });
 
-    $(document).off('click.blai-diff-menu').on('click.blai-diff-menu', function(e) {
-        if ($(e.target).closest('#blai-diff-menu-toggle, #blai-diff-actions-menu').length === 0) closeDiffActionsMenu();
+    $(document).off('click.vrm-diff-menu').on('click.vrm-diff-menu', function(e) {
+        if ($(e.target).closest('#vrm-diff-menu-toggle, #vrm-diff-actions-menu').length === 0) closeDiffActionsMenu();
     });
 
-    $(document).off('click', '#blai-diff-menu-pos-toggle').on('click', '#blai-diff-menu-pos-toggle', function() {
+    $(document).off('click', '#vrm-diff-menu-pos-toggle').on('click', '#vrm-diff-menu-pos-toggle', function() {
         const settings = extension_settings[extensionName];
         settings.diffButtonInExtraMenu = !settings.diffButtonInExtraMenu;
         saveSettingsDebounced();
@@ -2513,7 +2513,7 @@ export function bindEvents() {
         injectDiffButtons();
     });
 
-    $(document).off('click', '#blai-diff-menu-bottom-toggle').on('click', '#blai-diff-menu-bottom-toggle', function() {
+    $(document).off('click', '#vrm-diff-menu-bottom-toggle').on('click', '#vrm-diff-menu-bottom-toggle', function() {
         const settings = extension_settings[extensionName];
         settings.showBottomDiffButton = settings.showBottomDiffButton === false;
         saveSettingsDebounced();
@@ -2522,14 +2522,14 @@ export function bindEvents() {
         injectDiffButtons();
     });
 
-    $(document).off('click', '#blai-diff-mode-toggle').on('click', '#blai-diff-mode-toggle', function() {
+    $(document).off('click', '#vrm-diff-mode-toggle').on('click', '#vrm-diff-mode-toggle', function() {
         const settings = extension_settings[extensionName];
         settings.diffViewMode = settings.diffViewMode === 'full' ? 'snippet' : 'full';
         saveSettingsDebounced();
         if (runtimeState.currentDiffIndex !== undefined) renderDiffModalContent(runtimeState.currentDiffIndex);
     });
 
-    $(document).off('click', '#blai-diff-related-mode-toggle').on('click', '#blai-diff-related-mode-toggle', function(e) {
+    $(document).off('click', '#vrm-diff-related-mode-toggle').on('click', '#vrm-diff-related-mode-toggle', function(e) {
         e.preventDefault();
         e.stopPropagation();
         runtimeState.diffRelatedRuleMode = runtimeState.diffRelatedRuleMode !== true;
@@ -2537,9 +2537,9 @@ export function bindEvents() {
         closeDiffActionsMenu();
     });
 
-    $(document).off('change', '#blai-diff-limit-input').on('change', '#blai-diff-limit-input', applyDiffLimitDraft);
+    $(document).off('change', '#vrm-diff-limit-input').on('change', '#vrm-diff-limit-input', applyDiffLimitDraft);
 
-    $(document).off('keydown', '#blai-diff-limit-input').on('keydown', '#blai-diff-limit-input', function(e) {
+    $(document).off('keydown', '#vrm-diff-limit-input').on('keydown', '#vrm-diff-limit-input', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             applyDiffLimitDraft();
@@ -2549,19 +2549,19 @@ export function bindEvents() {
         }
     });
 
-    $(document).off('click', '#blai-diff-revert-toggle').on('click', '#blai-diff-revert-toggle', () => toggleCurrentDiffRevert());
-    $(document).off('click', '#blai-diff-ai-rewrite').on('click', '#blai-diff-ai-rewrite', () => triggerCurrentDiffAiRewrite());
+    $(document).off('click', '#vrm-diff-revert-toggle').on('click', '#vrm-diff-revert-toggle', () => toggleCurrentDiffRevert());
+    $(document).off('click', '#vrm-diff-ai-rewrite').on('click', '#vrm-diff-ai-rewrite', () => triggerCurrentDiffAiRewrite());
 
-    $(document).off('click', '#blai-diff-modal-content del.blai-diff-change, #blai-diff-modal-content ins.blai-diff-change').on('click', '#blai-diff-modal-content del.blai-diff-change, #blai-diff-modal-content ins.blai-diff-change', function(e) {
+    $(document).off('click', '#vrm-diff-modal-content del.vrm-diff-change, #vrm-diff-modal-content ins.vrm-diff-change').on('click', '#vrm-diff-modal-content del.vrm-diff-change, #vrm-diff-modal-content ins.vrm-diff-change', function(e) {
         if (runtimeState.diffRelatedRuleMode !== true) return;
         e.preventDefault();
         e.stopPropagation();
-        $('#blai-diff-modal-content .blai-diff-change').removeClass('blai-diff-change-selected');
-        $(this).addClass('blai-diff-change-selected');
+        $('#vrm-diff-modal-content .vrm-diff-change').removeClass('vrm-diff-change-selected');
+        $(this).addClass('vrm-diff-change-selected');
         showRelatedRulesForDiffElement(this);
     });
 
-    $(document).off('click', '.blai-diff-related-candidate').on('click', '.blai-diff-related-candidate', function(e) {
+    $(document).off('click', '.vrm-diff-related-candidate').on('click', '.vrm-diff-related-candidate', function(e) {
         e.preventDefault();
         e.stopPropagation();
         const ruleIndex = Number($(this).attr('data-rule-index'));
@@ -2574,20 +2574,20 @@ export function bindEvents() {
         openSingleRuleModal(subRuleIndex, { hideEditModal: true });
     });
 
-    $(document).off('click', '#blai-diff-related-close').on('click', '#blai-diff-related-close', (e) => {
+    $(document).off('click', '#vrm-diff-related-close').on('click', '#vrm-diff-related-close', (e) => {
         e.preventDefault();
         e.stopPropagation();
         closeDiffRelatedModal();
     });
-    $(document).off('click', '#blai-diff-related-modal').on('click', '#blai-diff-related-modal', function(e) {
-        if (e.target && e.target.id === 'blai-diff-related-modal') closeDiffRelatedModal();
+    $(document).off('click', '#vrm-diff-related-modal').on('click', '#vrm-diff-related-modal', function(e) {
+        if (e.target && e.target.id === 'vrm-diff-related-modal') closeDiffRelatedModal();
     });
 
-    $(document).off('click', '#blai-diff-modal-close').on('click', '#blai-diff-modal-close', () => closeDiffModal());
-    $(document).off('click', '#blai-diff-modal').on('click', '#blai-diff-modal', function(e) { if (e.target && e.target.id === 'blai-diff-modal') closeDiffModal(); });
+    $(document).off('click', '#vrm-diff-modal-close').on('click', '#vrm-diff-modal-close', () => closeDiffModal());
+    $(document).off('click', '#vrm-diff-modal').on('click', '#vrm-diff-modal', function(e) { if (e.target && e.target.id === 'vrm-diff-modal') closeDiffModal(); });
     
-    $(document).off('click', '#blai-open-new-rule-btn').on('click', '#blai-open-new-rule-btn', () => openEditModal(-1));
-    $(document).off('click keydown', '.blai-rule-risk-indicator').on('click keydown', '.blai-rule-risk-indicator', function(event) {
+    $(document).off('click', '#vrm-open-new-rule-btn').on('click', '#vrm-open-new-rule-btn', () => openEditModal(-1));
+    $(document).off('click keydown', '.vrm-rule-risk-indicator').on('click keydown', '.vrm-rule-risk-indicator', function(event) {
         if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
         event.preventDefault();
         event.stopPropagation();
@@ -2600,8 +2600,8 @@ export function bindEvents() {
         if (!isRuleActivationWarningEnabled(rule) || !warning) return;
         showRiskInfoModal(warning);
     });
-    $(document).off('click', '.blai-rule-edit').on('click', '.blai-rule-edit', function() { openEditModal($(this).data('index')); });
-    $(document).off('click', '.blai-rule-transfer').on('click', '.blai-rule-transfer', function() {
+    $(document).off('click', '.vrm-rule-edit').on('click', '.vrm-rule-edit', function() { openEditModal($(this).data('index')); });
+    $(document).off('click', '.vrm-rule-transfer').on('click', '.vrm-rule-transfer', function() {
         const index = Number($(this).data('index'));
         const rules = extension_settings[extensionName].rules || [];
         if (!Number.isInteger(index) || index < 0 || index >= rules.length) return;
@@ -2609,7 +2609,7 @@ export function bindEvents() {
         else openTransferModal(index);
     });
 
-    $(document).off('click', '.blai-rule-move-up').on('click', '.blai-rule-move-up', function() {
+    $(document).off('click', '.vrm-rule-move-up').on('click', '.vrm-rule-move-up', function() {
         const index = Number($(this).data('index'));
         const rules = extension_settings[extensionName].rules || [];
         if (!Number.isInteger(index) || index < 0 || index >= rules.length) return;
@@ -2621,7 +2621,7 @@ export function bindEvents() {
         renderTagsPreserveBatchSelection();
     });
 
-    $(document).off('click', '.blai-rule-move-down').on('click', '.blai-rule-move-down', function() {
+    $(document).off('click', '.vrm-rule-move-down').on('click', '.vrm-rule-move-down', function() {
         const index = Number($(this).data('index'));
         const rules = extension_settings[extensionName].rules || [];
         if (!Number.isInteger(index) || index < 0 || index >= rules.length) return;
@@ -2633,7 +2633,7 @@ export function bindEvents() {
         renderTagsPreserveBatchSelection();
     });
 
-    $(document).off('change', '.blai-rule-toggle').on('change', '.blai-rule-toggle', async function() {
+    $(document).off('change', '.vrm-rule-toggle').on('change', '.vrm-rule-toggle', async function() {
         const rules = extension_settings[extensionName].rules || [];
         const index = Number($(this).data('index'));
         if (!Number.isInteger(index) || index < 0 || index >= rules.length) return;
@@ -2657,7 +2657,7 @@ export function bindEvents() {
         performGlobalCleanse();
     });
 
-    $(document).off('click', '.blai-rule-del').on('click', '.blai-rule-del', function() {
+    $(document).off('click', '.vrm-rule-del').on('click', '.vrm-rule-del', function() {
         if (!confirm('确定要删除这个规则分组吗？删除后无法恢复。')) return; 
         const rules = extension_settings[extensionName].rules || [];
         const index = Number($(this).data('index'));
@@ -2671,30 +2671,30 @@ export function bindEvents() {
         }
     });
 
-    $(document).off('click', '#blai-add-subrule-btn').on('click', '#blai-add-subrule-btn', () => openSingleRuleModal(-1));
+    $(document).off('click', '#vrm-add-subrule-btn').on('click', '#vrm-add-subrule-btn', () => openSingleRuleModal(-1));
 
-    $(document).off('change', '.blai-subrule-toggle').on('change', '.blai-subrule-toggle', function() {
+    $(document).off('change', '.vrm-subrule-toggle').on('change', '.vrm-subrule-toggle', function() {
         const index = Number($(this).data('index'));
         if (!Number.isInteger(index) || index < 0 || index >= runtimeState.currentEditingSubrules.length) return;
         runtimeState.currentEditingSubrules[index].enabled = $(this).prop('checked');
         renderSubrulesToModal();
     });
 
-    $(document).off('click', '.blai-move-subrule-up-btn').on('click', '.blai-move-subrule-up-btn', function() {
+    $(document).off('click', '.vrm-move-subrule-up-btn').on('click', '.vrm-move-subrule-up-btn', function() {
         const index = Number($(this).data('index'));
         if (index <= 0 || index >= runtimeState.currentEditingSubrules.length) return;
         [runtimeState.currentEditingSubrules[index - 1], runtimeState.currentEditingSubrules[index]] = [runtimeState.currentEditingSubrules[index], runtimeState.currentEditingSubrules[index - 1]];
         renderSubrulesToModal();
     });
 
-    $(document).off('click', '.blai-move-subrule-down-btn').on('click', '.blai-move-subrule-down-btn', function() {
+    $(document).off('click', '.vrm-move-subrule-down-btn').on('click', '.vrm-move-subrule-down-btn', function() {
         const index = Number($(this).data('index'));
         if (index < 0 || index >= runtimeState.currentEditingSubrules.length - 1) return;
         [runtimeState.currentEditingSubrules[index], runtimeState.currentEditingSubrules[index + 1]] = [runtimeState.currentEditingSubrules[index + 1], runtimeState.currentEditingSubrules[index]];
         renderSubrulesToModal();
     });
 
-    $(document).off('click', '.blai-del-subrule-btn').on('click', '.blai-del-subrule-btn', function() {
+    $(document).off('click', '.vrm-del-subrule-btn').on('click', '.vrm-del-subrule-btn', function() {
         const index = Number($(this).data('index'));
         if (!Number.isInteger(index) || index < 0 || index >= runtimeState.currentEditingSubrules.length) return;
         if (!confirm('确定要删除该映射规则吗？')) return;
@@ -2703,11 +2703,11 @@ export function bindEvents() {
         showToast('词条删除成功');
     });
 
-    $(document).off('click', '.blai-edit-subrule-btn').on('click', '.blai-edit-subrule-btn', function() {
+    $(document).off('click', '.vrm-edit-subrule-btn').on('click', '.vrm-edit-subrule-btn', function() {
         openSingleRuleModal($(this).data('index'));
     });
 
-    $(document).off('click', '.blai-remark-subrule-btn').on('click', '.blai-remark-subrule-btn', function(e) {
+    $(document).off('click', '.vrm-remark-subrule-btn').on('click', '.vrm-remark-subrule-btn', function(e) {
         e.preventDefault();
         const index = $(this).data('index');
         const sub = runtimeState.currentEditingSubrules[index];
@@ -2719,45 +2719,45 @@ export function bindEvents() {
         }
     });
 
-    $(document).off('change', '#blai-modal-sub-mode').on('change', '#blai-modal-sub-mode', function() {
+    $(document).off('change', '#vrm-modal-sub-mode').on('change', '#vrm-modal-sub-mode', function() {
         applySubruleModeUI(String($(this).val() || 'simple'));
     });
 
-    $(document).off('change', '#blai-modal-sub-rewrite-mode').on('change', '#blai-modal-sub-rewrite-mode', function() {
+    $(document).off('change', '#vrm-modal-sub-rewrite-mode').on('change', '#vrm-modal-sub-rewrite-mode', function() {
         applySubruleRewriteModeUI();
     });
 
-    $(document).off('input', '#blai-modal-sub-target').on('input', '#blai-modal-sub-target', () => {
-        if ($('#blai-modal-sub-mode').val() === 'regex') validateRegexTargetField();
+    $(document).off('input', '#vrm-modal-sub-target').on('input', '#vrm-modal-sub-target', () => {
+        if ($('#vrm-modal-sub-mode').val() === 'regex') validateRegexTargetField();
     });
 
-    $(document).off('click', '#blai-modal-sub-regex-recognize').on('click', '#blai-modal-sub-regex-recognize', () => {
+    $(document).off('click', '#vrm-modal-sub-regex-recognize').on('click', '#vrm-modal-sub-regex-recognize', () => {
         const result = recognizeRegexReplacementInput();
         if (!result.ok) {
             showToast('留空会直接删除，直接保存条目即可。');
-            $('#blai-modal-sub-rep').trigger('focus');
+            $('#vrm-modal-sub-rep').trigger('focus');
             return;
         }
     });
 
-    $(document).off('click', '.blai-regex-replacement-chip-main').on('click', '.blai-regex-replacement-chip-main', function() {
+    $(document).off('click', '.vrm-regex-replacement-chip-main').on('click', '.vrm-regex-replacement-chip-main', function() {
         if (startEditingRegexReplacementInput($(this).data('index'))) {
-            $('#blai-modal-sub-rep').trigger('focus');
+            $('#vrm-modal-sub-rep').trigger('focus');
         }
     });
 
-    $(document).off('click', '.blai-regex-replacement-chip-remove').on('click', '.blai-regex-replacement-chip-remove', function(e) {
+    $(document).off('click', '.vrm-regex-replacement-chip-remove').on('click', '.vrm-regex-replacement-chip-remove', function(e) {
         e.preventDefault();
         e.stopPropagation();
         removeRegexReplacementInput($(this).data('index'));
     });
 
-    $(document).off('click', '#blai-modal-sub-save').on('click', '#blai-modal-sub-save', function() {
-        const mode = String($('#blai-modal-sub-mode').val() || 'simple');
-        const rewriteMode = $('#blai-modal-sub-rewrite-mode').val() === 'ai' ? 'ai' : 'program';
-        const tStr = String($('#blai-modal-sub-target').val() || '');
-        const remarkStr = String($('#blai-modal-sub-remark').val() || '').trim();
-        const aiPromptTemplate = String($('#blai-modal-sub-ai-prompt').val() || '').trim();
+    $(document).off('click', '#vrm-modal-sub-save').on('click', '#vrm-modal-sub-save', function() {
+        const mode = String($('#vrm-modal-sub-mode').val() || 'simple');
+        const rewriteMode = $('#vrm-modal-sub-rewrite-mode').val() === 'ai' ? 'ai' : 'program';
+        const tStr = String($('#vrm-modal-sub-target').val() || '');
+        const remarkStr = String($('#vrm-modal-sub-remark').val() || '').trim();
+        const aiPromptTemplate = String($('#vrm-modal-sub-ai-prompt').val() || '').trim();
         const isDirectSearchFlow = isSearchDirectSubruleFlow();
         const isRelatedFlow = isRelatedDirectSubruleFlow();
 
@@ -2765,7 +2765,7 @@ export function bindEvents() {
             const validation = validateRegexTargetField();
             if (!validation.ok) {
                 showToast(`正则规则有误：${validation.uiMessage || formatRegexTargetError(validation.error)}`);
-                $('#blai-modal-sub-target').trigger('focus');
+                $('#vrm-modal-sub-target').trigger('focus');
                 return;
             }
         } else {
@@ -2774,7 +2774,7 @@ export function bindEvents() {
 
         if (mode === 'regex' && hasPendingRegexReplacementInput()) {
             showToast('替换框里还有未处理的内容，请先点右侧按钮。');
-            $('#blai-modal-sub-rep').trigger('focus');
+            $('#vrm-modal-sub-rep').trigger('focus');
             return;
         }
         
@@ -2783,7 +2783,7 @@ export function bindEvents() {
 
         if (targets.length === 0) {
             showToast("查找内容不能为空！");
-            $('#blai-modal-sub-target').trigger('focus');
+            $('#vrm-modal-sub-target').trigger('focus');
             return;
         }
 
@@ -2810,8 +2810,8 @@ export function bindEvents() {
         if (isDirectSearchFlow || isRelatedFlow) {
             const saveResult = saveCurrentEditingRule({ toastMessage: '条目保存成功', focusLatest: false });
             if (!saveResult.ok) return;
-            $('#blai-subrule-edit-modal').fadeOut(150, () => {
-                $('#blai-rule-edit-modal').hide();
+            $('#vrm-subrule-edit-modal').fadeOut(150, () => {
+                $('#vrm-rule-edit-modal').hide();
                 clearRuleSearchEditFlow();
                 if (isDirectSearchFlow) openRuleSearchModal();
                 else if (runtimeState.currentDiffIndex !== undefined) renderDiffModalContent(runtimeState.currentDiffIndex);
@@ -2819,56 +2819,56 @@ export function bindEvents() {
             return;
         }
 
-        $('#blai-subrule-edit-modal').fadeOut(150);
+        $('#vrm-subrule-edit-modal').fadeOut(150);
         renderSubrulesToModal();
 
         if (runtimeState.currentSubruleEditIndex === -1) {
-            const container = $('#blai-edit-subrules-container');
+            const container = $('#vrm-edit-subrules-container');
             container.scrollTop(container[0].scrollHeight);
         }
     });
 
-    $(document).off('click', '#blai-modal-sub-cancel').on('click', '#blai-modal-sub-cancel', () => {
+    $(document).off('click', '#vrm-modal-sub-cancel').on('click', '#vrm-modal-sub-cancel', () => {
         clearRegexTargetValidationState();
         if (isSearchDirectSubruleFlow() || isRelatedDirectSubruleFlow()) {
             const shouldReturnSearch = isSearchDirectSubruleFlow();
-            $('#blai-subrule-edit-modal').fadeOut(150, () => {
-                $('#blai-rule-edit-modal').hide();
+            $('#vrm-subrule-edit-modal').fadeOut(150, () => {
+                $('#vrm-rule-edit-modal').hide();
                 clearRuleSearchEditFlow();
                 if (shouldReturnSearch) openRuleSearchModal();
             });
             return;
         }
-        $('#blai-subrule-edit-modal').fadeOut(150);
+        $('#vrm-subrule-edit-modal').fadeOut(150);
     });
 
-    $(document).off('click', '#blai-edit-cancel-x').on('click', '#blai-edit-cancel-x', () => {
-        $('#blai-rule-edit-modal').hide();
+    $(document).off('click', '#vrm-edit-cancel-x').on('click', '#vrm-edit-cancel-x', () => {
+        $('#vrm-rule-edit-modal').hide();
         if (isSearchGroupEditFlow()) {
             clearRuleSearchEditFlow();
             openRuleSearchModal();
         }
     });
-    $(document).off('click', '#blai-transfer-cancel').on('click', '#blai-transfer-cancel', () => closeTransferModal());
-    $(document).off('click', '#blai-transfer-copy').on('click', '#blai-transfer-copy', () => runRuleTransfer(false));
-    $(document).off('click', '#blai-transfer-move').on('click', '#blai-transfer-move', () => runRuleTransfer(true));
-    $(document).off('click', '#blai-rule-transfer-modal').on('click', '#blai-rule-transfer-modal', function(e) {
-        if (e.target && e.target.id === 'blai-rule-transfer-modal') closeTransferModal();
+    $(document).off('click', '#vrm-transfer-cancel').on('click', '#vrm-transfer-cancel', () => closeTransferModal());
+    $(document).off('click', '#vrm-transfer-copy').on('click', '#vrm-transfer-copy', () => runRuleTransfer(false));
+    $(document).off('click', '#vrm-transfer-move').on('click', '#vrm-transfer-move', () => runRuleTransfer(true));
+    $(document).off('click', '#vrm-rule-transfer-modal').on('click', '#vrm-rule-transfer-modal', function(e) {
+        if (e.target && e.target.id === 'vrm-rule-transfer-modal') closeTransferModal();
     });
 
-    $(document).off('click', '#blai-edit-save').on('click', '#blai-edit-save', () => {
+    $(document).off('click', '#vrm-edit-save').on('click', '#vrm-edit-save', () => {
         const saveResult = saveCurrentEditingRule({ toastMessage: '合集保存成功', focusLatest: true });
         if (!saveResult.ok) return;
-        $('#blai-rule-edit-modal').hide();
+        $('#vrm-rule-edit-modal').hide();
         if (isSearchGroupEditFlow()) {
             clearRuleSearchEditFlow();
             openRuleSearchModal();
         }
     });
 
-    $(document).off('click', '#blai-deep-clean-btn').on('click', '#blai-deep-clean-btn', () => showConfirmModal(() => performDeepCleanse()));
+    $(document).off('click', '#vrm-deep-clean-btn').on('click', '#vrm-deep-clean-btn', () => showConfirmModal(() => performDeepCleanse()));
 
-    $(document).off('change', '#blai-preset-select, #blai-tools-preset-select').on('change', '#blai-preset-select, #blai-tools-preset-select', function() {
+    $(document).off('change', '#vrm-preset-select, #vrm-tools-preset-select').on('change', '#vrm-preset-select, #vrm-tools-preset-select', function() {
         const settings = extension_settings[extensionName];
         const oldPreset = settings.activePreset;
         const newPreset = $(this).val();
@@ -2881,19 +2881,19 @@ export function bindEvents() {
         }
 
         applyPresetByName(newPreset, { skipRender: true });
-        $('#blai-preset-select, #blai-tools-preset-select').val(newPreset);
+        $('#vrm-preset-select, #vrm-tools-preset-select').val(newPreset);
         renderTags();
         refreshCharacterBindingUI();
     });
 
-    $(document).off('change.blai-purifier-chat-preset-binding', '#settings_preset_openai').on('change.blai-purifier-chat-preset-binding', '#settings_preset_openai', function() {
+    $(document).off('change.vrm-purifier-chat-preset-binding', '#settings_preset_openai').on('change.vrm-purifier-chat-preset-binding', '#settings_preset_openai', function() {
         setTimeout(() => {
             applyCharacterPresetBinding(true, { skipCleanse: true });
             refreshCharacterBindingUI();
         }, 0);
     });
 
-    $(document).off('click', '#blai-default-toggle').on('click', '#blai-default-toggle', function() {
+    $(document).off('click', '#vrm-default-toggle').on('click', '#vrm-default-toggle', function() {
         const settings = extension_settings[extensionName];
         const activePreset = String(settings.activePreset || '');
         if (!activePreset) { showRiskInfoModal('请先在下拉框中选择一个净化预设。'); return; }
@@ -2904,17 +2904,17 @@ export function bindEvents() {
         showToast(isDefaultActive ? '已取消全局默认' : `已设为全局默认：${activePreset}`);
     });
 
-    $(document).off('click', '#blai-character-bind-toggle').on('click', '#blai-character-bind-toggle', function(e) {
+    $(document).off('click', '#vrm-character-bind-toggle').on('click', '#vrm-character-bind-toggle', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        const $menu = $('#blai-bind-menu');
+        const $menu = $('#vrm-bind-menu');
         const shouldOpen = $menu.prop('hidden');
         $menu.prop('hidden', !shouldOpen);
         $(this).attr('aria-expanded', String(shouldOpen));
         refreshCharacterBindingUI();
     });
 
-    $(document).off('click', '.blai-bind-menu-item').on('click', '.blai-bind-menu-item', async function(e) {
+    $(document).off('click', '.vrm-bind-menu-item').on('click', '.vrm-bind-menu-item', async function(e) {
         e.preventDefault();
         e.stopPropagation();
         if ($(this).prop('disabled')) return;
@@ -2943,8 +2943,8 @@ export function bindEvents() {
             applyPresetByName(activePreset, { skipRender: true });
             saveSettingsDebounced();
             refreshCharacterBindingUI();
-            $('#blai-bind-menu').prop('hidden', true);
-            $('#blai-character-bind-toggle').attr('aria-expanded', 'false');
+            $('#vrm-bind-menu').prop('hidden', true);
+            $('#vrm-character-bind-toggle').attr('aria-expanded', 'false');
             showToast(`已绑定：${context.name} → ${activePreset}`);
             return;
         }
@@ -2966,8 +2966,8 @@ export function bindEvents() {
             applyPresetByName(activePreset, { skipRender: true });
             saveSettingsDebounced();
             refreshCharacterBindingUI();
-            $('#blai-bind-menu').prop('hidden', true);
-            $('#blai-character-bind-toggle').attr('aria-expanded', 'false');
+            $('#vrm-bind-menu').prop('hidden', true);
+            $('#vrm-character-bind-toggle').attr('aria-expanded', 'false');
             showToast(`已绑定：对话补全预设 ${chatCompletionPresetName} → ${activePreset}`);
             return;
         }
@@ -2988,15 +2988,15 @@ export function bindEvents() {
             applyCharacterPresetBinding(true);
             saveSettingsDebounced();
             refreshCharacterBindingUI();
-            $('#blai-bind-menu').prop('hidden', true);
-            $('#blai-character-bind-toggle').attr('aria-expanded', 'false');
+            $('#vrm-bind-menu').prop('hidden', true);
+            $('#vrm-character-bind-toggle').attr('aria-expanded', 'false');
             showToast(removedRolePreset ? '已取消当前角色绑定，改为跟随全局默认' : '已取消当前对话补全预设绑定，改为跟随全局默认');
             return;
         }
 
     });
 
-    $(document).off('click', '#blai-preset-rename').on('click', '#blai-preset-rename', function() {
+    $(document).off('click', '#vrm-preset-rename').on('click', '#vrm-preset-rename', function() {
         const settings = extension_settings[extensionName];
         const oldName = settings.activePreset;
         if (!oldName) { alert("当前为临时规则，请先新建存档。"); return; }
@@ -3019,7 +3019,7 @@ export function bindEvents() {
         showToast(`已重命名为：${newName}`);
     });
 
-    $(document).off('click', '#blai-preset-delete').on('click', '#blai-preset-delete', function() {
+    $(document).off('click', '#vrm-preset-delete').on('click', '#vrm-preset-delete', function() {
         const settings = extension_settings[extensionName];
         const name = settings.activePreset;
         if (!name) { showToast('当前为临时规则，没有可删除的存档'); return; }
@@ -3043,7 +3043,7 @@ export function bindEvents() {
         }
     });
 
-    $(document).off('click', '#blai-preset-new').on('click', '#blai-preset-new', function() {
+    $(document).off('click', '#vrm-preset-new').on('click', '#vrm-preset-new', function() {
         const settings = extension_settings[extensionName];
         const name = prompt("输入新存档名称：");
         if (!name) return;
@@ -3058,7 +3058,7 @@ export function bindEvents() {
         showToast(`已新建存档：${name}`);
     });
 
-    $(document).off('click', '#blai-preset-save').on('click', '#blai-preset-save', function() {
+    $(document).off('click', '#vrm-preset-save').on('click', '#vrm-preset-save', function() {
         const settings = extension_settings[extensionName];
         if (!settings.activePreset) { showToast("当前为临时规则，请点击“新建”保存为新存档。"); return; }
         settings.presets[settings.activePreset] = buildCurrentPresetEntry(settings.rules);
@@ -3066,7 +3066,7 @@ export function bindEvents() {
         showToast("保存成功");
     });
 
-    $(document).off('click', '#blai-preset-export').on('click', '#blai-preset-export', function() {
+    $(document).off('click', '#vrm-preset-export').on('click', '#vrm-preset-export', function() {
         const settings = extension_settings[extensionName];
         const data = JSON.stringify(buildPresetExportPayload(settings), null, 2);
         const blob = new Blob([data], { type: "application/json" });
@@ -3079,7 +3079,7 @@ export function bindEvents() {
         showToast(`已导出：${a.download}`);
     });
 
-    $(document).off('click', '#blai-preset-import').on('click', '#blai-preset-import', function() {
+    $(document).off('click', '#vrm-preset-import').on('click', '#vrm-preset-import', function() {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json,application/json';
@@ -3126,14 +3126,14 @@ export function bindEvents() {
         window.setTimeout(cleanupInput, 120000);
     });
 
-    $(document).off('click', '#blai-import-only').on('click', '#blai-import-only', () => importPresetOnly());
-    $(document).off('click', '#blai-import-switch').on('click', '#blai-import-switch', () => importPresetAndSwitch());
-    $(document).off('click', '#blai-import-preview').on('click', '#blai-import-preview', () => importPresetAsTemporaryPreview());
-    $(document).off('click', '#blai-import-choice-close').on('click', '#blai-import-choice-close', () => closeImportChoiceModal());
-    $(document).off('click', '#blai-preset-import-choice-modal').on('click', '#blai-preset-import-choice-modal', function(e) {
-        if (e.target && e.target.id === 'blai-preset-import-choice-modal') closeImportChoiceModal();
+    $(document).off('click', '#vrm-import-only').on('click', '#vrm-import-only', () => importPresetOnly());
+    $(document).off('click', '#vrm-import-switch').on('click', '#vrm-import-switch', () => importPresetAndSwitch());
+    $(document).off('click', '#vrm-import-preview').on('click', '#vrm-import-preview', () => importPresetAsTemporaryPreview());
+    $(document).off('click', '#vrm-import-choice-close').on('click', '#vrm-import-choice-close', () => closeImportChoiceModal());
+    $(document).off('click', '#vrm-preset-import-choice-modal').on('click', '#vrm-preset-import-choice-modal', function(e) {
+        if (e.target && e.target.id === 'vrm-preset-import-choice-modal') closeImportChoiceModal();
     });
-    $(document).off('keydown', '#blai-import-preset-name').on('keydown', '#blai-import-preset-name', function(e) {
+    $(document).off('keydown', '#vrm-import-preset-name').on('keydown', '#vrm-import-preset-name', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             importPresetOnly();
@@ -3697,7 +3697,7 @@ export function bindEvents() {
             clearStreamingPresentations();
             clearStreamEventBuffers();
             runtimeState.currentDiffIndex = undefined;
-            $('#blai-diff-modal').hide();
+            $('#vrm-diff-modal').hide();
             applyCharacterPresetBinding(true, { skipCleanse: true });
             restoreDiffStateFromChatMetadata();
             setTimeout(() => { injectDiffButtons(); performGlobalCleanse({ deferLargeChat: true }); }, 120);

@@ -27,7 +27,7 @@ function getRewriteMode(sub) {
 
 function getRewriteModeBadgeHtml(sub) {
     return getRewriteMode(sub) === 'ai'
-        ? '<span class="blai-tag blai-ai-rewrite-badge">AI 改写</span>'
+        ? '<span class="vrm-tag vrm-ai-rewrite-badge">AI 改写</span>'
         : '';
 }
 
@@ -55,10 +55,10 @@ function applyTauriMobileSurface(selector, surface) {
 }
 
 function annotateTauriMobileSurfaces() {
-    applyTauriMobileSurface('#blai-purifier-popup', 'fullscreen-window');
-    applyTauriMobileSurface('.blai-modal-shell, #blai-rule-transfer-modal, #blai-diff-modal, #blai-loading-overlay', 'backdrop');
-    applyTauriMobileSurface('.blai-modal-card, .blai-transfer-content, .blai-diff-modal-card, .blai-loading-panel, .blai-scope-tag-editor-card', 'fullscreen-window');
-    applyTauriMobileSurface('.blai-toast', 'free-window');
+    applyTauriMobileSurface('#vrm-purifier-popup', 'fullscreen-window');
+    applyTauriMobileSurface('.vrm-modal-shell, #vrm-rule-transfer-modal, #vrm-diff-modal, #vrm-loading-overlay', 'backdrop');
+    applyTauriMobileSurface('.vrm-modal-card, .vrm-transfer-content, .vrm-diff-modal-card, .vrm-loading-panel, .vrm-scope-tag-editor-card', 'fullscreen-window');
+    applyTauriMobileSurface('.vrm-toast', 'free-window');
 }
 
 export function isLegacyPurifierDetected() {
@@ -74,7 +74,7 @@ export function isLegacyPurifierDetected() {
 }
 
 export function updateLegacyPurifierWarning() {
-    const $warning = $('#blai-legacy-purifier-warning');
+    const $warning = $('#vrm-legacy-purifier-warning');
     if (!$warning.length) return false;
     const detected = isLegacyPurifierDetected();
     $warning.prop('hidden', !detected);
@@ -92,7 +92,7 @@ const responsivePageTitles = {
 export function showResponsivePage(pageId = 'overview') {
     const normalizedPage = responsivePageTitles[pageId] ? pageId : 'overview';
     const title = responsivePageTitles[normalizedPage];
-    const $popup = $('#blai-purifier-popup');
+    const $popup = $('#vrm-purifier-popup');
     if (!$popup.length) return;
 
     $popup.find('.page-panel').each(function() {
@@ -101,8 +101,8 @@ export function showResponsivePage(pageId = 'overview') {
     $popup.find('.rail-btn, .nav-item').each(function() {
         $(this).toggleClass('active', String($(this).attr('data-page-target') || '') === normalizedPage);
     });
-    $popup.find('[data-title], #blai-responsive-title').text(title);
-    $popup.find('#blai-character-bind-toggle').attr('aria-expanded', 'false');
+    $popup.find('[data-title], #vrm-responsive-title').text(title);
+    $popup.find('#vrm-character-bind-toggle').attr('aria-expanded', 'false');
 }
 
 function buildRuleSearchHaystack(sub = {}) {
@@ -141,12 +141,12 @@ function buildRuleSearchResults(keyword) {
 }
 
 function getRegexReplacementEditIndex() {
-    const rawIndex = Number($('#blai-modal-sub-rep').data('regex-edit-index'));
+    const rawIndex = Number($('#vrm-modal-sub-rep').data('regex-edit-index'));
     return Number.isInteger(rawIndex) ? rawIndex : -1;
 }
 
 function getRegexReplacementChipValues() {
-    return $('#blai-modal-sub-regex-list').children('.blai-regex-replacement-chip').map(function() {
+    return $('#vrm-modal-sub-regex-list').children('.vrm-regex-replacement-chip').map(function() {
         return String($(this).data('value') ?? '');
     }).get();
 }
@@ -155,15 +155,15 @@ function buildRegexReplacementChip(value = '') {
     const normalizedValue = String(value ?? '');
     const preview = formatReplacementCandidatePreview(normalizedValue);
     const $chip = $(`
-        <div class="blai-regex-replacement-chip" data-index="0">
-            <button type="button" class="blai-regex-replacement-chip-main" data-index="0" title="点击编辑替换项"></button>
-            <button type="button" class="blai-regex-replacement-chip-remove" data-index="0" title="删除替换项">
+        <div class="vrm-regex-replacement-chip" data-index="0">
+            <button type="button" class="vrm-regex-replacement-chip-main" data-index="0" title="点击编辑替换项"></button>
+            <button type="button" class="vrm-regex-replacement-chip-remove" data-index="0" title="删除替换项">
                 <i class="fas fa-times"></i>
             </button>
         </div>
     `);
     $chip.data('value', normalizedValue);
-    $chip.find('.blai-regex-replacement-chip-main').html(preview).attr('title', normalizedValue || '点击编辑替换项');
+    $chip.find('.vrm-regex-replacement-chip-main').html(preview).attr('title', normalizedValue || '点击编辑替换项');
     return $chip;
 }
 
@@ -172,7 +172,7 @@ function appendRegexReplacementInputs(values = [], options = {}) {
     const { sync = true } = options;
     if (normalizedValues.length === 0) return $();
 
-    const $container = $('#blai-modal-sub-regex-list');
+    const $container = $('#vrm-modal-sub-regex-list');
     const fragment = document.createDocumentFragment();
     const nodes = [];
     normalizedValues.forEach((value) => {
@@ -186,10 +186,10 @@ function appendRegexReplacementInputs(values = [], options = {}) {
 }
 
 function syncRegexReplacementInputState() {
-    const $container = $('#blai-modal-sub-regex-list');
-    const $textarea = $('#blai-modal-sub-rep');
-    $container.children('.blai-regex-replacement-empty').remove();
-    const $items = $container.children('.blai-regex-replacement-chip');
+    const $container = $('#vrm-modal-sub-regex-list');
+    const $textarea = $('#vrm-modal-sub-rep');
+    $container.children('.vrm-regex-replacement-empty').remove();
+    const $items = $container.children('.vrm-regex-replacement-chip');
     let editIndex = getRegexReplacementEditIndex();
     if (editIndex >= $items.length) {
         editIndex = -1;
@@ -199,36 +199,36 @@ function syncRegexReplacementInputState() {
         const $element = $(element);
         $element.attr('data-index', index);
         $element.toggleClass('is-active', index === editIndex);
-        $element.find('.blai-regex-replacement-chip-main').attr('data-index', index);
-        $element.find('.blai-regex-replacement-chip-remove').attr('data-index', index);
+        $element.find('.vrm-regex-replacement-chip-main').attr('data-index', index);
+        $element.find('.vrm-regex-replacement-chip-remove').attr('data-index', index);
     });
     const isEditing = editIndex >= 0;
     const defaultPlaceholder = String($textarea.data('regex-default-placeholder') || '');
     const editPlaceholder = String($textarea.data('regex-edit-placeholder') || defaultPlaceholder);
-    const isRegexEditorVisible = !$('#blai-modal-sub-regex-actions').prop('hidden');
+    const isRegexEditorVisible = !$('#vrm-modal-sub-regex-actions').prop('hidden');
     if ($items.length === 0 && isRegexEditorVisible) {
         $container.append(`
-            <div class="blai-regex-replacement-empty" aria-live="polite">
+            <div class="vrm-regex-replacement-empty" aria-live="polite">
                 <i class="fas fa-eraser"></i>
                 <span>未添加替换项，命中后将直接删除。</span>
             </div>
         `);
     }
     $container.prop('hidden', $items.length === 0 && !isRegexEditorVisible);
-    $('#blai-modal-sub-regex-recognize').text(isEditing ? '更新替换项' : '按行识别');
+    $('#vrm-modal-sub-regex-recognize').text(isEditing ? '更新替换项' : '按行识别');
     $textarea.attr('placeholder', isEditing ? editPlaceholder : defaultPlaceholder);
 }
 
 export function showToast(message) {
-    $('.blai-toast').remove();
-    const themeMode = String($('#blai-purifier-popup').attr('data-blai-theme') || 'auto');
+    $('.vrm-toast').remove();
+    const themeMode = String($('#vrm-purifier-popup').attr('data-vrm-theme') || 'auto');
     // 替换为 100% 兼容的 fas fa-exclamation-circle 图标
-    const $toast = $(`<div class="blai-toast" data-blai-theme="${themeMode}" data-tt-mobile-surface="free-window" role="status" aria-live="polite"><i class="fas fa-exclamation-circle" style="margin-right: 6px; font-size: 15px;"></i><span class="blai-toast-text"></span></div>`);
-    $toast.find('.blai-toast-text').text(String(message || ''));
+    const $toast = $(`<div class="vrm-toast" data-vrm-theme="${themeMode}" data-tt-mobile-surface="free-window" role="status" aria-live="polite"><i class="fas fa-exclamation-circle" style="margin-right: 6px; font-size: 15px;"></i><span class="vrm-toast-text"></span></div>`);
+    $toast.find('.vrm-toast-text').text(String(message || ''));
     $('body').append($toast);
-    setTimeout(() => $toast.addClass('blai-show'), 10);
+    setTimeout(() => $toast.addClass('vrm-show'), 10);
     setTimeout(() => {
-        $toast.removeClass('blai-show');
+        $toast.removeClass('vrm-show');
         setTimeout(() => $toast.remove(), 300);
     }, 2000);
 }
@@ -238,18 +238,18 @@ export async function setupUI(renderTemplate) {
         throw new TypeError('setupUI requires a SillyTavern template renderer');
     }
     logger.debug('[setupUI] 开始初始化 UI');
-    $('#blai-purifier-popup, #blai-rule-edit-modal, #blai-risk-confirm-modal, #blai-risk-info-modal, #blai-confirm-modal, #blai-rule-transfer-modal, #blai-preset-import-choice-modal, #blai-rule-search-modal, #blai-scope-tags-modal, #blai-scope-tag-editor-modal, #blai-diff-modal, #blai-subrule-edit-modal, #blai-ai-prompt-modal, #blai-loading-overlay, .blai-toast').remove();
+    $('#vrm-purifier-popup, #vrm-rule-edit-modal, #vrm-risk-confirm-modal, #vrm-risk-info-modal, #vrm-confirm-modal, #vrm-rule-transfer-modal, #vrm-preset-import-choice-modal, #vrm-rule-search-modal, #vrm-scope-tags-modal, #vrm-scope-tag-editor-modal, #vrm-diff-modal, #vrm-subrule-edit-modal, #vrm-ai-prompt-modal, #vrm-loading-overlay, .vrm-toast').remove();
 
     const ensureExtensionPanelEntry = () => {
-        if ($('#blai-extension-settings-entry').length || !$('#extensions_settings').length) return;
+        if ($('#vrm-extension-settings-entry').length || !$('#extensions_settings').length) return;
         $('#extensions_settings').append(`
-            <div id="blai-extension-settings-entry" class="inline-drawer blai-extension-settings-entry">
+            <div id="vrm-extension-settings-entry" class="inline-drawer vrm-extension-settings-entry">
                 <div class="inline-drawer-toggle inline-drawer-header">
-                    <b>屏蔽词净化助手 AI版</b>
+                    <b>Veridis Rewrite Modified</b>
                     <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down interactable"></div>
                 </div>
                 <div class="inline-drawer-content">
-                    <button id="blai-wand-btn-panel" type="button" class="menu_button blai-extension-open-btn">
+                    <button id="vrm-wand-btn-panel" type="button" class="menu_button vrm-extension-open-btn">
                         <i class="fa-solid fa-language fa-fw"></i>
                         <span>打开 AI 词汇映射</span>
                     </button>
@@ -258,9 +258,9 @@ export async function setupUI(renderTemplate) {
         `);
     };
 
-    if (!$('#blai-wand-btn').length) {
+    if (!$('#vrm-wand-btn').length) {
         $('#data_bank_wand_container').append(`
-            <div id="blai-wand-btn" title="词汇映射管理">
+            <div id="vrm-wand-btn" title="词汇映射管理">
                 <i class="fa-solid fa-language fa-fw"></i><span>词汇映射</span>
             </div>`);
     }
@@ -268,7 +268,7 @@ export async function setupUI(renderTemplate) {
     window.setTimeout(ensureExtensionPanelEntry, 500);
 
     const templateHtml = await renderTemplate(
-        'third-party/Veridis-Rewrite/templates',
+        'third-party/Veridis-Rewrite-Modified/templates',
         'purifier',
         {},
         false,
@@ -280,7 +280,7 @@ export async function setupUI(renderTemplate) {
     markRulesUiDirty(true);
     markPresetsUiDirty(true);
     annotateTauriMobileSurfaces();
-} 
+}
 
 export function clearRuleSearchEditFlow() {
     runtimeState.searchEditFlow.active = false;
@@ -300,9 +300,9 @@ export function resetRuleSearchState() {
 export function syncRuleSearchInputUi(options = {}) {
     const { syncValue = false } = options;
     const draftKeyword = String(runtimeState.ruleSearchDraftKeyword || '');
-    const $input = $('#blai-rule-search-input');
-    const $field = $input.closest('.blai-rule-search-field');
-    const $clear = $('#blai-rule-search-clear');
+    const $input = $('#vrm-rule-search-input');
+    const $field = $input.closest('.vrm-rule-search-field');
+    const $clear = $('#vrm-rule-search-clear');
     if (syncValue && $input.length) $input.val(draftKeyword);
     const hasValue = draftKeyword.length > 0;
     $field.toggleClass('has-value', hasValue);
@@ -310,7 +310,7 @@ export function syncRuleSearchInputUi(options = {}) {
 }
 
 export function renderRuleSearchModal() {
-    const $body = $('#blai-rule-search-body');
+    const $body = $('#vrm-rule-search-body');
     if (!$body.length) return;
 
     const keyword = String(runtimeState.ruleSearchKeyword || '').trim();
@@ -318,10 +318,10 @@ export function renderRuleSearchModal() {
 
     if (!runtimeState.ruleSearchHasSearched || !keyword) {
         $body.html(`
-            <div class="blai-rule-search-empty">
-                <div class="blai-rule-search-empty-icon"><i class="fas fa-magnifying-glass"></i></div>
-                <div class="blai-rule-search-empty-title">请输入关键词</div>
-                <div class="blai-rule-search-empty-text">点击“搜索”查找对应规则</div>
+            <div class="vrm-rule-search-empty">
+                <div class="vrm-rule-search-empty-icon"><i class="fas fa-magnifying-glass"></i></div>
+                <div class="vrm-rule-search-empty-title">请输入关键词</div>
+                <div class="vrm-rule-search-empty-text">点击“搜索”查找对应规则</div>
             </div>
         `);
         return;
@@ -330,10 +330,10 @@ export function renderRuleSearchModal() {
     const results = buildRuleSearchResults(keyword);
     if (results.length === 0) {
         $body.html(`
-            <div class="blai-rule-search-empty">
-                <div class="blai-rule-search-empty-icon"><i class="fas fa-circle-info"></i></div>
-                <div class="blai-rule-search-empty-title">未找到匹配规则</div>
-                <div class="blai-rule-search-empty-text">当前只搜索每条映射的查找词与替换词</div>
+            <div class="vrm-rule-search-empty">
+                <div class="vrm-rule-search-empty-icon"><i class="fas fa-circle-info"></i></div>
+                <div class="vrm-rule-search-empty-title">未找到匹配规则</div>
+                <div class="vrm-rule-search-empty-text">当前只搜索每条映射的查找词与替换词</div>
             </div>
         `);
         return;
@@ -342,11 +342,11 @@ export function renderRuleSearchModal() {
     const html = results.map((item) => {
         const menuHtml = runtimeState.ruleSearchExpandedMenuKey === item.key
             ? `
-                <div class="blai-rule-search-menu">
-                    <button type="button" class="blai-rule-search-menu-item" data-action="group" data-rule-index="${item.ruleIndex}" data-subrule-index="${item.subRuleIndex}">
+                <div class="vrm-rule-search-menu">
+                    <button type="button" class="vrm-rule-search-menu-item" data-action="group" data-rule-index="${item.ruleIndex}" data-subrule-index="${item.subRuleIndex}">
                         分组详情
                     </button>
-                    <button type="button" class="blai-rule-search-menu-item" data-action="subrule" data-rule-index="${item.ruleIndex}" data-subrule-index="${item.subRuleIndex}">
+                    <button type="button" class="vrm-rule-search-menu-item" data-action="subrule" data-rule-index="${item.ruleIndex}" data-subrule-index="${item.subRuleIndex}">
                         编辑条目
                     </button>
                 </div>
@@ -354,38 +354,38 @@ export function renderRuleSearchModal() {
             : '';
 
         return `
-            <div class="blai-rule-search-result-card ${item.isEnabled ? '' : 'blai-is-disabled'}" data-rule-index="${item.ruleIndex}" data-subrule-index="${item.subRuleIndex}">
-                <div class="blai-rule-search-result-head">
-                    <div class="blai-rule-search-result-group">
+            <div class="vrm-rule-search-result-card ${item.isEnabled ? '' : 'vrm-is-disabled'}" data-rule-index="${item.ruleIndex}" data-subrule-index="${item.subRuleIndex}">
+                <div class="vrm-rule-search-result-head">
+                    <div class="vrm-rule-search-result-group">
                         <i class="fas fa-folder-open"></i>
                         所属分组：${item.groupName}
                     </div>
-                    <div class="blai-rule-search-menu-wrap">
-                        <button type="button" class="blai-icon-btn blai-rule-search-menu-toggle" data-key="${item.key}" title="更多操作">
+                    <div class="vrm-rule-search-menu-wrap">
+                        <button type="button" class="vrm-icon-btn vrm-rule-search-menu-toggle" data-key="${item.key}" title="更多操作">
                             <i class="fas fa-ellipsis"></i>
                         </button>
                         ${menuHtml}
                     </div>
                 </div>
-                <div class="blai-rule-search-result-preview">
-                    <span class="blai-tag">${item.tagText}</span>
-                    <span class="blai-source">${item.sourcePreview}</span>
-                    <i class="fas fa-arrow-right blai-arrow"></i>
-                    <span class="blai-target">${item.replacementPreview}</span>
+                <div class="vrm-rule-search-result-preview">
+                    <span class="vrm-tag">${item.tagText}</span>
+                    <span class="vrm-source">${item.sourcePreview}</span>
+                    <i class="fas fa-arrow-right vrm-arrow"></i>
+                    <span class="vrm-target">${item.replacementPreview}</span>
                 </div>
             </div>
         `;
     }).join('');
 
-    $body.html(`<div class="blai-rule-search-results">${html}</div>`);
+    $body.html(`<div class="vrm-rule-search-results">${html}</div>`);
 }
 
 export function openRuleSearchModal() {
     syncRuleSearchInputUi({ syncValue: true });
     renderRuleSearchModal();
-    $('#blai-rule-search-modal').css('display', 'flex').hide().fadeIn(150);
+    $('#vrm-rule-search-modal').css('display', 'flex').hide().fadeIn(150);
     window.setTimeout(() => {
-        $('#blai-rule-search-input').trigger('focus');
+        $('#vrm-rule-search-input').trigger('focus');
     }, 20);
 }
 
@@ -396,7 +396,7 @@ export function closeRuleSearchModal(options = {}) {
         syncRuleSearchInputUi({ syncValue: true });
         renderRuleSearchModal();
     }
-    $('#blai-rule-search-modal').fadeOut(150);
+    $('#vrm-rule-search-modal').fadeOut(150);
 }
 
 function getScopeTagGroupsForSettings(settings = {}) {
@@ -416,7 +416,7 @@ function buildScopeTagChipHtml(scopeTag, editId) {
     const isEnabled = scopeTag.enabled !== false;
     const checkedAttr = isEnabled ? 'checked' : '';
     const activeClass = scopeTag.id === editId ? 'is-active' : '';
-    const disabledClass = isEnabled ? '' : 'blai-is-disabled';
+    const disabledClass = isEnabled ? '' : 'vrm-is-disabled';
     const labelText = String(scopeTag.label || '').trim();
     const rangeText = isCotScopeTagEntry(scopeTag)
         ? COT_SCOPE_TAG_DISPLAY_TEXT
@@ -424,31 +424,31 @@ function buildScopeTagChipHtml(scopeTag, editId) {
     const primaryText = labelText || '标签范围';
     const chipTitle = `${primaryText} · ${rangeText}`;
     return `
-        <div class="blai-scope-tag-chip ${activeClass} ${disabledClass}" data-id="${safeHtml(scopeTag.id)}">
-            <label class="blai-checkbox-label blai-scope-tag-toggle-wrap" title="启用或停用该标签">
-                <input type="checkbox" class="blai-scope-tag-toggle" data-id="${safeHtml(scopeTag.id)}" ${checkedAttr}>
-                <span class="blai-custom-checkbox blai-square"></span>
+        <div class="vrm-scope-tag-chip ${activeClass} ${disabledClass}" data-id="${safeHtml(scopeTag.id)}">
+            <label class="vrm-checkbox-label vrm-scope-tag-toggle-wrap" title="启用或停用该标签">
+                <input type="checkbox" class="vrm-scope-tag-toggle" data-id="${safeHtml(scopeTag.id)}" ${checkedAttr}>
+                <span class="vrm-custom-checkbox vrm-square"></span>
             </label>
-            <button type="button" class="blai-scope-tag-chip-main" data-id="${safeHtml(scopeTag.id)}" title="${safeHtml(chipTitle)}">
-                <span class="blai-scope-tag-chip-title">${safeHtml(primaryText)}</span>
-                <span class="blai-scope-tag-chip-text">${safeHtml(rangeText)}</span>
+            <button type="button" class="vrm-scope-tag-chip-main" data-id="${safeHtml(scopeTag.id)}" title="${safeHtml(chipTitle)}">
+                <span class="vrm-scope-tag-chip-title">${safeHtml(primaryText)}</span>
+                <span class="vrm-scope-tag-chip-text">${safeHtml(rangeText)}</span>
             </button>
-            <span class="blai-scope-tag-row-divider" aria-hidden="true"></span>
-            <div class="blai-scope-tag-actions">
-                <button type="button" class="blai-icon-btn blai-scope-tag-move" title="保持当前顺序" aria-label="保持当前顺序" disabled><i class="fas fa-arrow-up"></i></button>
-                <button type="button" class="blai-icon-btn blai-scope-tag-move" title="保持当前顺序" aria-label="保持当前顺序" disabled><i class="fas fa-arrow-down"></i></button>
-                <button type="button" class="blai-icon-btn blai-scope-tag-edit" data-id="${safeHtml(scopeTag.id)}" title="编辑标签" aria-label="编辑标签"><i class="fas fa-pen"></i></button>
-                <button type="button" class="blai-icon-btn blai-scope-tag-del blai-danger-btn" data-id="${safeHtml(scopeTag.id)}" title="删除标签" aria-label="删除标签"><i class="fas fa-trash"></i></button>
+            <span class="vrm-scope-tag-row-divider" aria-hidden="true"></span>
+            <div class="vrm-scope-tag-actions">
+                <button type="button" class="vrm-icon-btn vrm-scope-tag-move" title="保持当前顺序" aria-label="保持当前顺序" disabled><i class="fas fa-arrow-up"></i></button>
+                <button type="button" class="vrm-icon-btn vrm-scope-tag-move" title="保持当前顺序" aria-label="保持当前顺序" disabled><i class="fas fa-arrow-down"></i></button>
+                <button type="button" class="vrm-icon-btn vrm-scope-tag-edit" data-id="${safeHtml(scopeTag.id)}" title="编辑标签" aria-label="编辑标签"><i class="fas fa-pen"></i></button>
+                <button type="button" class="vrm-icon-btn vrm-scope-tag-del vrm-danger-btn" data-id="${safeHtml(scopeTag.id)}" title="删除标签" aria-label="删除标签"><i class="fas fa-trash"></i></button>
             </div>
         </div>
     `;
 }
 
 export function renderScopeTagsModal() {
-    const $list = $('#blai-scope-tags-list');
+    const $list = $('#vrm-scope-tags-list');
     if (!$list.length) return;
 
-    const isGroupManageMode = $list.hasClass('blai-is-group-manage-mode');
+    const isGroupManageMode = $list.hasClass('vrm-is-group-manage-mode');
 
     const { extension_settings } = getAppContext();
     const settings = extension_settings?.[extensionName] || {};
@@ -459,7 +459,7 @@ export function renderScopeTagsModal() {
         settings.scopeTags,
         settings.scopeTagBuiltinDismissed
     );
-    const editId = String($('#blai-scope-tag-input').data('scope-edit-id') || '');
+    const editId = String($('#vrm-scope-tag-input').data('scope-edit-id') || '');
     const isEditing = editId !== '';
     const scopeTagMode = settings.scopeTagMode === 'cleanse-inside' ? 'cleanse-inside' : 'protect';
     const isCleanseInsideMode = scopeTagMode === 'cleanse-inside';
@@ -484,8 +484,8 @@ export function renderScopeTagsModal() {
         if (scopeTag.id === editId) cotDisplayTag.id = scopeTag.id;
     });
 
-    $('#blai-scope-tag-total-count').text(`共 ${displayScopeTags.length} 个标签`);
-    $('#blai-scope-group-manage-open')
+    $('#vrm-scope-tag-total-count').text(`共 ${displayScopeTags.length} 个标签`);
+    $('#vrm-scope-group-manage-open')
         .toggleClass('is-active', isGroupManageMode)
         .attr('aria-pressed', String(isGroupManageMode))
         .attr('title', isGroupManageMode ? '完成分组管理' : '管理分组')
@@ -493,16 +493,16 @@ export function renderScopeTagsModal() {
         .find('i')
         .attr('class', isGroupManageMode ? 'fas fa-check' : 'fas fa-layer-group');
 
-    $('#blai-scope-tag-editor-title').text(isEditing ? '编辑标签' : '新增标签');
-    $('#blai-scope-tag-save').text('确认');
-    $('#blai-scope-tag-reset').text('取消');
-    $('#blai-scope-mode-protect')
+    $('#vrm-scope-tag-editor-title').text(isEditing ? '编辑标签' : '新增标签');
+    $('#vrm-scope-tag-save').text('确认');
+    $('#vrm-scope-tag-reset').text('取消');
+    $('#vrm-scope-mode-protect')
         .toggleClass('is-active', !isCleanseInsideMode)
         .attr('aria-pressed', String(!isCleanseInsideMode));
-    $('#blai-scope-mode-cleanse')
+    $('#vrm-scope-mode-cleanse')
         .toggleClass('is-active', isCleanseInsideMode)
         .attr('aria-pressed', String(isCleanseInsideMode));
-    $('#blai-scope-tags-hint').text(isCleanseInsideMode
+    $('#vrm-scope-tags-hint').text(isCleanseInsideMode
         ? '当前模式下，只会删除或替换列表内标签的内容，标签外内容会被保留。'
         : '当前模式下，列表内标签的内容将被跳过，只对标签外的内容进行净化。');
 
@@ -523,7 +523,7 @@ export function renderScopeTagsModal() {
         const isGroupEnabled = activeCount > 0;
         const isGroupPartial = activeCount > 0 && activeCount < group.tags.length;
         const groupToggleClass = [
-            'blai-scope-tag-group-toggle',
+            'vrm-scope-tag-group-toggle',
             isGroupEnabled ? 'is-on' : '',
             isGroupPartial ? 'is-partial' : '',
         ].filter(Boolean).join(' ');
@@ -533,38 +533,38 @@ export function renderScopeTagsModal() {
         const groupToggleDisabled = hasTags ? '' : 'disabled';
         const tagsHtml = group.tags.length > 0
             ? group.tags.map((scopeTag) => buildScopeTagChipHtml(scopeTag, editId)).join('')
-            : `<div class="blai-scope-tag-group-empty">${isCleanseInsideMode ? '此分组暂无标签。' : '此分组暂无标签。'}</div>`;
+            : `<div class="vrm-scope-tag-group-empty">${isCleanseInsideMode ? '此分组暂无标签。' : '此分组暂无标签。'}</div>`;
         const groupHeadHtml = isGroupManageMode
             ? `
-                <input type="text" class="blai-scope-group-name-input" data-group-id="${safeHtml(group.id)}" value="${groupTitle}" aria-label="分组名称">
-                <span class="blai-scope-tag-group-count">${group.tags.length} 个标签</span>
-                <div class="blai-scope-group-manager-item-actions" aria-label="${groupTitle}分组操作">
-                    <button type="button" class="blai-icon-btn blai-scope-group-move-up" data-group-id="${safeHtml(group.id)}" title="上移分组" aria-label="上移分组" ${groupIndex === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
-                    <button type="button" class="blai-icon-btn blai-scope-group-move-down" data-group-id="${safeHtml(group.id)}" title="下移分组" aria-label="下移分组" ${groupIndex === grouped.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
-                    <button type="button" class="blai-icon-btn blai-scope-group-delete blai-danger-btn" data-group-id="${safeHtml(group.id)}" title="${isDefaultGroup ? '默认分组不可删除' : '删除分组'}" aria-label="${isDefaultGroup ? '默认分组不可删除' : '删除分组'}" ${isDefaultGroup ? 'disabled' : ''}><i class="fas fa-trash"></i></button>
+                <input type="text" class="vrm-scope-group-name-input" data-group-id="${safeHtml(group.id)}" value="${groupTitle}" aria-label="分组名称">
+                <span class="vrm-scope-tag-group-count">${group.tags.length} 个标签</span>
+                <div class="vrm-scope-group-manager-item-actions" aria-label="${groupTitle}分组操作">
+                    <button type="button" class="vrm-icon-btn vrm-scope-group-move-up" data-group-id="${safeHtml(group.id)}" title="上移分组" aria-label="上移分组" ${groupIndex === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+                    <button type="button" class="vrm-icon-btn vrm-scope-group-move-down" data-group-id="${safeHtml(group.id)}" title="下移分组" aria-label="下移分组" ${groupIndex === grouped.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+                    <button type="button" class="vrm-icon-btn vrm-scope-group-delete vrm-danger-btn" data-group-id="${safeHtml(group.id)}" title="${isDefaultGroup ? '默认分组不可删除' : '删除分组'}" aria-label="${isDefaultGroup ? '默认分组不可删除' : '删除分组'}" ${isDefaultGroup ? 'disabled' : ''}><i class="fas fa-trash"></i></button>
                 </div>
             `
             : `
-                <button type="button" class="blai-scope-tag-group-collapse" data-group-id="${safeHtml(group.id)}" aria-expanded="${String(!isCollapsed)}">
-                    <svg class="blai-scope-tag-group-caret" viewBox="0 0 24 24" aria-hidden="true">
+                <button type="button" class="vrm-scope-tag-group-collapse" data-group-id="${safeHtml(group.id)}" aria-expanded="${String(!isCollapsed)}">
+                    <svg class="vrm-scope-tag-group-caret" viewBox="0 0 24 24" aria-hidden="true">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
-                    <span class="blai-scope-tag-group-title">${groupTitle}</span>
+                    <span class="vrm-scope-tag-group-title">${groupTitle}</span>
                 </button>
-                <span class="blai-scope-tag-group-count">${group.tags.length} 个标签</span>
+                <span class="vrm-scope-tag-group-count">${group.tags.length} 个标签</span>
                 <button type="button" class="${groupToggleClass}" data-group-id="${safeHtml(group.id)}" aria-pressed="${String(isGroupEnabled)}" title="${safeHtml(groupToggleTitle)}" ${groupToggleDisabled}>
-                    <span class="blai-scope-tag-group-toggle-track" aria-hidden="true">
-                        <span class="blai-scope-tag-group-toggle-knob"></span>
+                    <span class="vrm-scope-tag-group-toggle-track" aria-hidden="true">
+                        <span class="vrm-scope-tag-group-toggle-knob"></span>
                     </span>
                 </button>
             `;
         return `
-            <div class="blai-scope-tag-group ${isCollapsed ? 'is-collapsed' : ''}" data-group-id="${safeHtml(group.id)}">
-                <div class="blai-scope-tag-group-head ${isGroupManageMode ? 'blai-is-managing' : ''}">
+            <div class="vrm-scope-tag-group ${isCollapsed ? 'is-collapsed' : ''}" data-group-id="${safeHtml(group.id)}">
+                <div class="vrm-scope-tag-group-head ${isGroupManageMode ? 'vrm-is-managing' : ''}">
                     ${groupHeadHtml}
                 </div>
-                <div class="blai-scope-tag-group-body">
-                    <div class="blai-scope-tag-group-inner">
+                <div class="vrm-scope-tag-group-body">
+                    <div class="vrm-scope-tag-group-inner">
                         ${tagsHtml}
                     </div>
                 </div>
@@ -572,13 +572,13 @@ export function renderScopeTagsModal() {
         `;
     }).join('');
 
-    $list.html(html || `<div class="blai-empty-state">${isCleanseInsideMode ? '当前没有标签，新增并启用后才会净化标签内内容。' : '当前没有标签，新增后即可保护对应标签内容。'}</div>`);
+    $list.html(html || `<div class="vrm-empty-state">${isCleanseInsideMode ? '当前没有标签，新增并启用后才会净化标签内内容。' : '当前没有标签，新增后即可保护对应标签内容。'}</div>`);
 }
 
 export function openScopeTagsModal() {
     renderScopeTagsModal();
     showResponsivePage('clean');
-    const $cleanPage = $('#blai-purifier-popup .page-panel[data-page="clean"]');
+    const $cleanPage = $('#vrm-purifier-popup .page-panel[data-page="clean"]');
     $cleanPage.find('[data-clean-tab]')
         .removeClass('is-active')
         .attr('aria-selected', 'false');
@@ -592,26 +592,26 @@ export function openScopeTagsModal() {
 export function closeScopeTagsModal(options = {}) {
     const { reset = false } = options;
     if (reset) {
-        $('#blai-scope-tag-input').val('').data('scope-edit-id', '');
-        $('#blai-scope-tag-label-input').val('');
-        $('#blai-scope-tag-error').removeClass('is-visible').text('');
-        $('#blai-scope-tag-input').removeClass('blai-invalid').removeAttr('aria-invalid');
-        $('#blai-scope-tag-editor-modal')
-            .removeClass('blai-is-open')
+        $('#vrm-scope-tag-input').val('').data('scope-edit-id', '');
+        $('#vrm-scope-tag-label-input').val('');
+        $('#vrm-scope-tag-error').removeClass('is-visible').text('');
+        $('#vrm-scope-tag-input').removeClass('vrm-invalid').removeAttr('aria-invalid');
+        $('#vrm-scope-tag-editor-modal')
+            .removeClass('vrm-is-open')
             .attr('aria-hidden', 'true');
-        $('#blai-scope-tags-list').removeClass('blai-is-group-manage-mode');
-        $('#blai-scope-tag-action-menu').prop('hidden', true);
-        $('#blai-scope-tag-menu-open').attr('aria-expanded', 'false');
+        $('#vrm-scope-tags-list').removeClass('vrm-is-group-manage-mode');
+        $('#vrm-scope-tag-action-menu').prop('hidden', true);
+        $('#vrm-scope-tag-menu-open').attr('aria-expanded', 'false');
         renderScopeTagsModal();
     }
     showResponsivePage('overview');
 }
 
 export function focusLatestRuleCard() {
-    const container = document.getElementById('blai-tags-container');
+    const container = document.getElementById('vrm-tags-container');
     if (!container) return;
 
-    const cards = container.querySelectorAll('.blai-card');
+    const cards = container.querySelectorAll('.vrm-card');
     const latestCard = cards[cards.length - 1];
     if (!latestCard) return;
 
@@ -623,34 +623,34 @@ export function focusLatestRuleCard() {
         latestCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    latestCard.classList.remove('blai-highlight-flash');
+    latestCard.classList.remove('vrm-highlight-flash');
     void latestCard.offsetWidth;
-    latestCard.classList.add('blai-highlight-flash');
+    latestCard.classList.add('vrm-highlight-flash');
 
     window.setTimeout(() => {
-        latestCard.classList.remove('blai-highlight-flash');
+        latestCard.classList.remove('vrm-highlight-flash');
     }, 1600);
 }
 
 function showProgressOverlay({ title, statusText, cancelText = '停止', onCancel = null }) {
-    const themeMode = String($('#blai-purifier-popup').attr('data-blai-theme') || 'auto');
-    $('#blai-loading-overlay').remove();
+    const themeMode = String($('#vrm-purifier-popup').attr('data-vrm-theme') || 'auto');
+    $('#vrm-loading-overlay').remove();
     $('body').append(`
-        <div id="blai-loading-overlay" class="blai-loading-overlay" data-blai-theme="${themeMode}" data-tt-mobile-surface="backdrop">
-            <div class="blai-loading-panel" data-tt-mobile-surface="fullscreen-window" role="dialog" aria-modal="true" aria-labelledby="blai-loading-title">
-                <div class="blai-loading-head">
-                    <h2 id="blai-loading-title" class="blai-loading-title"><i class="fas fa-spinner fa-spin"></i> ${title}</h2>
-                    <button id="blai-loading-cancel" type="button" class="blai-loading-cancel" title="${cancelText}">${cancelText}</button>
+        <div id="vrm-loading-overlay" class="vrm-loading-overlay" data-vrm-theme="${themeMode}" data-tt-mobile-surface="backdrop">
+            <div class="vrm-loading-panel" data-tt-mobile-surface="fullscreen-window" role="dialog" aria-modal="true" aria-labelledby="vrm-loading-title">
+                <div class="vrm-loading-head">
+                    <h2 id="vrm-loading-title" class="vrm-loading-title"><i class="fas fa-spinner fa-spin"></i> ${title}</h2>
+                    <button id="vrm-loading-cancel" type="button" class="vrm-loading-cancel" title="${cancelText}">${cancelText}</button>
                 </div>
-                <p id="blai-loading-status">${statusText}</p>
-                <div class="blai-progress-track"><div id="blai-progress-fill" class="blai-progress-fill"></div></div>
-                <p id="blai-progress-percent" class="blai-progress-percent">0%</p>
+                <p id="vrm-loading-status">${statusText}</p>
+                <div class="vrm-progress-track"><div id="vrm-progress-fill" class="vrm-progress-fill"></div></div>
+                <p id="vrm-progress-percent" class="vrm-progress-percent">0%</p>
             </div>
         </div>
     `);
     annotateTauriMobileSurfaces();
     if (typeof onCancel === 'function') {
-        $('#blai-loading-cancel').off('click').on('click', onCancel);
+        $('#vrm-loading-cancel').off('click').on('click', onCancel);
     }
 }
 
@@ -662,11 +662,11 @@ export function showDeepCleanOverlay() {
         cancelText: '停止',
         onCancel: () => {
             runtimeState.deepCleanCancelRequested = true;
-            $('#blai-loading-cancel')
+            $('#vrm-loading-cancel')
                 .prop('disabled', true)
                 .addClass('is-disabled')
                 .text('停止中');
-            $('#blai-loading-status').text('正在停止深度清理，请等待当前批次收尾。');
+            $('#vrm-loading-status').text('正在停止深度清理，请等待当前批次收尾。');
         },
     });
 }
@@ -679,18 +679,18 @@ export function showZhDictionaryInstallOverlay(onCancel) {
         cancelText: '取消',
         onCancel: () => {
             runtimeState.zhDictionaryInstallCancelRequested = true;
-            $('#blai-loading-cancel')
+            $('#vrm-loading-cancel')
                 .prop('disabled', true)
                 .addClass('is-disabled')
                 .text('取消中');
-            $('#blai-loading-status').text('正在取消下载，请等待当前请求结束。');
+            $('#vrm-loading-status').text('正在取消下载，请等待当前请求结束。');
             if (typeof onCancel === 'function') onCancel();
         },
     });
 }
 
 export function closeLoadingOverlay() {
-    $('#blai-loading-overlay').remove();
+    $('#vrm-loading-overlay').remove();
 }
 
 export function updateZhDictionaryInstallOverlay(progressRatio, statusText) {
@@ -698,36 +698,36 @@ export function updateZhDictionaryInstallOverlay(progressRatio, statusText) {
 }
 
 export function openZhDictionaryModal(stats = {}, options = {}) {
-    const themeMode = String($('#blai-purifier-popup').attr('data-blai-theme') || 'auto');
+    const themeMode = String($('#vrm-purifier-popup').attr('data-vrm-theme') || 'auto');
     const bytes = Number(stats.bytes) || 0;
     const mb = bytes > 0 ? (bytes / 1024 / 1024).toFixed(2) : '1.20';
     const entries = Number(stats.entries) || 0;
-    $('#blai-zh-dictionary-modal')
-        .attr('data-blai-theme', themeMode)
+    $('#vrm-zh-dictionary-modal')
+        .attr('data-vrm-theme', themeMode)
         .css('display', 'flex');
-    $('#blai-zh-dict-stats').text(`词典包约 ${mb} MB，包含 ${entries.toLocaleString('zh-CN')} 条字词与异体映射。`);
-    $('#blai-zh-dict-tw').prop('checked', options.tw !== false);
-    $('#blai-zh-dict-hk').prop('checked', options.hk !== false);
+    $('#vrm-zh-dict-stats').text(`词典包约 ${mb} MB，包含 ${entries.toLocaleString('zh-CN')} 条字词与异体映射。`);
+    $('#vrm-zh-dict-tw').prop('checked', options.tw !== false);
+    $('#vrm-zh-dict-hk').prop('checked', options.hk !== false);
 }
 
 export function closeZhDictionaryModal() {
-    $('#blai-zh-dictionary-modal').fadeOut(120);
+    $('#vrm-zh-dictionary-modal').fadeOut(120);
 }
 
 export function updateDeepCleanOverlay(progressRatio, statusText) {
     const ratio = Math.max(0, Math.min(1, Number(progressRatio) || 0));
-    $('#blai-progress-fill').css('width', `${Math.round(ratio * 100)}%`);
-    $('#blai-progress-percent').text(`${Math.round(ratio * 100)}%`);
-    if (statusText) $('#blai-loading-status').text(statusText);
+    $('#vrm-progress-fill').css('width', `${Math.round(ratio * 100)}%`);
+    $('#vrm-progress-percent').text(`${Math.round(ratio * 100)}%`);
+    if (statusText) $('#vrm-loading-status').text(statusText);
 }
 
 export function showConfirmModal(onConfirm = () => performDeepCleanse()) {
-    const $modal = $('#blai-confirm-modal');
-    const $confirmBtn = $('#blai-modal-confirm');
-    const $cancelBtn = $('#blai-modal-cancel');
+    const $modal = $('#vrm-confirm-modal');
+    const $confirmBtn = $('#vrm-modal-confirm');
+    const $cancelBtn = $('#vrm-modal-cancel');
 
     $modal.css('display', 'flex');
-    $confirmBtn.prop('disabled', true).addClass('blai-is-disabled');
+    $confirmBtn.prop('disabled', true).addClass('vrm-is-disabled');
 
     let timeLeft = 3;
     $confirmBtn.text(`确认清理 (${timeLeft}s)`);
@@ -739,7 +739,7 @@ export function showConfirmModal(onConfirm = () => performDeepCleanse()) {
         } else {
             clearInterval(timer);
             $confirmBtn.prop('disabled', false)
-                .removeClass('blai-is-disabled')
+                .removeClass('vrm-is-disabled')
                 .text('我已切换，确认清理！');
         }
     }, 1000);
@@ -760,36 +760,36 @@ export function showConfirmModal(onConfirm = () => performDeepCleanse()) {
 
 export function showRiskConfirmModal(message) {
     return new Promise((resolve) => {
-        const $modal = $('#blai-risk-confirm-modal');
+        const $modal = $('#vrm-risk-confirm-modal');
         const finish = (confirmed) => {
             $modal.hide().attr('aria-hidden', 'true');
-            $('#blai-risk-confirm-cancel, #blai-risk-confirm-ok').off('.blaiRiskConfirm');
-            $modal.off('.blaiRiskConfirm');
+            $('#vrm-risk-confirm-cancel, #vrm-risk-confirm-ok').off('.vrmRiskConfirm');
+            $modal.off('.vrmRiskConfirm');
             resolve(confirmed);
         };
 
-        $('#blai-risk-confirm-text').text(String(message || ''));
+        $('#vrm-risk-confirm-text').text(String(message || ''));
         $modal.css('display', 'flex').attr('aria-hidden', 'false');
-        $('#blai-risk-confirm-cancel').on('click.blaiRiskConfirm', () => finish(false));
-        $('#blai-risk-confirm-ok').on('click.blaiRiskConfirm', () => finish(true));
-        $modal.on('click.blaiRiskConfirm', (event) => {
+        $('#vrm-risk-confirm-cancel').on('click.vrmRiskConfirm', () => finish(false));
+        $('#vrm-risk-confirm-ok').on('click.vrmRiskConfirm', () => finish(true));
+        $modal.on('click.vrmRiskConfirm', (event) => {
             if (event.target === $modal[0]) finish(false);
         });
     });
 }
 
 export function showRiskInfoModal(message) {
-    const $modal = $('#blai-risk-info-modal');
+    const $modal = $('#vrm-risk-info-modal');
     const close = () => {
         $modal.hide().attr('aria-hidden', 'true');
-        $('#blai-risk-info-close').off('.blaiRiskInfo');
-        $modal.off('.blaiRiskInfo');
+        $('#vrm-risk-info-close').off('.vrmRiskInfo');
+        $modal.off('.vrmRiskInfo');
     };
 
-    $('#blai-risk-info-text').text(String(message || ''));
+    $('#vrm-risk-info-text').text(String(message || ''));
     $modal.css('display', 'flex').attr('aria-hidden', 'false');
-    $('#blai-risk-info-close').on('click.blaiRiskInfo', close).trigger('focus');
-    $modal.on('click.blaiRiskInfo', (event) => {
+    $('#vrm-risk-info-close').on('click.vrmRiskInfo', close).trigger('focus');
+    $modal.on('click.vrmRiskInfo', (event) => {
         if (event.target === $modal[0]) close();
     });
 }
@@ -810,15 +810,15 @@ function syncPresetAiRewriteGenerationSettingsUI(settings) {
         const $field = $(selector);
         if (!$field.is(':focus')) $field.val(value);
     };
-    $('#blai-ai-protect-comments').prop('checked', aiSettings.protectXmlComments === true);
-    setValueIfNotFocused('#blai-ai-temperature', aiSettings.temperature);
-    setValueIfNotFocused('#blai-ai-timeout', getAiTimeoutSeconds(aiSettings.timeoutMs));
-    setValueIfNotFocused('#blai-ai-max-retries', aiSettings.maxRetries);
-    setValueIfNotFocused('#blai-ai-max-items', aiSettings.maxItemsPerRequest);
-    setValueIfNotFocused('#blai-ai-max-context', aiSettings.maxContextChars);
-    setValueIfNotFocused('#blai-ai-max-rewrite', aiSettings.maxRewriteCharsPerItem);
-    setValueIfNotFocused('#blai-ai-prompt', aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
-    setValueIfNotFocused('#blai-ai-prompt-expanded', aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
+    $('#vrm-ai-protect-comments').prop('checked', aiSettings.protectXmlComments === true);
+    setValueIfNotFocused('#vrm-ai-temperature', aiSettings.temperature);
+    setValueIfNotFocused('#vrm-ai-timeout', getAiTimeoutSeconds(aiSettings.timeoutMs));
+    setValueIfNotFocused('#vrm-ai-max-retries', aiSettings.maxRetries);
+    setValueIfNotFocused('#vrm-ai-max-items', aiSettings.maxItemsPerRequest);
+    setValueIfNotFocused('#vrm-ai-max-context', aiSettings.maxContextChars);
+    setValueIfNotFocused('#vrm-ai-max-rewrite', aiSettings.maxRewriteCharsPerItem);
+    setValueIfNotFocused('#vrm-ai-prompt', aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
+    setValueIfNotFocused('#vrm-ai-prompt-expanded', aiSettings.promptTemplate || defaultAiRewriteSettings.promptTemplate);
 }
 
 function applyPresetAiRewriteSettings(settings, presetEntry) {
@@ -884,18 +884,18 @@ export function refreshCharacterBindingUI() {
     const activePreset = String(settings.activePreset || '');
     const chatCompletionPresetName = getCurrentChatCompletionPresetName();
     const bindingResolution = getPresetBindingResolution(context.key, { chatCompletionPresetName });
-    const $defaultBtn = $('#blai-default-toggle');
-    const $bindBtn = $('#blai-character-bind-toggle');
-    const $bindCurrentItem = $('#blai-bind-current-character');
-    const $bindChatPresetItem = $('#blai-bind-current-chat-preset');
-    const $unbindItem = $('#blai-unbind-current-character');
+    const $defaultBtn = $('#vrm-default-toggle');
+    const $bindBtn = $('#vrm-character-bind-toggle');
+    const $bindCurrentItem = $('#vrm-bind-current-character');
+    const $bindChatPresetItem = $('#vrm-bind-current-chat-preset');
+    const $unbindItem = $('#vrm-unbind-current-character');
     const currentBound = context.key ? (settings.characterBindings?.[context.key] || '') : '';
     const currentChatBound = chatCompletionPresetName ? (settings.chatCompletionPresetBindings?.[chatCompletionPresetName] || '') : '';
     const activeUsage = getPresetBindingUsage(activePreset);
 
     if ($defaultBtn.length && $bindBtn.length) {
         const isDefaultActive = !!(activePreset && settings.defaultPreset === activePreset);
-        $defaultBtn.toggleClass('blai-bind-active', isDefaultActive);
+        $defaultBtn.toggleClass('vrm-bind-active', isDefaultActive);
         $defaultBtn.prop('disabled', !activePreset);
         $defaultBtn.attr('aria-pressed', String(isDefaultActive));
         $defaultBtn.attr('title', activePreset ? (isDefaultActive ? `已设为全局默认：${activePreset}（点击取消）` : `将当前净化预设设为全局默认：${activePreset}`) : '请先选择一个净化预设');
@@ -905,10 +905,10 @@ export function refreshCharacterBindingUI() {
         const hasCurrentBinding = !!((context.key && currentBound) || (chatCompletionPresetName && currentChatBound));
         const roleBindingWillSwitchFromChatPreset = !!(activePreset && activeUsage.hasChatCompletionPresetBindings && !isCharacterBound);
         const chatPresetBindingWillSwitchFromRole = !!(activePreset && activeUsage.hasCharacterBindings && !isChatPresetBound);
-        $('#blai-tools-global-preset').text(settings.defaultPreset || '无');
-        $('#blai-tools-chat-binding').text(currentChatBound || '无');
-        $('#blai-tools-character-binding').text(currentBound || '无');
-        $bindBtn.toggleClass('blai-bind-active', hasCurrentBinding);
+        $('#vrm-tools-global-preset').text(settings.defaultPreset || '无');
+        $('#vrm-tools-chat-binding').text(currentChatBound || '无');
+        $('#vrm-tools-character-binding').text(currentBound || '无');
+        $bindBtn.toggleClass('vrm-bind-active', hasCurrentBinding);
         $bindBtn.prop('disabled', false);
         $bindBtn.attr('aria-pressed', String(hasCurrentBinding));
         $bindBtn.find('i').removeClass('fa-link-slash').addClass('fa-link');
@@ -923,8 +923,8 @@ export function refreshCharacterBindingUI() {
         $bindCurrentItem
             .prop('disabled', !activePreset || !context.key || isCharacterBound)
             .toggleClass('is-active', isCharacterBound);
-        $bindCurrentItem.find('.blai-bind-menu-label').text(isCharacterBound ? '已绑定当前角色' : '绑定当前角色');
-        $bindCurrentItem.find('.blai-bind-menu-note').text(!activePreset
+        $bindCurrentItem.find('.vrm-bind-menu-label').text(isCharacterBound ? '已绑定当前角色' : '绑定当前角色');
+        $bindCurrentItem.find('.vrm-bind-menu-note').text(!activePreset
             ? '请先选择净化预设'
             : !context.key
                 ? '未检测到角色'
@@ -937,8 +937,8 @@ export function refreshCharacterBindingUI() {
         $bindChatPresetItem
             .prop('disabled', !activePreset || !chatCompletionPresetName || isChatPresetBound)
             .toggleClass('is-active', isChatPresetBound);
-        $bindChatPresetItem.find('.blai-bind-menu-label').text(isChatPresetBound ? '已绑定当前对话补全预设' : '绑定当前对话补全预设');
-        $bindChatPresetItem.find('.blai-bind-menu-note').text(!activePreset
+        $bindChatPresetItem.find('.vrm-bind-menu-label').text(isChatPresetBound ? '已绑定当前对话补全预设' : '绑定当前对话补全预设');
+        $bindChatPresetItem.find('.vrm-bind-menu-note').text(!activePreset
             ? '请先选择净化预设'
             : !chatCompletionPresetName
                 ? '未检测到 ST 对话补全预设'
@@ -951,22 +951,22 @@ export function refreshCharacterBindingUI() {
         $unbindItem
             .prop('disabled', !currentBound && !currentChatBound)
             .toggleClass('is-active', !!(currentBound || currentChatBound));
-        $unbindItem.find('.blai-bind-menu-label').text(currentBound ? '取消角色绑定' : currentChatBound ? '取消对话预设绑定' : '取消当前绑定');
-        $unbindItem.find('.blai-bind-menu-note').text(currentBound
+        $unbindItem.find('.vrm-bind-menu-label').text(currentBound ? '取消角色绑定' : currentChatBound ? '取消对话预设绑定' : '取消当前绑定');
+        $unbindItem.find('.vrm-bind-menu-note').text(currentBound
             ? `当前角色：${currentBound}`
             : currentChatBound
                 ? `当前对话预设：${currentChatBound}`
                 : '当前没有绑定');
 
         const syncProxyFieldState = (selector, $target) => {
-            const $proxy = $(`#blai-purifier-popup [data-blai-click-proxy="${selector}"]`);
+            const $proxy = $(`#vrm-purifier-popup [data-vrm-click-proxy="${selector}"]`);
             if (!$proxy.length || !$target.length) return;
             const active = $target.hasClass('is-active')
-                || $target.hasClass('blai-bind-active')
+                || $target.hasClass('vrm-bind-active')
                 || $target.attr('aria-pressed') === 'true';
-            const canToggleActiveBinding = active && $proxy.attr('data-blai-toggle-binding') === 'true';
+            const canToggleActiveBinding = active && $proxy.attr('data-vrm-toggle-binding') === 'true';
             const disabled = $target.prop('disabled') === true && !canToggleActiveBinding;
-            const note = String($target.find('.blai-bind-menu-note').text() || $target.attr('title') || '').trim();
+            const note = String($target.find('.vrm-bind-menu-note').text() || $target.attr('title') || '').trim();
             $proxy
                 .attr('aria-disabled', String(disabled))
                 .attr('aria-pressed', String(active))
@@ -975,16 +975,16 @@ export function refreshCharacterBindingUI() {
                 .attr('title', note || (disabled ? '当前操作不可用' : '点击执行'));
         };
 
-        syncProxyFieldState('#blai-default-toggle', $defaultBtn);
-        syncProxyFieldState('#blai-bind-current-character', $bindCurrentItem);
-        syncProxyFieldState('#blai-bind-current-chat-preset', $bindChatPresetItem);
-        syncProxyFieldState('#blai-unbind-current-character', $unbindItem);
+        syncProxyFieldState('#vrm-default-toggle', $defaultBtn);
+        syncProxyFieldState('#vrm-bind-current-character', $bindCurrentItem);
+        syncProxyFieldState('#vrm-bind-current-chat-preset', $bindChatPresetItem);
+        syncProxyFieldState('#vrm-unbind-current-character', $unbindItem);
 
-        $(`#blai-purifier-popup [data-blai-click-proxy="#blai-default-toggle"] .binding-action-label`)
+        $(`#vrm-purifier-popup [data-vrm-click-proxy="#vrm-default-toggle"] .binding-action-label`)
             .text(isDefaultActive ? '全局已设为此项' : '设为全局预设');
-        $(`#blai-purifier-popup [data-blai-click-proxy="#blai-bind-current-chat-preset"] .binding-action-label`)
+        $(`#vrm-purifier-popup [data-vrm-click-proxy="#vrm-bind-current-chat-preset"] .binding-action-label`)
             .text(isChatPresetBound ? '取消预设绑定' : currentChatBound ? '更换预设绑定' : '绑定到预设');
-        $(`#blai-purifier-popup [data-blai-click-proxy="#blai-bind-current-character"] .binding-action-label`)
+        $(`#vrm-purifier-popup [data-vrm-click-proxy="#vrm-bind-current-character"] .binding-action-label`)
             .text(isCharacterBound ? '角色卡已绑此项' : currentBound ? '更换角色卡绑定' : '绑定到角色卡');
     }
 }
@@ -1015,11 +1015,11 @@ export function syncRealtimeMaskModeUI() {
         ? '生成中只处理消息显示层文本，不重建代码块或控件。'
         : '生成中只处理酒馆助手显示层文本，不重建代码块或控件。';
 
-    $('#blai-realtime-mask-label').text(label);
-    $('#blai-realtime-mask-note').text(note);
-    $('#blai-responsive-model-pill').text(mode === 'simple-visual' ? '简单视觉' : '实时渲染');
-    $('#blai-realtime-mask-label, #blai-responsive-model-pill').attr('title', note);
-    $('.blai-realtime-mask-option').each(function() {
+    $('#vrm-realtime-mask-label').text(label);
+    $('#vrm-realtime-mask-note').text(note);
+    $('#vrm-responsive-model-pill').text(mode === 'simple-visual' ? '简单视觉' : '实时渲染');
+    $('#vrm-realtime-mask-label, #vrm-responsive-model-pill').attr('title', note);
+    $('.vrm-realtime-mask-option').each(function() {
         const active = String($(this).attr('data-mode') || '') === mode;
         $(this)
             .toggleClass('active', active)
@@ -1032,7 +1032,7 @@ export function updateToolbarUI() {
     const { extension_settings } = getAppContext();
     const settings = extension_settings[extensionName];
     cleanupInvalidPresetBindings();
-    const selects = $('#blai-preset-select, #blai-tools-preset-select');
+    const selects = $('#vrm-preset-select, #vrm-tools-preset-select');
     if (!selects.length) return;
 
     if (runtimeState.presetsUiDirty || selects.filter((_, element) => element.children.length === 0).length > 0) {
@@ -1049,9 +1049,9 @@ export function updateToolbarUI() {
     const aiRuleCount = rules.reduce((count, rule) => count + (Array.isArray(rule?.subRules)
         ? rule.subRules.filter((sub) => sub?.rewriteMode === 'ai').length
         : 0), 0);
-    $('#blai-responsive-preset-title, #blai-responsive-mobile-preset-title, #blai-bind-active-preset').text(activePresetLabel);
-    $('#blai-rule-group-count').text(String(rules.length));
-    $('#blai-ai-rule-count').text(String(aiRuleCount));
+    $('#vrm-responsive-preset-title, #vrm-responsive-mobile-preset-title, #vrm-bind-active-preset').text(activePresetLabel);
+    $('#vrm-rule-group-count').text(String(rules.length));
+    $('#vrm-ai-rule-count').text(String(aiRuleCount));
     syncRealtimeMaskModeUI();
     refreshCharacterBindingUI();
 }
@@ -1062,14 +1062,14 @@ export function addRegexReplacementInput(value = '') {
 
 export function removeRegexReplacementInput(index) {
     const normalizedIndex = Number(index);
-    const $items = $('#blai-modal-sub-regex-list').children('.blai-regex-replacement-chip');
+    const $items = $('#vrm-modal-sub-regex-list').children('.vrm-regex-replacement-chip');
     if (!Number.isInteger(normalizedIndex) || normalizedIndex < 0 || normalizedIndex >= $items.length) return;
     const currentEditIndex = getRegexReplacementEditIndex();
     $items.eq(normalizedIndex).remove();
     if (currentEditIndex === normalizedIndex) {
-        $('#blai-modal-sub-rep').data('regex-edit-index', -1);
+        $('#vrm-modal-sub-rep').data('regex-edit-index', -1);
     } else if (currentEditIndex > normalizedIndex) {
-        $('#blai-modal-sub-rep').data('regex-edit-index', currentEditIndex - 1);
+        $('#vrm-modal-sub-rep').data('regex-edit-index', currentEditIndex - 1);
     }
     syncRegexReplacementInputState();
 }
@@ -1078,22 +1078,22 @@ export function startEditingRegexReplacementInput(index) {
     const normalizedIndex = Number(index);
     const values = getRegexReplacementChipValues();
     if (!Number.isInteger(normalizedIndex) || normalizedIndex < 0 || normalizedIndex >= values.length) return false;
-    $('#blai-modal-sub-rep').val(values[normalizedIndex]).data('regex-edit-index', normalizedIndex);
+    $('#vrm-modal-sub-rep').val(values[normalizedIndex]).data('regex-edit-index', normalizedIndex);
     syncRegexReplacementInputState();
     return true;
 }
 
 export function recognizeRegexReplacementInput() {
-    const $textarea = $('#blai-modal-sub-rep');
+    const $textarea = $('#vrm-modal-sub-rep');
     const draft = String($textarea.val() ?? '');
     if (draft.trim() === '') return { ok: false, reason: 'empty' };
 
     const editIndex = getRegexReplacementEditIndex();
-    const $items = $('#blai-modal-sub-regex-list').children('.blai-regex-replacement-chip');
+    const $items = $('#vrm-modal-sub-regex-list').children('.vrm-regex-replacement-chip');
     if (editIndex >= 0 && editIndex < $items.length) {
         const $item = $items.eq(editIndex);
         $item.data('value', draft);
-        $item.find('.blai-regex-replacement-chip-main')
+        $item.find('.vrm-regex-replacement-chip-main')
             .html(formatReplacementCandidatePreview(draft))
             .attr('title', draft || '点击编辑替换项');
         $textarea.val('').data('regex-edit-index', -1);
@@ -1110,7 +1110,7 @@ export function recognizeRegexReplacementInput() {
 }
 
 export function hasPendingRegexReplacementInput() {
-    const draft = String($('#blai-modal-sub-rep').val() ?? '');
+    const draft = String($('#vrm-modal-sub-rep').val() ?? '');
     if (draft.trim() === '') return false;
     const editIndex = getRegexReplacementEditIndex();
     const values = getRegexReplacementChipValues();
@@ -1120,9 +1120,9 @@ export function hasPendingRegexReplacementInput() {
 export function setSingleRuleReplacementEditor(mode, replacements = []) {
     const normalized = normalizeReplacementList(replacements);
     const isRegexMode = mode === 'regex';
-    const $textarea = $('#blai-modal-sub-rep');
-    const $actions = $('#blai-modal-sub-regex-actions');
-    const $list = $('#blai-modal-sub-regex-list');
+    const $textarea = $('#vrm-modal-sub-rep');
+    const $actions = $('#vrm-modal-sub-regex-actions');
+    const $list = $('#vrm-modal-sub-regex-list');
     $textarea.data('regex-edit-index', -1);
 
     if (isRegexMode) {
@@ -1147,12 +1147,12 @@ export function getSingleRuleReplacementValues(mode) {
         return getRegexReplacementChipValues();
     }
 
-    const rawValue = String($('#blai-modal-sub-rep').val() ?? '');
+    const rawValue = String($('#vrm-modal-sub-rep').val() ?? '');
     return parseInputToWords(rawValue, mode === 'text' ? 'text' : 'regex', { isTarget: false });
 }
 
 export function renderTags() {
-    const container = $('#blai-tags-container');
+    const container = $('#vrm-tags-container');
     if (!container.length) return;
     if (!runtimeState.rulesUiDirty && container.children().length > 0) return;
 
@@ -1173,32 +1173,32 @@ export function renderTags() {
             const subEnabled = sub.enabled !== false;
             const rewriteBadge = getRewriteModeBadgeHtml(sub);
             return `
-                <div class="blai-rule-item ${subEnabled ? '' : 'blai-is-disabled'}">
-                    <div class="blai-rule-source">
-                        <div class="blai-rule-labels">
-                            <span class="blai-tag">${tagText}</span>
+                <div class="vrm-rule-item ${subEnabled ? '' : 'vrm-is-disabled'}">
+                    <div class="vrm-rule-source">
+                        <div class="vrm-rule-labels">
+                            <span class="vrm-tag">${tagText}</span>
                             ${rewriteBadge}
                         </div>
-                        <span class="blai-source">${tPreview}</span>
+                        <span class="vrm-source">${tPreview}</span>
                     </div>
-                    <i class="fas fa-arrow-right blai-arrow"></i>
-                    <div class="blai-rule-target">
-                        <span class="blai-preview-label">改写预览</span>
-                        <span class="blai-target">${rPreview}</span>
+                    <i class="fas fa-arrow-right vrm-arrow"></i>
+                    <div class="vrm-rule-target">
+                        <span class="vrm-preview-label">改写预览</span>
+                        <span class="vrm-target">${rPreview}</span>
                     </div>
                 </div>`;
         }).join('');
 
         const moreHtml = subRules.length > maxPreview
-            ? `<div class="blai-more-text">... 以及其他 ${subRules.length - maxPreview} 组映射</div>`
+            ? `<div class="vrm-more-text">... 以及其他 ${subRules.length - maxPreview} 组映射</div>`
             : '';
         const bodyHtml = subRules.length > 0
-            ? `<div class="blai-card-body">${subRulesHtml}${moreHtml}</div>`
+            ? `<div class="vrm-card-body">${subRulesHtml}${moreHtml}</div>`
             : '';
 
         const isEnabled = r.enabled !== false;
         const riskIndicatorHtml = isRuleActivationWarningEnabled(r)
-            ? `<i class="fas fa-circle-exclamation blai-rule-risk-indicator"
+            ? `<i class="fas fa-circle-exclamation vrm-rule-risk-indicator"
                   data-index="${i}"
                   title="查看启用风险提示"
                   aria-label="查看高风险规则组提示"
@@ -1208,48 +1208,48 @@ export function renderTags() {
         const checkedAttr = isEnabled ? 'checked' : '';
         const moveUpDisabled = i === 0 ? 'disabled' : '';
         const moveDownDisabled = i === rules.length - 1 ? 'disabled' : '';
-        const headerClass = subRules.length > 0 ? 'blai-card-header blai-has-border' : 'blai-card-header';
+        const headerClass = subRules.length > 0 ? 'vrm-card-header vrm-has-border' : 'vrm-card-header';
 
         return `
-            <div class="blai-card ${!isEnabled ? 'blai-is-disabled' : ''}" data-index="${i}">
+            <div class="vrm-card ${!isEnabled ? 'vrm-is-disabled' : ''}" data-index="${i}">
                 <div class="${headerClass}">
-                    <div class="blai-header-left">
-                        <label class="blai-batch-checkbox-label">
-                            <input type="checkbox" class="batch-item-checkbox" data-index="${i}">
-                            <span class="blai-custom-checkbox blai-square-2px"></span>
+                    <div class="vrm-header-left">
+                        <label class="vrm-batch-checkbox-label">
+                            <input type="checkbox" class="vrm-batch-item-checkbox" data-index="${i}">
+                            <span class="vrm-custom-checkbox vrm-square-2px"></span>
                         </label>
-                        <label class="blai-checkbox-label" title="启用或停用此规则组">
-                            <input type="checkbox" class="blai-rule-toggle" data-index="${i}" ${checkedAttr}>
-                            <span class="blai-custom-checkbox"></span>
-                            <span class="blai-group-title">${name}</span>
-                            <span class="blai-rule-count">${subRules.length} 条</span>
+                        <label class="vrm-checkbox-label" title="启用或停用此规则组">
+                            <input type="checkbox" class="vrm-rule-toggle" data-index="${i}" ${checkedAttr}>
+                            <span class="vrm-custom-checkbox"></span>
+                            <span class="vrm-group-title">${name}</span>
+                            <span class="vrm-rule-count">${subRules.length} 条</span>
                         </label>
                     </div>
-                    <div class="blai-icon-group blai-compact">
-                        <button class="blai-rule-move-up" data-index="${i}" title="上移合集" ${moveUpDisabled}><i class="fas fa-arrow-up"></i></button>
-                        <button class="blai-rule-move-down" data-index="${i}" title="下移合集" ${moveDownDisabled}><i class="fas fa-arrow-down"></i></button>
+                    <div class="vrm-icon-group vrm-compact">
+                        <button class="vrm-rule-move-up" data-index="${i}" title="上移合集" ${moveUpDisabled}><i class="fas fa-arrow-up"></i></button>
+                        <button class="vrm-rule-move-down" data-index="${i}" title="下移合集" ${moveDownDisabled}><i class="fas fa-arrow-down"></i></button>
                         ${riskIndicatorHtml}
-                        <button class="blai-rule-edit" type="button" data-index="${i}" title="打开合集" aria-label="打开合集"><i class="fas fa-ellipsis-vertical"></i></button>
+                        <button class="vrm-rule-edit" type="button" data-index="${i}" title="打开合集" aria-label="打开合集"><i class="fas fa-ellipsis-vertical"></i></button>
                     </div>
                 </div>
                 ${bodyHtml}
             </div>`;
     }).join('');
 
-    container.html(html || '<div class="blai-empty-state">当前无规则，请点击上方按钮新增</div>');
+    container.html(html || '<div class="vrm-empty-state">当前无规则，请点击上方按钮新增</div>');
     const aiRuleCount = rules.reduce((count, rule) => count + (Array.isArray(rule?.subRules)
         ? rule.subRules.filter((sub) => sub?.rewriteMode === 'ai').length
         : 0), 0);
-    $('#blai-rule-group-count').text(String(rules.length));
-    $('#blai-ai-rule-count').text(String(aiRuleCount));
+    $('#vrm-rule-group-count').text(String(rules.length));
+    $('#vrm-ai-rule-count').text(String(aiRuleCount));
     markRulesUiDirty(false);
 }
 
 export function renderSubrulesToModal() {
-    const container = $('#blai-edit-subrules-container');
+    const container = $('#vrm-edit-subrules-container');
     if (!container.length) return;
     if (runtimeState.currentEditingSubrules.length === 0) {
-        container.html('<div style="text-align:center; color:var(--blai-text-secondary); font-size:12px; padding:20px;">当前合集没有映射规则，请点击下方按钮添加。</div>');
+        container.html('<div style="text-align:center; color:var(--vrm-text-secondary); font-size:12px; padding:20px;">当前合集没有映射规则，请点击下方按钮添加。</div>');
         return;
     }
 
@@ -1263,9 +1263,9 @@ export function renderSubrulesToModal() {
 
         const badgeBaseStyle = "display:inline-flex; align-items:center; justify-content:center; padding:4px 10px; border-radius:6px; font-size:13px; font-weight:800; color:#fff; min-width:45px; margin:0; line-height:1; flex-shrink:0;";
         let badgeHTML = '';
-        if (mode === 'regex') badgeHTML = `<span style="${badgeBaseStyle} background:var(--blai-accent-color);">正则</span>`;
-        else if (mode === 'simple') badgeHTML = `<span style="${badgeBaseStyle} background:color-mix(in srgb, var(--blai-accent-color) 72%, #3b82f6 28%);">简易</span>`;
-        else badgeHTML = `<span style="${badgeBaseStyle} background:var(--blai-text-secondary); color:var(--blai-background-popup);">普通</span>`;
+        if (mode === 'regex') badgeHTML = `<span style="${badgeBaseStyle} background:var(--vrm-accent-color);">正则</span>`;
+        else if (mode === 'simple') badgeHTML = `<span style="${badgeBaseStyle} background:color-mix(in srgb, var(--vrm-accent-color) 72%, #3b82f6 28%);">简易</span>`;
+        else badgeHTML = `<span style="${badgeBaseStyle} background:var(--vrm-text-secondary); color:var(--vrm-background-popup);">普通</span>`;
 
         const tPreview = getRuleSourcePreviewText(sub);
         const rPreview = formatReplacementPreview(sub.replacements || [], mode);
@@ -1274,34 +1274,34 @@ export function renderSubrulesToModal() {
         let remarkHTML = '';
         if (remark) {
             remarkHTML = `
-                <div style="margin-top: 8px; padding-top: 10px; border-top: 1px dotted color-mix(in srgb, var(--blai-text-primary) 35%, rgba(128,128,128,0.5)); font-size: 11px; color: var(--blai-text-mute); font-style: italic;">
+                <div style="margin-top: 8px; padding-top: 10px; border-top: 1px dotted color-mix(in srgb, var(--vrm-text-primary) 35%, rgba(128,128,128,0.5)); font-size: 11px; color: var(--vrm-text-mute); font-style: italic;">
                     <i class="fas fa-info-circle" style="margin-right: 4px;"></i>${safeHtml(remark)}
                 </div>
             `;
         }
 
         return `
-            <div class="blai-subrule-card ${subEnabled ? '' : 'blai-is-disabled'}" style="flex-shrink: 0 !important; background: var(--blai-background-secondary); border: 1px solid var(--blai-border-color); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.04);">
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px dotted color-mix(in srgb, var(--blai-text-primary) 35%, rgba(128,128,128,0.5));">
+            <div class="vrm-subrule-card ${subEnabled ? '' : 'vrm-is-disabled'}" style="flex-shrink: 0 !important; background: var(--vrm-background-secondary); border: 1px solid var(--vrm-border-color); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px dotted color-mix(in srgb, var(--vrm-text-primary) 35%, rgba(128,128,128,0.5));">
                     <div style="display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; min-width: 0;">
-                        <label class="blai-checkbox-label blai-subrule-enable-label" title="${subEnabled ? '停用此条规则' : '启用此条规则'}">
-                            <input type="checkbox" class="blai-subrule-toggle" data-index="${i}" ${checkedAttr}>
-                            <span class="blai-custom-checkbox"></span>
+                        <label class="vrm-checkbox-label vrm-subrule-enable-label" title="${subEnabled ? '停用此条规则' : '启用此条规则'}">
+                            <input type="checkbox" class="vrm-subrule-toggle" data-index="${i}" ${checkedAttr}>
+                            <span class="vrm-custom-checkbox"></span>
                         </label>
                         ${badgeHTML}
                         ${rewriteBadge}
                     </div>
-                    <div class="blai-subrule-btn-group" style="display: flex; justify-content: space-between; align-items: center; flex: 0 0 35%; margin: 0; padding: 0;">
-                        <button class="blai-move-subrule-up-btn blai-icon-btn" data-index="${i}" title="上移" ${moveUpDisabled} style="margin:0;"><i class="fas fa-arrow-up"></i></button>
-                        <button class="blai-move-subrule-down-btn blai-icon-btn" data-index="${i}" title="下移" ${moveDownDisabled} style="margin:0;"><i class="fas fa-arrow-down"></i></button>
-                        <button class="blai-edit-subrule-btn blai-icon-btn" data-index="${i}" title="独立编辑" style="margin:0;"><i class="fas fa-pen"></i></button>
-                        <button class="blai-del-subrule-btn blai-icon-btn blai-danger-btn" data-index="${i}" title="删除" style="margin:0;"><i class="fas fa-trash"></i></button>
-                        <button class="blai-remark-subrule-btn blai-icon-btn" data-index="${i}" title="快捷修改备注" style="margin:0;"><i class="fas fa-comment-dots"></i></button>
+                    <div class="vrm-subrule-btn-group" style="display: flex; justify-content: space-between; align-items: center; flex: 0 0 35%; margin: 0; padding: 0;">
+                        <button class="vrm-move-subrule-up-btn vrm-icon-btn" data-index="${i}" title="上移" ${moveUpDisabled} style="margin:0;"><i class="fas fa-arrow-up"></i></button>
+                        <button class="vrm-move-subrule-down-btn vrm-icon-btn" data-index="${i}" title="下移" ${moveDownDisabled} style="margin:0;"><i class="fas fa-arrow-down"></i></button>
+                        <button class="vrm-edit-subrule-btn vrm-icon-btn" data-index="${i}" title="独立编辑" style="margin:0;"><i class="fas fa-pen"></i></button>
+                        <button class="vrm-del-subrule-btn vrm-icon-btn vrm-danger-btn" data-index="${i}" title="删除" style="margin:0;"><i class="fas fa-trash"></i></button>
+                        <button class="vrm-remark-subrule-btn vrm-icon-btn" data-index="${i}" title="快捷修改备注" style="margin:0;"><i class="fas fa-comment-dots"></i></button>
                     </div>
                 </div>
-                <div style="font-size: 13px !important; color: var(--blai-text-primary); line-height: 1.5; word-break: break-all;">
-                    <b style="font-size: 13px !important;">${tPreview}</b> 
-                    <i class="fas fa-arrow-right" style="color: var(--blai-text-mute); font-size: 11px; margin: 0 6px;"></i> 
+                <div style="font-size: 13px !important; color: var(--vrm-text-primary); line-height: 1.5; word-break: break-all;">
+                    <b style="font-size: 13px !important;">${tPreview}</b>
+                    <i class="fas fa-arrow-right" style="color: var(--vrm-text-mute); font-size: 11px; margin: 0 6px;"></i>
                     <span style="font-size: 13px !important;">${rPreview}</span>
                 </div>
                 ${remarkHTML}
@@ -1331,17 +1331,17 @@ export function openSingleRuleModal(index, options = {}) {
         aiPromptTemplate = String(sub.aiPromptTemplate || '');
     }
 
-    $('#blai-modal-sub-mode').val(mode).data('current-mode', mode);
-    $('#blai-modal-sub-rewrite-mode').val(rewriteMode);
-    $('#blai-modal-sub-target').val(tStr);
+    $('#vrm-modal-sub-mode').val(mode).data('current-mode', mode);
+    $('#vrm-modal-sub-rewrite-mode').val(rewriteMode);
+    $('#vrm-modal-sub-target').val(tStr);
     setSingleRuleReplacementEditor(mode, replacements);
-    $('#blai-modal-sub-remark').val(remark);
-    $('#blai-modal-sub-ai-prompt').val(aiPromptTemplate);
+    $('#vrm-modal-sub-remark').val(remark);
+    $('#vrm-modal-sub-ai-prompt').val(aiPromptTemplate);
 
-    $('#blai-modal-sub-mode').trigger('change');
-    $('#blai-modal-sub-rewrite-mode').trigger('change');
-    if (options.hideEditModal === true) $('#blai-rule-edit-modal').hide();
-    $('#blai-subrule-edit-modal').css('display', 'flex').hide().fadeIn(150);
+    $('#vrm-modal-sub-mode').trigger('change');
+    $('#vrm-modal-sub-rewrite-mode').trigger('change');
+    if (options.hideEditModal === true) $('#vrm-rule-edit-modal').hide();
+    $('#vrm-subrule-edit-modal').css('display', 'flex').hide().fadeIn(150);
 }
 
 export function openTransferModal(ruleIndexOrIndexes) {
@@ -1360,21 +1360,21 @@ export function openTransferModal(ruleIndexOrIndexes) {
         .map((v) => Number(v))
         .filter((v) => Number.isInteger(v) && v >= 0);
     runtimeState.currentTransferRuleIndex = runtimeState.currentTransferRuleIndexes[0] ?? -1;
-    const $select = $('#blai-transfer-target');
+    const $select = $('#vrm-transfer-target');
     $select.html(targetNames.map((name) => `<option value="${safeHtml(name)}">${safeHtml(name)}</option>`).join(''));
-    $('#blai-rule-transfer-modal').css('display', 'flex');
+    $('#vrm-rule-transfer-modal').css('display', 'flex');
 }
 
 export function closeTransferModal() {
     runtimeState.currentTransferRuleIndex = -1;
     runtimeState.currentTransferRuleIndexes = [];
-    $('#blai-rule-transfer-modal').hide();
+    $('#vrm-rule-transfer-modal').hide();
 }
 
 export function runRuleTransfer(isMove) {
     const { extension_settings, saveSettingsDebounced } = getAppContext();
     const settings = extension_settings[extensionName];
-    const targetPreset = String($('#blai-transfer-target').val() || '');
+    const targetPreset = String($('#vrm-transfer-target').val() || '');
     const sourcePreset = String(settings.activePreset || '');
     const transferIndexes = Array.isArray(runtimeState.currentTransferRuleIndexes) && runtimeState.currentTransferRuleIndexes.length > 0
         ? runtimeState.currentTransferRuleIndexes
@@ -1433,16 +1433,16 @@ export function openEditModal(index = -1, options = {}) {
     } else {
         clearRuleSearchEditFlow();
     }
-    const modal = $('#blai-rule-edit-modal');
+    const modal = $('#vrm-rule-edit-modal');
 
     if (index === -1) {
-        $('#blai-edit-modal-title').html('<i class="fas fa-folder-plus"></i> 新增规则合集');
-        $('#blai-edit-name').val('');
+        $('#vrm-edit-modal-title').html('<i class="fas fa-folder-plus"></i> 新增规则合集');
+        $('#vrm-edit-name').val('');
         runtimeState.currentEditingSubrules = [{ targets: [], replacements: [], mode: 'simple', enabled: true, isEditing: false }];
     } else {
         const rule = settings.rules[index];
-        $('#blai-edit-modal-title').html('<i class="fas fa-pen"></i> 编辑规则合集');
-        $('#blai-edit-name').val(rule.name || '');
+        $('#vrm-edit-modal-title').html('<i class="fas fa-pen"></i> 编辑规则合集');
+        $('#vrm-edit-name').val(rule.name || '');
         runtimeState.currentEditingSubrules = JSON.parse(JSON.stringify(rule.subRules || []));
         runtimeState.currentEditingSubrules.forEach(sub => {
             if (sub.enabled === undefined) sub.enabled = true;

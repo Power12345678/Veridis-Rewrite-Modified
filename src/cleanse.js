@@ -6,7 +6,7 @@ import { isMessageAiFinal, isMessageAiFinalForBranch } from './messageMeta.js';
 import { markHostChatDirtyFromIndex, runPreferredSaveChat } from './platform.js';
 
 function isRevertedMessageObject(value) {
-    return !!(value && typeof value === 'object' && value.__blai_is_reverted === true);
+    return !!(value && typeof value === 'object' && value.__vrm_is_reverted === true);
 }
 
 function createDeepCleanCancelledError(totalChanges = 0, partialChanges = 0) {
@@ -256,19 +256,19 @@ export async function performDeepCleanse() {
 
             updateDeepCleanOverlay(1, '清理完成，正在准备刷新页面...');
             await new Promise(r => setTimeout(r, 180));
-            $('#blai-loading-overlay').remove();
+            $('#vrm-loading-overlay').remove();
 
             alert(`清理完成，共处理 ${scrubbedItems} 处匹配项。\n\n页面即将刷新，请在刷新后将系统预设切换回常用预设！`);
             location.reload();
         } else {
             updateDeepCleanOverlay(1, '未发现残留，任务结束。');
             await new Promise(r => setTimeout(r, 260));
-            $('#blai-loading-overlay').remove();
+            $('#vrm-loading-overlay').remove();
             alert('未发现需要替换的数据残留。');
         }
     } catch (e) {
         logger.error(`深度清理出错`, e);
-        $('#blai-loading-overlay').remove();
+        $('#vrm-loading-overlay').remove();
         if (e && e.message === 'DEEP_CLEAN_CANCELLED') {
             const totalChanges = Number.isFinite(Number(e.totalChanges)) ? Number(e.totalChanges) : 0;
             alert(`深度清理已停止，已处理 ${totalChanges} 处匹配项。\n已完成的处理会保留在当前页面内；如不想保留，请刷新页面后再操作。`);

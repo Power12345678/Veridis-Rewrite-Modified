@@ -1,231 +1,231 @@
 
-        <div id="blai-purifier-popup" class="blai-app-shell scheme-a" data-blai-theme="auto" style="display:none;">
+        <div id="vrm-purifier-popup" class="vrm-app-shell scheme-a" data-vrm-theme="auto" style="display:none;">
             <div class="windowbar">
-                <button id="blai-close-btn" type="button" class="blai-window-close" title="关闭" aria-label="关闭">×</button>
-                <button id="blai-theme-toggle" type="button" class="text-btn blai-toolbar-icon-btn blai-theme-action" title="切换主题" aria-label="切换主题"><i class="fas fa-sun" aria-hidden="true"></i></button>
-                <div class="desktop-title"><strong id="blai-responsive-title" data-title>首页</strong><span id="blai-responsive-preset-title">临时规则</span></div>
+                <button id="vrm-close-btn" type="button" class="vrm-window-close" title="关闭" aria-label="关闭">×</button>
+                <button id="vrm-theme-toggle" type="button" class="text-btn vrm-toolbar-icon-btn vrm-theme-action" title="切换主题" aria-label="切换主题"><i class="fas fa-sun" aria-hidden="true"></i></button>
+                <div class="desktop-title"><strong id="vrm-responsive-title" data-title>首页</strong><span id="vrm-responsive-preset-title">临时规则</span></div>
                 <div class="desktop-actions">
-                    <span id="blai-responsive-model-pill" class="pill">AI 改写</span>
-                    <button id="blai-preset-save" type="button" class="text-btn accent blai-toolbar-icon-btn" title="保存" aria-label="保存"><i class="fas fa-save" aria-hidden="true"></i></button>
+                    <span id="vrm-responsive-model-pill" class="pill">AI 改写</span>
+                    <button id="vrm-preset-save" type="button" class="text-btn accent vrm-toolbar-icon-btn" title="保存" aria-label="保存"><i class="fas fa-save" aria-hidden="true"></i></button>
                 </div>
             </div>
             <div class="phone-top">
-                <button type="button" class="round-btn" data-blai-click-proxy="#blai-theme-toggle" aria-label="切换主题"><i class="fas fa-sun" aria-hidden="true"></i></button>
-                <div class="phone-title"><strong data-title>首页</strong><span id="blai-responsive-mobile-preset-title">临时规则</span></div>
+                <button type="button" class="round-btn" data-vrm-click-proxy="#vrm-theme-toggle" aria-label="切换主题"><i class="fas fa-sun" aria-hidden="true"></i></button>
+                <div class="phone-title"><strong data-title>首页</strong><span id="vrm-responsive-mobile-preset-title">临时规则</span></div>
                 <div class="phone-actions">
-                    <button type="button" class="round-btn" data-blai-click-proxy="#blai-preset-save" aria-label="保存"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg></button>
-                    <button type="button" class="round-btn" data-blai-click-proxy="#blai-close-btn" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+                    <button type="button" class="round-btn" data-vrm-click-proxy="#vrm-preset-save" aria-label="保存"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg></button>
+                    <button type="button" class="round-btn" data-vrm-click-proxy="#vrm-close-btn" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
                 </div>
             </div>
             <div class="app-main">
                 <nav class="rail">
-                    <div class="brand" aria-label="Veridis Rewrite"><strong>VR</strong></div>
+                    <div class="brand" aria-label="Veridis Rewrite Modified"><strong>VRM</strong></div>
                     <button type="button" class="rail-btn active" data-page-target="overview"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6" rx="2"/><rect x="4" y="14" width="16" height="6" rx="2"/></svg><span>首页</span></button><button type="button" class="rail-btn" data-page-target="ai"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M5 8h14"/></svg><span>AI</span></button><button type="button" class="rail-btn" data-page-target="clean"><svg viewBox="0 0 24 24"><path d="M4 14c4-9 12-9 16 0"/><path d="M8 14c2 4 6 4 8 0"/><path d="M12 4v3M5 7l2 2M19 7l-2 2"/></svg><span>净化</span></button><button type="button" class="rail-btn" data-page-target="tools"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4z"/></svg><span>工具</span></button>
                 </nav>
                 <div class="pages">
                     <section class="page-panel active" data-page="overview">
                         <div class="panel overview-preset-panel">
                             <div class="panel-head"><strong>当前预设</strong></div>
-                            <div id="blai-legacy-purifier-warning" class="blai-legacy-warning" role="status" aria-live="polite" hidden>
-                                <div class="blai-legacy-warning-icon" aria-hidden="true"><i class="fas fa-triangle-exclamation"></i></div>
-                                <div class="blai-legacy-warning-main">
-                                    <div class="blai-legacy-warning-title">检测到旧版 purifier</div>
-                                    <div class="blai-legacy-warning-text">旧版与 AI 版只能保留一个，请在 SillyTavern 扩展管理中关闭旧插件。</div>
+                            <div id="vrm-legacy-purifier-warning" class="vrm-legacy-warning" role="status" aria-live="polite" hidden>
+                                <div class="vrm-legacy-warning-icon" aria-hidden="true"><i class="fas fa-triangle-exclamation"></i></div>
+                                <div class="vrm-legacy-warning-main">
+                                    <div class="vrm-legacy-warning-title">检测到旧版 purifier</div>
+                                    <div class="vrm-legacy-warning-text">旧版与 AI 版只能保留一个，请在 SillyTavern 扩展管理中关闭旧插件。</div>
                                 </div>
-                                <button id="blai-close-legacy-plugin" type="button" class="blai-legacy-warning-action">关闭旧插件</button>
+                                <button id="vrm-close-legacy-plugin" type="button" class="vrm-legacy-warning-action">关闭旧插件</button>
                             </div>
                             <div class="field-grid">
-                                <label class="field blai-preset-field">
+                                <label class="field vrm-preset-field">
                                     <span>净化预设</span>
-                                    <select id="blai-preset-select" class="blai-select-box"></select>
+                                    <select id="vrm-preset-select" class="vrm-select-box"></select>
                                 </label>
                                 <div class="metric-grid">
-                                    <div class="metric"><b id="blai-rule-group-count">0</b><span>规则组</span></div>
-                                    <div class="metric"><b id="blai-ai-rule-count">0</b><span>AI 项</span></div>
-                                    <button id="blai-ai-api-check" class="metric api-metric" data-state="idle" type="button"><b id="blai-ai-api-status">拉取</b><span>模型列表</span></button>
+                                    <div class="metric"><b id="vrm-rule-group-count">0</b><span>规则组</span></div>
+                                    <div class="metric"><b id="vrm-ai-rule-count">0</b><span>AI 项</span></div>
+                                    <button id="vrm-ai-api-check" class="metric api-metric" data-state="idle" type="button"><b id="vrm-ai-api-status">拉取</b><span>模型列表</span></button>
                                 </div>
                             </div>
                             <div class="overview-preset-actions" aria-label="预设操作">
-                                <button type="button" data-blai-click-proxy="#blai-preset-new"><i class="fas fa-plus"></i><span>新建</span></button>
-                                <button type="button" data-blai-click-proxy="#blai-preset-rename"><i class="fas fa-pen-to-square"></i><span>重命名</span></button>
-                                <button type="button" data-blai-click-proxy="#blai-preset-import"><i class="fas fa-download"></i><span>导入</span></button>
-                                <button type="button" data-blai-click-proxy="#blai-preset-export"><i class="fas fa-upload"></i><span>导出</span></button>
+                                <button type="button" data-vrm-click-proxy="#vrm-preset-new"><i class="fas fa-plus"></i><span>新建</span></button>
+                                <button type="button" data-vrm-click-proxy="#vrm-preset-rename"><i class="fas fa-pen-to-square"></i><span>重命名</span></button>
+                                <button type="button" data-vrm-click-proxy="#vrm-preset-import"><i class="fas fa-download"></i><span>导入</span></button>
+                                <button type="button" data-vrm-click-proxy="#vrm-preset-export"><i class="fas fa-upload"></i><span>导出</span></button>
                                 <span class="overview-action-divider" aria-hidden="true"></span>
-                                <button type="button" class="blai-danger" data-blai-click-proxy="#blai-preset-delete"><i class="fas fa-trash"></i><span>删除</span></button>
+                                <button type="button" class="vrm-danger" data-vrm-click-proxy="#vrm-preset-delete"><i class="fas fa-trash"></i><span>删除</span></button>
                             </div>
                         </div>
                         <div class="panel rules-panel">
                             <div class="panel-head">
                                 <strong>规则合集</strong>
                                 <div class="panel-actions">
-                                    <button id="blai-open-new-rule-btn" type="button" class="text-btn accent"><i class="fas fa-folder-plus"></i><span>添加</span></button>
-                                    <button id="blai-preset-search" type="button" class="text-btn"><i class="fas fa-magnifying-glass"></i><span>搜索</span></button>
-                                    <button id="blai-batch-toggle" type="button" class="text-btn"><i class="fas fa-list-check"></i><span>编辑分组</span></button>
-                                    <button id="blai-rule-sort-toggle" type="button" class="text-btn" title="反转当前分组顺序" aria-label="反转当前分组顺序"><i class="fas fa-arrows-up-down"></i><span>反序排序</span></button>
+                                    <button id="vrm-open-new-rule-btn" type="button" class="text-btn accent"><i class="fas fa-folder-plus"></i><span>添加</span></button>
+                                    <button id="vrm-preset-search" type="button" class="text-btn"><i class="fas fa-magnifying-glass"></i><span>搜索</span></button>
+                                    <button id="vrm-batch-toggle" type="button" class="text-btn"><i class="fas fa-list-check"></i><span>编辑分组</span></button>
+                                    <button id="vrm-rule-sort-toggle" type="button" class="text-btn" title="反转当前分组顺序" aria-label="反转当前分组顺序"><i class="fas fa-arrows-up-down"></i><span>反序排序</span></button>
                                 </div>
                             </div>
-                            <div class="rule-manager" id="blai-batch-operations">
+                            <div class="rule-manager" id="vrm-batch-operations">
                                 <div class="rule-manager-row">
                                     <div class="selection-status"><strong>批量编辑模式</strong></div>
                                     <span class="selection-hint">规则合集</span>
                                 </div>
                                 <div class="batch-actions">
-                                    <button class="text-btn" id="blai-btn-select-all"><i class="far fa-check-square"></i> 全选</button>
-                                    <button class="text-btn" id="blai-btn-select-invert"><i class="fas fa-minus-square"></i> 反选</button>
-                                    <button class="text-btn" id="blai-btn-batch-transfer"><i class="fas fa-copy"></i> 复制 / 转移</button>
-                                    <button class="text-btn blai-danger" id="blai-btn-batch-delete"><i class="fas fa-trash"></i> 删除</button>
+                                    <button class="text-btn" id="vrm-btn-select-all"><i class="far fa-check-square"></i> 全选</button>
+                                    <button class="text-btn" id="vrm-btn-select-invert"><i class="fas fa-minus-square"></i> 反选</button>
+                                    <button class="text-btn" id="vrm-btn-batch-transfer"><i class="fas fa-copy"></i> 复制 / 转移</button>
+                                    <button class="text-btn vrm-danger" id="vrm-btn-batch-delete"><i class="fas fa-trash"></i> 删除</button>
                                 </div>
                             </div>
-                            <div id="blai-tags-container" class="list blai-card-list"></div>
+                            <div id="vrm-tags-container" class="list vrm-card-list"></div>
                         </div>
                     </section>
                     <section class="page-panel" data-page="ai">
-                        <div id="blai-ai-settings" class="content-grid blai-ai-settings">
+                        <div id="vrm-ai-settings" class="content-grid vrm-ai-settings">
                             <div class="panel">
-                                <div class="panel-head blai-ai-connection-head">
+                                <div class="panel-head vrm-ai-connection-head">
                                     <strong>API连接配置</strong>
-                                    <label class="blai-checkbox-label">
-                                        <input type="checkbox" id="blai-ai-enabled">
-                                        <span class="blai-custom-checkbox blai-square"></span>
+                                    <label class="vrm-checkbox-label">
+                                        <input type="checkbox" id="vrm-ai-enabled">
+                                        <span class="vrm-custom-checkbox vrm-square"></span>
                                         <span>启用改写</span>
                                     </label>
                                 </div>
                                 <div class="field-grid">
-                                    <div class="blai-ai-comment-protection-row">
-                                        <label class="blai-checkbox-label" title="开启后，content 等 XML 标签中的 HTML/XML 注释会原样保留，不参与 AI 改写">
-                                            <input type="checkbox" id="blai-ai-protect-comments">
-                                            <span class="blai-custom-checkbox blai-square"></span>
+                                    <div class="vrm-ai-comment-protection-row">
+                                        <label class="vrm-checkbox-label" title="开启后，content 等 XML 标签中的 HTML/XML 注释会原样保留，不参与 AI 改写">
+                                            <input type="checkbox" id="vrm-ai-protect-comments">
+                                            <span class="vrm-custom-checkbox vrm-square"></span>
                                             <span>HTML/XML 注释保护</span>
                                         </label>
                                         <small>保留 &lt;!-- ... --&gt;</small>
                                     </div>
-                                    <label class="field blai-ai-field blai-ai-api-preset-field">
+                                    <label class="field vrm-ai-field vrm-ai-api-preset-field">
                                         <span>API 预设</span>
-                                        <span class="blai-ai-api-preset-row">
-                                            <select id="blai-ai-api-preset" class="blai-select-box" aria-label="API 预设"></select>
-                                            <span class="blai-ai-api-preset-actions">
-                                                <button type="button" id="blai-ai-api-preset-new" class="text-btn" title="将当前 API 配置另存为新预设"><i class="fas fa-plus"></i><span>新建</span></button>
-                                                <button type="button" id="blai-ai-api-preset-save" class="text-btn" title="保存当前 API 配置"><i class="fas fa-save"></i><span>保存</span></button>
-                                                <button type="button" id="blai-ai-api-preset-delete" class="text-btn" title="删除当前 API 预设"><i class="fas fa-trash"></i><span>删除</span></button>
+                                        <span class="vrm-ai-api-preset-row">
+                                            <select id="vrm-ai-api-preset" class="vrm-select-box" aria-label="API 预设"></select>
+                                            <span class="vrm-ai-api-preset-actions">
+                                                <button type="button" id="vrm-ai-api-preset-new" class="text-btn" title="将当前 API 配置另存为新预设"><i class="fas fa-plus"></i><span>新建</span></button>
+                                                <button type="button" id="vrm-ai-api-preset-save" class="text-btn" title="保存当前 API 配置"><i class="fas fa-save"></i><span>保存</span></button>
+                                                <button type="button" id="vrm-ai-api-preset-delete" class="text-btn" title="删除当前 API 预设"><i class="fas fa-trash"></i><span>删除</span></button>
                                             </span>
                                         </span>
                                     </label>
-                                    <label class="field blai-ai-field"><span>API 地址</span><input type="text" id="blai-ai-base-url" class="blai-input" placeholder="https://api.openai.com/v1"></label>
-                                    <label class="field blai-ai-field blai-api-key-field">
+                                    <label class="field vrm-ai-field"><span>API 地址</span><input type="text" id="vrm-ai-base-url" class="vrm-input" placeholder="https://api.openai.com/v1"></label>
+                                    <label class="field vrm-ai-field vrm-api-key-field">
                                         <span>API 密钥</span>
-                                        <span class="blai-ai-key-row">
-                                            <input type="password" id="blai-ai-api-key" class="blai-input" autocomplete="off">
-                                            <button type="button" id="blai-ai-api-key-reveal" class="mini-btn" title="显示 / 隐藏 API Key"><i class="fas fa-eye"></i></button>
-                                            <button type="button" id="blai-ai-api-key-clear" class="mini-btn" title="清空 API Key"><i class="fas fa-eraser"></i></button>
+                                        <span class="vrm-ai-key-row">
+                                            <input type="password" id="vrm-ai-api-key" class="vrm-input" autocomplete="off">
+                                            <button type="button" id="vrm-ai-api-key-reveal" class="mini-btn" title="显示 / 隐藏 API Key"><i class="fas fa-eye"></i></button>
+                                            <button type="button" id="vrm-ai-api-key-clear" class="mini-btn" title="清空 API Key"><i class="fas fa-eraser"></i></button>
                                         </span>
                                     </label>
-                                    <label class="field blai-ai-field blai-ai-model-field">
+                                    <label class="field vrm-ai-field vrm-ai-model-field">
                                         <span>模型选择</span>
-                                        <span class="blai-ai-model-row">
-                                            <select id="blai-ai-model" class="blai-select-box blai-ai-model-select"></select>
-                                            <button type="button" id="blai-ai-model-fetch" class="text-btn" title="通过酒馆助手拉取模型，不发送聊天消息">拉取模型</button>
+                                        <span class="vrm-ai-model-row">
+                                            <select id="vrm-ai-model" class="vrm-select-box vrm-ai-model-select"></select>
+                                            <button type="button" id="vrm-ai-model-fetch" class="text-btn" title="通过酒馆助手拉取模型，不发送聊天消息">拉取模型</button>
                                         </span>
                                     </label>
-                                    <label class="field blai-ai-field"><span>XML 标签</span><input type="text" id="blai-ai-xml-scope" class="blai-input" placeholder="留空则在消息结束后处理整条回复"><small>填写标签可在闭合后提前请求；留空则等待整条回复生成完成。</small></label>
+                                    <label class="field vrm-ai-field"><span>XML 标签</span><input type="text" id="vrm-ai-xml-scope" class="vrm-input" placeholder="留空则在消息结束后处理整条回复"><small>填写标签可在闭合后提前请求；留空则等待整条回复生成完成。</small></label>
                                 </div>
                                 <div class="clean-row"><p>请求通过 TavernHelper.generateRaw 发送，但固定使用这里配置的 Base URL、API Key 和模型，不占用酒馆当前主模型。</p></div>
-                                <div id="blai-ai-http-warning" class="clean-row blai-ai-warning" hidden><p>非本地 HTTP 地址不安全，建议使用 HTTPS 或本地代理。</p></div>
+                                <div id="vrm-ai-http-warning" class="clean-row vrm-ai-warning" hidden><p>非本地 HTTP 地址不安全，建议使用 HTTPS 或本地代理。</p></div>
                             </div>
                             <div class="panel">
                                 <div class="panel-head"><strong>生成设定</strong></div>
                                 <div class="field"><span>提示词组合</span><small>全局 + 单条改写要求</small></div>
-                                <div class="field-grid blai-ai-limit-grid">
-                                    <div class="field blai-temperature-field">
-                                        <span class="blai-temperature-label-row">
-                                            <label for="blai-ai-temperature">温度</label>
-                                            <details class="blai-temperature-guide">
+                                <div class="field-grid vrm-ai-limit-grid">
+                                    <div class="field vrm-temperature-field">
+                                        <span class="vrm-temperature-label-row">
+                                            <label for="vrm-ai-temperature">温度</label>
+                                            <details class="vrm-temperature-guide">
                                                 <summary title="查看模型推荐温度" aria-label="查看模型推荐温度"><i class="fas fa-exclamation-circle" aria-hidden="true"></i></summary>
-                                                <div class="blai-temperature-guide-card">
-                                                    <div class="blai-temperature-guide-row"><b>dsv4f</b><strong>1.00 <em>推荐温度</em></strong><small>平均时间 92.13s · 质量 98.6</small></div>
-                                                    <div class="blai-temperature-guide-row"><b>gemini3f</b><strong>0.95 <em>推荐温度</em></strong><small>平均时间 76.33s · 质量 97.4</small></div>
-                                                    <div class="blai-temperature-guide-row"><b>gemini3.1p</b><strong>0.45 <em>推荐温度</em></strong><small>平均时间 29.05s · 质量 99.1</small></div>
-                                                    <div class="blai-temperature-guide-row"><b>gemini3.6f</b><strong>0.90 <em>推荐温度</em></strong><small>平均时间 22.04s · 质量 98.9</small></div>
+                                                <div class="vrm-temperature-guide-card">
+                                                    <div class="vrm-temperature-guide-row"><b>dsv4f</b><strong>1.00 <em>推荐温度</em></strong><small>平均时间 92.13s · 质量 98.6</small></div>
+                                                    <div class="vrm-temperature-guide-row"><b>gemini3f</b><strong>0.95 <em>推荐温度</em></strong><small>平均时间 76.33s · 质量 97.4</small></div>
+                                                    <div class="vrm-temperature-guide-row"><b>gemini3.1p</b><strong>0.45 <em>推荐温度</em></strong><small>平均时间 29.05s · 质量 99.1</small></div>
+                                                    <div class="vrm-temperature-guide-row"><b>gemini3.6f</b><strong>0.90 <em>推荐温度</em></strong><small>平均时间 22.04s · 质量 98.9</small></div>
                                                     <p><strong>dsv4f 和 gemini3f 改写较慢，推荐使用 gemini3.1p 和 gemini3.6f。</strong>其他模型请自行测试合适温度。</p>
                                                 </div>
                                             </details>
                                         </span>
-                                        <span class="setting-value"><input type="number" id="blai-ai-temperature" class="setting-input blai-input" min="0" max="2" step="0.05"></span>
+                                        <span class="setting-value"><input type="number" id="vrm-ai-temperature" class="setting-input vrm-input" min="0" max="2" step="0.05"></span>
                                     </div>
-                                    <label class="field"><span>超时</span><span class="setting-value"><input type="number" id="blai-ai-timeout" class="setting-input blai-input" min="1" max="120" step="1"><em class="setting-unit">s</em></span></label>
-                                    <label class="field"><span>失败重试</span><span class="setting-value"><input type="number" id="blai-ai-max-retries" class="setting-input blai-input" min="0" max="5" step="1"><em class="setting-unit">次</em></span></label>
-                                    <label class="field"><span>单次条目</span><span class="setting-value"><input type="number" id="blai-ai-max-items" class="setting-input blai-input" min="1" step="1"><em class="setting-unit">条</em></span></label>
-                                    <label class="field"><span>上下文</span><span class="setting-value"><input type="number" id="blai-ai-max-context" class="setting-input blai-input" min="1000" max="60000" step="500"><em class="setting-unit">字</em></span></label>
-                                    <label class="field"><span>输出上限</span><span class="setting-value"><input type="number" id="blai-ai-max-rewrite" class="setting-input blai-input" min="50" max="10000" step="50"><em class="setting-unit">字</em></span></label>
+                                    <label class="field"><span>超时</span><span class="setting-value"><input type="number" id="vrm-ai-timeout" class="setting-input vrm-input" min="1" max="120" step="1"><em class="setting-unit">s</em></span></label>
+                                    <label class="field"><span>失败重试</span><span class="setting-value"><input type="number" id="vrm-ai-max-retries" class="setting-input vrm-input" min="0" max="5" step="1"><em class="setting-unit">次</em></span></label>
+                                    <label class="field"><span>单次条目</span><span class="setting-value"><input type="number" id="vrm-ai-max-items" class="setting-input vrm-input" min="1" step="1"><em class="setting-unit">条</em></span></label>
+                                    <label class="field"><span>上下文</span><span class="setting-value"><input type="number" id="vrm-ai-max-context" class="setting-input vrm-input" min="1000" max="60000" step="500"><em class="setting-unit">字</em></span></label>
+                                    <label class="field"><span>输出上限</span><span class="setting-value"><input type="number" id="vrm-ai-max-rewrite" class="setting-input vrm-input" min="50" max="10000" step="50"><em class="setting-unit">字</em></span></label>
                                 </div>
-                                <div class="edit-field blai-ai-field blai-ai-prompt-card">
-                                    <div class="blai-ai-prompt-card-head">
-                                        <div class="blai-ai-prompt-copy">
+                                <div class="edit-field vrm-ai-field vrm-ai-prompt-card">
+                                    <div class="vrm-ai-prompt-card-head">
+                                        <div class="vrm-ai-prompt-copy">
                                             <span>全局 Prompt template</span>
                                             <small>用于所有 AI 改写项；单条规则可在编辑弹窗里追加专用要求。</small>
                                         </div>
-                                        <button id="blai-ai-prompt-expand" type="button" class="text-btn blai-ai-prompt-expand" title="展开编辑全局 Prompt template" aria-label="展开编辑全局 Prompt template">
+                                        <button id="vrm-ai-prompt-expand" type="button" class="text-btn vrm-ai-prompt-expand" title="展开编辑全局 Prompt template" aria-label="展开编辑全局 Prompt template">
                                             <i class="fas fa-expand"></i>
                                         </button>
                                     </div>
-                                    <textarea id="blai-ai-prompt" class="blai-textarea text-box" rows="7" aria-label="全局 Prompt template"></textarea>
+                                    <textarea id="vrm-ai-prompt" class="vrm-textarea text-box" rows="7" aria-label="全局 Prompt template"></textarea>
                                 </div>
-                                <div class="field blai-ai-debug-field">
+                                <div class="field vrm-ai-debug-field">
                                     <span>Debug 日志</span>
-                                    <button type="button" id="blai-ai-copy-log" class="text-btn" title="排查 AI 改写请求、重试和写回问题时使用；复制最近诊断日志">复制 Debug 日志</button>
+                                    <button type="button" id="vrm-ai-copy-log" class="text-btn" title="排查 AI 改写请求、重试和写回问题时使用；复制最近诊断日志">复制 Debug 日志</button>
                                 </div>
                             </div>
                         </div>
                     </section>
                     <section class="page-panel" data-page="clean">
-                        <nav class="blai-clean-mobile-tabs" role="tablist" aria-label="净化分页">
-                            <button type="button" class="blai-clean-mobile-tab is-active" role="tab" data-clean-tab="settings" aria-controls="blai-clean-settings-pane" aria-selected="true">净化设置</button>
-                            <button type="button" class="blai-clean-mobile-tab" role="tab" data-clean-tab="tags" aria-controls="blai-clean-tags-pane" aria-selected="false">标签管理</button>
+                        <nav class="vrm-clean-mobile-tabs" role="tablist" aria-label="净化分页">
+                            <button type="button" class="vrm-clean-mobile-tab is-active" role="tab" data-clean-tab="settings" aria-controls="vrm-clean-settings-pane" aria-selected="true">净化设置</button>
+                            <button type="button" class="vrm-clean-mobile-tab" role="tab" data-clean-tab="tags" aria-controls="vrm-clean-tags-pane" aria-selected="false">标签管理</button>
                         </nav>
                         <div class="content-grid clean-page-shell">
-                            <div id="blai-clean-tags-pane" class="panel tight scope-manager blai-scope-tags-card clean-scope-panel" data-clean-pane="tags">
+                            <div id="vrm-clean-tags-pane" class="panel tight scope-manager vrm-scope-tags-card clean-scope-panel" data-clean-pane="tags">
                                 <div class="panel-head"><strong>标签管理</strong><em>范围标签</em></div>
-                                <div class="blai-clean-tag-toolbar">
-                                    <strong id="blai-scope-tag-total-count">共 0 个标签</strong>
-                                    <div class="blai-clean-tag-actions" aria-label="标签管理操作">
-                                        <button id="blai-scope-tag-add-open" type="button" class="blai-icon-btn" title="新增标签" aria-label="新增标签"><i class="fas fa-plus"></i></button>
-                                        <button id="blai-scope-group-add" type="button" class="blai-icon-btn" title="新增分组" aria-label="新增分组"><i class="fas fa-folder-plus"></i></button>
-                                        <button id="blai-scope-tags-expand-all" type="button" class="blai-icon-btn" title="展开全部分组" aria-label="展开全部分组"><i class="fas fa-expand"></i></button>
-                                        <button id="blai-scope-tags-collapse-all" type="button" class="blai-icon-btn" title="折叠全部分组" aria-label="折叠全部分组"><i class="fas fa-compress"></i></button>
-                                        <button id="blai-scope-group-manage-open" type="button" class="blai-icon-btn" title="管理分组" aria-label="管理分组" aria-pressed="false"><i class="fas fa-layer-group"></i></button>
+                                <div class="vrm-clean-tag-toolbar">
+                                    <strong id="vrm-scope-tag-total-count">共 0 个标签</strong>
+                                    <div class="vrm-clean-tag-actions" aria-label="标签管理操作">
+                                        <button id="vrm-scope-tag-add-open" type="button" class="vrm-icon-btn" title="新增标签" aria-label="新增标签"><i class="fas fa-plus"></i></button>
+                                        <button id="vrm-scope-group-add" type="button" class="vrm-icon-btn" title="新增分组" aria-label="新增分组"><i class="fas fa-folder-plus"></i></button>
+                                        <button id="vrm-scope-tags-expand-all" type="button" class="vrm-icon-btn" title="展开全部分组" aria-label="展开全部分组"><i class="fas fa-expand"></i></button>
+                                        <button id="vrm-scope-tags-collapse-all" type="button" class="vrm-icon-btn" title="折叠全部分组" aria-label="折叠全部分组"><i class="fas fa-compress"></i></button>
+                                        <button id="vrm-scope-group-manage-open" type="button" class="vrm-icon-btn" title="管理分组" aria-label="管理分组" aria-pressed="false"><i class="fas fa-layer-group"></i></button>
                                     </div>
                                 </div>
                                 <div class="scope-input-row">
-                                    <input id="blai-scope-quick-input" class="scope-input" value="" placeholder="输入标签或 <horae>//备注">
-                                    <button id="blai-scope-tag-add-quick" type="button" class="text-btn accent">添加</button>
+                                    <input id="vrm-scope-quick-input" class="scope-input" value="" placeholder="输入标签或 <horae>//备注">
+                                    <button id="vrm-scope-tag-add-quick" type="button" class="text-btn accent">添加</button>
                                 </div>
-                                <div id="blai-scope-tags-list" class="managed-tag-list scope-group-list blai-scope-tags-list"></div>
+                                <div id="vrm-scope-tags-list" class="managed-tag-list scope-group-list vrm-scope-tags-list"></div>
                             </div>
-                            <div id="blai-clean-settings-pane" class="panel tight clean-control-panel is-active" data-clean-pane="settings">
+                            <div id="vrm-clean-settings-pane" class="panel tight clean-control-panel is-active" data-clean-pane="settings">
                                 <section class="clean-mode-section">
                                     <div class="panel-head"><strong>净化模式</strong></div>
-                                    <div class="segmented blai-scope-mode-segment" role="group" aria-label="范围标签净化模式">
-                                        <button id="blai-scope-mode-protect" type="button" class="blai-scope-mode-option" data-mode="protect">保护特定标签</button>
-                                        <button id="blai-scope-mode-cleanse" type="button" class="blai-scope-mode-option" data-mode="cleanse-inside">净化特定标签</button>
+                                    <div class="segmented vrm-scope-mode-segment" role="group" aria-label="范围标签净化模式">
+                                        <button id="vrm-scope-mode-protect" type="button" class="vrm-scope-mode-option" data-mode="protect">保护特定标签</button>
+                                        <button id="vrm-scope-mode-cleanse" type="button" class="vrm-scope-mode-option" data-mode="cleanse-inside">净化特定标签</button>
                                     </div>
-                                    <div id="blai-scope-tags-hint" class="blai-scope-tags-hint"></div>
+                                    <div id="vrm-scope-tags-hint" class="vrm-scope-tags-hint"></div>
                                 </section>
                                 <div class="cleanse-target-card">
                                     <div class="cleanse-target-head"><strong>净化对象</strong><small>保护范围</small></div>
                                     <div class="cleanse-target-item">
-                                        <div class="row-main"><strong>跳过用户消息</strong><button id="blai-skip-user-toggle" type="button" class="text-btn" aria-pressed="false">关闭</button></div>
+                                        <div class="row-main"><strong>跳过用户消息</strong><button id="vrm-skip-user-toggle" type="button" class="text-btn" aria-pressed="false">关闭</button></div>
                                         <p>用户消息、发送输入框和编辑输入区不进入净化。</p>
                                     </div>
                                     <div class="cleanse-target-item">
-                                        <div class="row-main"><strong>人设描述保护</strong><button type="button" class="blai-persona-description-protect-toggle text-btn" aria-pressed="false" title="点击保护用户设定描述"><span class="blai-persona-protect-text">关闭</span></button></div>
+                                        <div class="row-main"><strong>人设描述保护</strong><button type="button" class="vrm-persona-description-protect-toggle text-btn" aria-pressed="false" title="点击保护用户设定描述"><span class="vrm-persona-protect-text">关闭</span></button></div>
                                         <p>保护 persona_description，深度清理时也避让。</p>
                                     </div>
-                                    <div class="cleanse-target-item blai-realtime-mask-item">
-                                        <div class="row-main"><strong>实时屏蔽模式</strong><span id="blai-realtime-mask-label">简单视觉</span></div>
-                                        <div class="segmented blai-realtime-mask-segment" role="group" aria-label="实时屏蔽模式">
-                                            <button type="button" class="blai-realtime-mask-option" data-mode="simple-visual">简单视觉屏蔽</button>
-                                            <button type="button" class="blai-realtime-mask-option" data-mode="tavern-helper">酒馆助手实时渲染</button>
+                                    <div class="cleanse-target-item vrm-realtime-mask-item">
+                                        <div class="row-main"><strong>实时屏蔽模式</strong><span id="vrm-realtime-mask-label">简单视觉</span></div>
+                                        <div class="segmented vrm-realtime-mask-segment" role="group" aria-label="实时屏蔽模式">
+                                            <button type="button" class="vrm-realtime-mask-option" data-mode="simple-visual">简单视觉屏蔽</button>
+                                            <button type="button" class="vrm-realtime-mask-option" data-mode="tavern-helper">酒馆助手实时渲染</button>
                                         </div>
-                                        <p id="blai-realtime-mask-note">生成中只处理消息显示层文本，不重建代码块或控件。</p>
+                                        <p id="vrm-realtime-mask-note">生成中只处理消息显示层文本，不重建代码块或控件。</p>
                                     </div>
                                 </div>
                                 <div class="clean-deep-section">
@@ -233,7 +233,7 @@
                                     <div class="clean-row"><p>提示：深度清理会永久性替换或删除多处八股内容，包括预设、用户人设、角色卡、世界书、当前聊天文件（包含已隐藏楼层）等，清理范围较大，请谨慎使用此功能。</p></div>
                                 </div>
                                 <div class="row-actions deep-action-row">
-                                    <button id="blai-deep-clean-btn" class="text-btn accent"><i class="fas fa-broom"></i> 深度清理</button>
+                                    <button id="vrm-deep-clean-btn" class="text-btn accent"><i class="fas fa-broom"></i> 深度清理</button>
                                 </div>
                             </div>
                         </div>
@@ -243,11 +243,11 @@
                             <div class="panel preset-management-panel">
                                 <div class="panel-head"><strong>预设管理</strong><em>本地 JSON</em></div>
                                 <div class="row-actions three preset-actions">
-                                    <button id="blai-preset-rename" type="button" class="text-btn"><i class="fas fa-pen"></i> 重命名</button>
-                                    <button id="blai-preset-new" type="button" class="text-btn"><i class="fas fa-plus"></i> 新建</button>
-                                    <button id="blai-preset-delete" type="button" class="text-btn"><i class="fas fa-trash"></i> 删除</button>
-                                    <button id="blai-preset-import" type="button" class="text-btn"><i class="fas fa-file-import"></i> 导入</button>
-                                    <button id="blai-preset-export" type="button" class="text-btn"><i class="fas fa-file-export"></i> 导出</button>
+                                    <button id="vrm-preset-rename" type="button" class="text-btn"><i class="fas fa-pen"></i> 重命名</button>
+                                    <button id="vrm-preset-new" type="button" class="text-btn"><i class="fas fa-plus"></i> 新建</button>
+                                    <button id="vrm-preset-delete" type="button" class="text-btn"><i class="fas fa-trash"></i> 删除</button>
+                                    <button id="vrm-preset-import" type="button" class="text-btn"><i class="fas fa-file-import"></i> 导入</button>
+                                    <button id="vrm-preset-export" type="button" class="text-btn"><i class="fas fa-file-export"></i> 导出</button>
                                 </div>
                                 <div class="field-grid preset-import-notes">
                                     <div class="field"><span>只导入为新预设</span><small>不修改当前规则</small></div>
@@ -257,34 +257,34 @@
                                 </div>
                             </div>
                             <div class="panel binding-tools-panel">
-                                <div class="panel-head"><strong>预设与绑定</strong><em id="blai-bind-active-preset">临时规则</em></div>
+                                <div class="panel-head"><strong>预设与绑定</strong><em id="vrm-bind-active-preset">临时规则</em></div>
                                 <div class="binding-summary">
-                                    <div><span>当前全局预设：</span><strong id="blai-tools-global-preset">无</strong></div>
-                                    <div><span>当前预设绑定：</span><strong id="blai-tools-chat-binding">无</strong></div>
-                                    <div><span>当前角色绑定：</span><strong id="blai-tools-character-binding">无</strong></div>
+                                    <div><span>当前全局预设：</span><strong id="vrm-tools-global-preset">无</strong></div>
+                                    <div><span>当前预设绑定：</span><strong id="vrm-tools-chat-binding">无</strong></div>
+                                    <div><span>当前角色绑定：</span><strong id="vrm-tools-character-binding">无</strong></div>
                                     <p>预设覆盖性质：<strong>局部角色卡 &gt; 全局预设</strong></p>
                                 </div>
-                                <label class="field blai-tools-preset-field">
+                                <label class="field vrm-tools-preset-field">
                                     <span>预设列表</span>
-                                    <select id="blai-tools-preset-select" class="blai-select-box"></select>
+                                    <select id="vrm-tools-preset-select" class="vrm-select-box"></select>
                                 </label>
                                 <div class="field-grid binding-actions-grid">
-                                    <button type="button" class="field blai-proxy-field" data-blai-click-proxy="#blai-default-toggle"><i class="fas fa-check binding-action-state-icon" aria-hidden="true"></i><span class="binding-action-label">设为全局预设</span></button>
-                                    <button type="button" class="field blai-proxy-field" data-blai-click-proxy="#blai-bind-current-chat-preset" data-blai-toggle-binding="true"><i class="fas fa-check binding-action-state-icon" aria-hidden="true"></i><span class="binding-action-label">绑定到预设</span></button>
-                                    <button type="button" class="field blai-proxy-field" data-blai-click-proxy="#blai-bind-current-character" data-blai-toggle-binding="true"><i class="fas fa-check binding-action-state-icon" aria-hidden="true"></i><span class="binding-action-label">绑定到角色卡</span></button>
+                                    <button type="button" class="field vrm-proxy-field" data-vrm-click-proxy="#vrm-default-toggle"><i class="fas fa-check binding-action-state-icon" aria-hidden="true"></i><span class="binding-action-label">设为全局预设</span></button>
+                                    <button type="button" class="field vrm-proxy-field" data-vrm-click-proxy="#vrm-bind-current-chat-preset" data-vrm-toggle-binding="true"><i class="fas fa-check binding-action-state-icon" aria-hidden="true"></i><span class="binding-action-label">绑定到预设</span></button>
+                                    <button type="button" class="field vrm-proxy-field" data-vrm-click-proxy="#vrm-bind-current-character" data-vrm-toggle-binding="true"><i class="fas fa-check binding-action-state-icon" aria-hidden="true"></i><span class="binding-action-label">绑定到角色卡</span></button>
                                 </div>
-                                <button id="blai-default-toggle" type="button" class="blai-hidden-real-button" title="设为全局默认净化预设" aria-hidden="true" tabindex="-1"><i class="fas fa-star"></i></button>
+                                <button id="vrm-default-toggle" type="button" class="vrm-hidden-real-button" title="设为全局默认净化预设" aria-hidden="true" tabindex="-1"><i class="fas fa-star"></i></button>
                             </div>
                             <div class="panel tools-combined-panel">
                                 <section class="tools-subsection tools-perspective-section">
                                     <div class="panel-head"><strong>透视楼层</strong><em>对比范围</em></div>
                                     <div class="list">
-                                            <div class="tool-row blai-diff-limit-row">
+                                            <div class="tool-row vrm-diff-limit-row">
                                                 <div class="row-main">
-                                                    <div id="blai-diff-limit-control" class="blai-diff-limit-control">
-                                                        <span class="blai-diff-limit-affix">最近</span>
-                                                        <input type="number" id="blai-diff-limit-input" class="blai-diff-limit-input" inputmode="numeric" min="1" max="20" step="1" aria-label="透视楼层数量">
-                                                        <span class="blai-diff-limit-affix">层</span>
+                                                    <div id="vrm-diff-limit-control" class="vrm-diff-limit-control">
+                                                        <span class="vrm-diff-limit-affix">最近</span>
+                                                        <input type="number" id="vrm-diff-limit-input" class="vrm-diff-limit-input" inputmode="numeric" min="1" max="20" step="1" aria-label="透视楼层数量">
+                                                        <span class="vrm-diff-limit-affix">层</span>
                                                     </div>
                                             </div>
                                             <p>设置对比弹窗读取最近 N 层消息，确认后同步刷新消息旁按钮。</p>
@@ -294,13 +294,13 @@
                                 <section class="tools-subsection tools-zh-section">
                                     <div class="panel-head"><strong>简繁兼容</strong><em>校验：本地缓存</em></div>
                                     <div class="zh-compact-grid">
-                                        <span class="zh-chip"><strong>增强词典</strong><span id="blai-zh-dict-status-chip">未安装</span></span>
+                                        <span class="zh-chip"><strong>增强词典</strong><span id="vrm-zh-dict-status-chip">未安装</span></span>
                                         <span class="zh-chip"><strong>台湾</strong>可选</span>
                                         <span class="zh-chip"><strong>香港</strong>可选</span>
                                     </div>
                                     <div class="row-actions zh-actions">
-                                        <button id="blai-zh-dict-install-open" class="text-btn accent" type="button">下载并启用</button>
-                                        <button id="blai-zh-compat-toggle" class="text-btn blai-zh-compat-toggle" type="button" title="简繁兼容已关闭：按当前规则精确匹配" aria-label="简繁兼容模式" aria-pressed="false">开启</button>
+                                        <button id="vrm-zh-dict-install-open" class="text-btn accent" type="button">下载并启用</button>
+                                        <button id="vrm-zh-compat-toggle" class="text-btn vrm-zh-compat-toggle" type="button" title="简繁兼容已关闭：按当前规则精确匹配" aria-label="简繁兼容模式" aria-pressed="false">开启</button>
                                     </div>
                                 </section>
                             </div>
@@ -311,29 +311,29 @@
             <nav class="bottom-nav">
                 <button type="button" class="nav-item active" data-page-target="overview"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6" rx="2"/><rect x="4" y="14" width="16" height="6" rx="2"/></svg><span>首页</span></button><button type="button" class="nav-item" data-page-target="ai"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M5 8h14"/></svg><span>AI</span></button><button type="button" class="nav-item" data-page-target="clean"><svg viewBox="0 0 24 24"><path d="M4 14c4-9 12-9 16 0"/><path d="M8 14c2 4 6 4 8 0"/><path d="M12 4v3M5 7l2 2M19 7l-2 2"/></svg><span>净化</span></button><button type="button" class="nav-item" data-page-target="tools"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4z"/></svg><span>工具</span></button>
             </nav>
-            <div class="blai-hidden-real-bind-menu">
-                <button id="blai-character-bind-toggle" type="button" class="blai-hidden-real-button" title="绑定管理" aria-hidden="true" tabindex="-1"></button>
+            <div class="vrm-hidden-real-bind-menu">
+                <button id="vrm-character-bind-toggle" type="button" class="vrm-hidden-real-button" title="绑定管理" aria-hidden="true" tabindex="-1"></button>
 
-        <div id="blai-bind-menu" class="blai-bind-menu" role="menu" hidden>
-            <button type="button" id="blai-bind-current-character" class="blai-bind-menu-item" data-bind-action="character" role="menuitem">
+        <div id="vrm-bind-menu" class="vrm-bind-menu" role="menu" hidden>
+            <button type="button" id="vrm-bind-current-character" class="vrm-bind-menu-item" data-bind-action="character" role="menuitem">
                 <i class="fas fa-user-tag"></i>
-                <span class="blai-bind-menu-copy">
-                    <span class="blai-bind-menu-label">绑定当前角色</span>
-                    <span class="blai-bind-menu-note">使用当前净化预设</span>
+                <span class="vrm-bind-menu-copy">
+                    <span class="vrm-bind-menu-label">绑定当前角色</span>
+                    <span class="vrm-bind-menu-note">使用当前净化预设</span>
                 </span>
             </button>
-            <button type="button" id="blai-bind-current-chat-preset" class="blai-bind-menu-item" data-bind-action="chat-preset" role="menuitem">
+            <button type="button" id="vrm-bind-current-chat-preset" class="vrm-bind-menu-item" data-bind-action="chat-preset" role="menuitem">
                 <i class="fas fa-comments"></i>
-                <span class="blai-bind-menu-copy">
-                    <span class="blai-bind-menu-label">绑定当前对话补全预设</span>
-                    <span class="blai-bind-menu-note">跟随 ST 当前对话补全预设</span>
+                <span class="vrm-bind-menu-copy">
+                    <span class="vrm-bind-menu-label">绑定当前对话补全预设</span>
+                    <span class="vrm-bind-menu-note">跟随 ST 当前对话补全预设</span>
                 </span>
             </button>
-            <button type="button" id="blai-unbind-current-character" class="blai-bind-menu-item" data-bind-action="unbind-character" role="menuitem">
+            <button type="button" id="vrm-unbind-current-character" class="vrm-bind-menu-item" data-bind-action="unbind-character" role="menuitem">
                 <i class="fas fa-rotate-left"></i>
-                <span class="blai-bind-menu-copy">
-                    <span class="blai-bind-menu-label">取消当前绑定</span>
-                    <span class="blai-bind-menu-note">改为跟随全局默认</span>
+                <span class="vrm-bind-menu-copy">
+                    <span class="vrm-bind-menu-label">取消当前绑定</span>
+                    <span class="vrm-bind-menu-note">改为跟随全局默认</span>
                 </span>
             </button>
         </div>
@@ -341,155 +341,155 @@
             </div>
         </div>
 
-        <div id="blai-rule-edit-modal" class="blai-modal-shell">
-            <div class="blai-modal-card blai-edit-modal-card">
+        <div id="vrm-rule-edit-modal" class="vrm-modal-shell">
+            <div class="vrm-modal-card vrm-edit-modal-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-shrink: 0;">
-                    <h3 id="blai-edit-modal-title" class="blai-edit-modal-title" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <h3 id="vrm-edit-modal-title" class="vrm-edit-modal-title" style="margin: 0; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-pen"></i> 编辑规则合集
                     </h3>
-                    <button id="blai-edit-cancel-x" class="blai-icon-btn" style="background: transparent !important; border: none !important; box-shadow: none !important; font-size: 20px !important; color: var(--blai-text-mute); padding: 0 !important; min-width: auto !important; height: auto !important; cursor: pointer;">
+                    <button id="vrm-edit-cancel-x" class="vrm-icon-btn" style="background: transparent !important; border: none !important; box-shadow: none !important; font-size: 20px !important; color: var(--vrm-text-mute); padding: 0 !important; min-width: auto !important; height: auto !important; cursor: pointer;">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="blai-edit-field">
-                    <label class="blai-field-label">规则组合集名称</label>
-                    <input type="text" id="blai-edit-name" class="blai-input" placeholder="例如：程度副词与认知失能净化" style="background: var(--blai-bg-button) !important; border: 1px solid var(--blai-border-color-base) !important; color: var(--blai-text-main) !important;">
+                <div class="vrm-edit-field">
+                    <label class="vrm-field-label">规则组合集名称</label>
+                    <input type="text" id="vrm-edit-name" class="vrm-input" placeholder="例如：程度副词与认知失能净化" style="background: var(--vrm-bg-button) !important; border: 1px solid var(--vrm-border-color-base) !important; color: var(--vrm-text-main) !important;">
                 </div>
-                <label class="blai-field-label" style="margin-bottom:6px; flex-shrink:0;">映射规则列表</label>
-                <div id="blai-edit-subrules-container"></div>
+                <label class="vrm-field-label" style="margin-bottom:6px; flex-shrink:0;">映射规则列表</label>
+                <div id="vrm-edit-subrules-container"></div>
 
-                <div class="blai-modal-actions">
-                    <button id="blai-add-subrule-btn" class="blai-secondary-btn"><i class="fas fa-plus"></i> 新增规则</button>
-                    <button id="blai-edit-save" class="blai-primary-btn"><i class="fas fa-check"></i> 保存合集</button>
-                </div>
-            </div>
-        </div>
-
-
-        <div id="blai-risk-confirm-modal" class="blai-modal-shell" aria-hidden="true">
-            <div class="blai-modal-card blai-risk-confirm-card" role="dialog" aria-modal="true" aria-describedby="blai-risk-confirm-text">
-                <p id="blai-risk-confirm-text"></p>
-                <div class="blai-modal-actions">
-                    <button id="blai-risk-confirm-cancel" type="button" class="blai-secondary-btn">取消</button>
-                    <button id="blai-risk-confirm-ok" type="button" class="blai-primary-btn">确定</button>
+                <div class="vrm-modal-actions">
+                    <button id="vrm-add-subrule-btn" class="vrm-secondary-btn"><i class="fas fa-plus"></i> 新增规则</button>
+                    <button id="vrm-edit-save" class="vrm-primary-btn"><i class="fas fa-check"></i> 保存合集</button>
                 </div>
             </div>
         </div>
 
 
-        <div id="blai-risk-info-modal" class="blai-modal-shell" aria-hidden="true">
-            <div class="blai-modal-card blai-risk-info-card" role="dialog" aria-modal="true" aria-describedby="blai-risk-info-text">
-                <p id="blai-risk-info-text"></p>
-                <div class="blai-modal-actions">
-                    <button id="blai-risk-info-close" type="button" class="blai-primary-btn">知道了</button>
+        <div id="vrm-risk-confirm-modal" class="vrm-modal-shell" aria-hidden="true">
+            <div class="vrm-modal-card vrm-risk-confirm-card" role="dialog" aria-modal="true" aria-describedby="vrm-risk-confirm-text">
+                <p id="vrm-risk-confirm-text"></p>
+                <div class="vrm-modal-actions">
+                    <button id="vrm-risk-confirm-cancel" type="button" class="vrm-secondary-btn">取消</button>
+                    <button id="vrm-risk-confirm-ok" type="button" class="vrm-primary-btn">确定</button>
                 </div>
             </div>
         </div>
 
 
-        <div id="blai-confirm-modal" class="blai-modal-shell">
-            <div class="blai-modal-card blai-confirm-card">
-                <h3 class="blai-confirm-title">⚠️ 深度清理警告</h3>
-                <p class="blai-confirm-text">
+        <div id="vrm-risk-info-modal" class="vrm-modal-shell" aria-hidden="true">
+            <div class="vrm-modal-card vrm-risk-info-card" role="dialog" aria-modal="true" aria-describedby="vrm-risk-info-text">
+                <p id="vrm-risk-info-text"></p>
+                <div class="vrm-modal-actions">
+                    <button id="vrm-risk-info-close" type="button" class="vrm-primary-btn">知道了</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="vrm-confirm-modal" class="vrm-modal-shell">
+            <div class="vrm-modal-card vrm-confirm-card">
+                <h3 class="vrm-confirm-title">⚠️ 深度清理警告</h3>
+                <p class="vrm-confirm-text">
                     深度清理会永久洗刷角色卡、世界书、人设、全部历史记录及<strong>当前选中的预设</strong>。
                     为了防止深度清理修改或误伤您的以上内容，请在此刻：
                     <br><br>
-                    👉 <strong class="blai-warning-callout">将SillyTavern当前的预设切换至「Default」或废弃预设！<br>将插件预设切换至不含名词句式规则(已在贴内提供)。</strong>
+                    👉 <strong class="vrm-warning-callout">将SillyTavern当前的预设切换至「Default」或废弃预设！<br>将插件预设切换至不含名词句式规则(已在贴内提供)。</strong>
                     <br>
-                    <span class="blai-field-label">清理完成后页面会刷新，届时可切回原预设即可保证预设安全。</span>
+                    <span class="vrm-field-label">清理完成后页面会刷新，届时可切回原预设即可保证预设安全。</span>
                 </p>
-                <div class="blai-modal-actions blai-confirm-actions">
-                    <button id="blai-modal-cancel" class="blai-secondary-btn blai-confirm-btn">取消返回</button>
-                    <button id="blai-modal-confirm" disabled class="blai-primary-btn blai-confirm-btn">我已阅读警告，已完成切换 (3s)</button>
+                <div class="vrm-modal-actions vrm-confirm-actions">
+                    <button id="vrm-modal-cancel" class="vrm-secondary-btn vrm-confirm-btn">取消返回</button>
+                    <button id="vrm-modal-confirm" disabled class="vrm-primary-btn vrm-confirm-btn">我已阅读警告，已完成切换 (3s)</button>
                 </div>
             </div>
         </div>
 
 
-        <div id="blai-ai-prompt-modal" class="blai-modal-shell">
-            <div class="blai-modal-card blai-ai-prompt-modal-card">
-                <div class="blai-ai-prompt-modal-head">
-                    <div class="blai-ai-prompt-modal-title">
+        <div id="vrm-ai-prompt-modal" class="vrm-modal-shell">
+            <div class="vrm-modal-card vrm-ai-prompt-modal-card">
+                <div class="vrm-ai-prompt-modal-head">
+                    <div class="vrm-ai-prompt-modal-title">
                         <h3><i class="fas fa-pen-to-square"></i> 全局 Prompt template</h3>
                         <p>用于所有 AI 改写项；单条规则可在编辑弹窗里追加专用要求。</p>
                     </div>
-                    <button id="blai-ai-prompt-modal-close" type="button" class="blai-icon-btn" title="关闭" aria-label="关闭全局 Prompt template 编辑器">
+                    <button id="vrm-ai-prompt-modal-close" type="button" class="vrm-icon-btn" title="关闭" aria-label="关闭全局 Prompt template 编辑器">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <textarea id="blai-ai-prompt-expanded" class="blai-textarea blai-ai-prompt-expanded" aria-label="全屏编辑全局 Prompt template"></textarea>
-                <div class="blai-modal-actions blai-ai-prompt-modal-actions">
-                    <button id="blai-ai-prompt-modal-cancel" type="button" class="blai-secondary-btn">关闭</button>
-                    <button id="blai-ai-prompt-modal-apply" type="button" class="blai-primary-btn"><i class="fas fa-check"></i> 应用</button>
+                <textarea id="vrm-ai-prompt-expanded" class="vrm-textarea vrm-ai-prompt-expanded" aria-label="全屏编辑全局 Prompt template"></textarea>
+                <div class="vrm-modal-actions vrm-ai-prompt-modal-actions">
+                    <button id="vrm-ai-prompt-modal-cancel" type="button" class="vrm-secondary-btn">关闭</button>
+                    <button id="vrm-ai-prompt-modal-apply" type="button" class="vrm-primary-btn"><i class="fas fa-check"></i> 应用</button>
                 </div>
             </div>
         </div>
 
 
-        <div id="blai-zh-dictionary-modal" class="blai-modal-shell">
-            <div class="blai-modal-card blai-zh-dict-card">
-                <div class="blai-zh-dict-header">
-                    <h3 class="blai-zh-dict-title"><i class="fas fa-language"></i> 增强简繁词典</h3>
-                    <button id="blai-zh-dict-close" type="button" class="blai-icon-btn" title="关闭"><i class="fas fa-times"></i></button>
+        <div id="vrm-zh-dictionary-modal" class="vrm-modal-shell">
+            <div class="vrm-modal-card vrm-zh-dict-card">
+                <div class="vrm-zh-dict-header">
+                    <h3 class="vrm-zh-dict-title"><i class="fas fa-language"></i> 增强简繁词典</h3>
+                    <button id="vrm-zh-dict-close" type="button" class="vrm-icon-btn" title="关闭"><i class="fas fa-times"></i></button>
                 </div>
-                <p class="blai-zh-dict-text">
+                <p class="vrm-zh-dict-text">
                     简繁兼容需要先从 GitHub 下载 OpenCC 词典包。若无法连接 GitHub，请开启代理或 VPN 后重试；下载完成并通过完整性校验后，之后会直接使用本地缓存。
                 </p>
-                <div id="blai-zh-dict-stats" class="blai-zh-dict-stats"></div>
-                <div class="blai-zh-dict-options">
-                    <label class="blai-checkbox-label" title="匹配台湾常用异体词，例如 仿佛 / 彷彿、软件 / 軟體">
-                        <input type="checkbox" id="blai-zh-dict-tw" checked>
-                        <span class="blai-custom-checkbox blai-square"></span>
+                <div id="vrm-zh-dict-stats" class="vrm-zh-dict-stats"></div>
+                <div class="vrm-zh-dict-options">
+                    <label class="vrm-checkbox-label" title="匹配台湾常用异体词，例如 仿佛 / 彷彿、软件 / 軟體">
+                        <input type="checkbox" id="vrm-zh-dict-tw" checked>
+                        <span class="vrm-custom-checkbox vrm-square"></span>
                         <span>台湾异体</span>
                     </label>
-                    <label class="blai-checkbox-label" title="匹配香港常用异体词，例如 软件 / 軟件、网络 / 網絡">
-                        <input type="checkbox" id="blai-zh-dict-hk" checked>
-                        <span class="blai-custom-checkbox blai-square"></span>
+                    <label class="vrm-checkbox-label" title="匹配香港常用异体词，例如 软件 / 軟件、网络 / 網絡">
+                        <input type="checkbox" id="vrm-zh-dict-hk" checked>
+                        <span class="vrm-custom-checkbox vrm-square"></span>
                         <span>香港异体</span>
                     </label>
                 </div>
-                <div class="blai-modal-actions blai-zh-dict-actions">
-                    <button id="blai-zh-dict-cancel" type="button" class="blai-secondary-btn">取消</button>
-                    <button id="blai-zh-dict-download" type="button" class="blai-primary-btn"><i class="fas fa-download"></i> 下载并启用</button>
+                <div class="vrm-modal-actions vrm-zh-dict-actions">
+                    <button id="vrm-zh-dict-cancel" type="button" class="vrm-secondary-btn">取消</button>
+                    <button id="vrm-zh-dict-download" type="button" class="vrm-primary-btn"><i class="fas fa-download"></i> 下载并启用</button>
                 </div>
             </div>
         </div>
 
 
-        <div id="blai-rule-transfer-modal" style="display:none;">
-            <div class="blai-transfer-content">
-                <h3 class="blai-edit-modal-title blai-transfer-title"><i class="fas fa-copy"></i> 复制 / 转移规则合集</h3>
-                <select id="blai-transfer-target" class="blai-input blai-transfer-target"></select>
-                <div class="blai-transfer-actions">
-                    <button id="blai-transfer-copy" class="blai-transfer-btn blai-transfer-copy">复制到该存档</button>
-                    <button id="blai-transfer-move" class="blai-transfer-btn blai-transfer-move">转移到该存档</button>
-                    <button id="blai-transfer-cancel" class="blai-transfer-btn">取消</button>
+        <div id="vrm-rule-transfer-modal" style="display:none;">
+            <div class="vrm-transfer-content">
+                <h3 class="vrm-edit-modal-title vrm-transfer-title"><i class="fas fa-copy"></i> 复制 / 转移规则合集</h3>
+                <select id="vrm-transfer-target" class="vrm-input vrm-transfer-target"></select>
+                <div class="vrm-transfer-actions">
+                    <button id="vrm-transfer-copy" class="vrm-transfer-btn vrm-transfer-copy">复制到该存档</button>
+                    <button id="vrm-transfer-move" class="vrm-transfer-btn vrm-transfer-move">转移到该存档</button>
+                    <button id="vrm-transfer-cancel" class="vrm-transfer-btn">取消</button>
                 </div>
             </div>
         </div>
 
 
-        <div id="blai-preset-import-choice-modal" class="blai-modal-shell">
-            <div class="blai-modal-card blai-import-choice-card">
-                <div class="blai-import-choice-header">
-                    <h3 class="blai-edit-modal-title"><i class="fas fa-file-import"></i> 导入预设</h3>
-                    <button id="blai-import-choice-close" type="button" class="blai-icon-btn" title="关闭"><i class="fas fa-times"></i></button>
+        <div id="vrm-preset-import-choice-modal" class="vrm-modal-shell">
+            <div class="vrm-modal-card vrm-import-choice-card">
+                <div class="vrm-import-choice-header">
+                    <h3 class="vrm-edit-modal-title"><i class="fas fa-file-import"></i> 导入预设</h3>
+                    <button id="vrm-import-choice-close" type="button" class="vrm-icon-btn" title="关闭"><i class="fas fa-times"></i></button>
                 </div>
-                <div class="blai-edit-field">
-                    <label class="blai-field-label" for="blai-import-preset-name">预设名称</label>
-                    <input type="text" id="blai-import-preset-name" class="blai-input" placeholder="导入预设名称">
+                <div class="vrm-edit-field">
+                    <label class="vrm-field-label" for="vrm-import-preset-name">预设名称</label>
+                    <input type="text" id="vrm-import-preset-name" class="vrm-input" placeholder="导入预设名称">
                 </div>
-                <div id="blai-import-choice-summary" class="blai-import-choice-summary"></div>
-                <div class="blai-import-choice-actions">
-                    <button id="blai-import-only" type="button" class="blai-secondary-btn blai-import-choice-btn">
+                <div id="vrm-import-choice-summary" class="vrm-import-choice-summary"></div>
+                <div class="vrm-import-choice-actions">
+                    <button id="vrm-import-only" type="button" class="vrm-secondary-btn vrm-import-choice-btn">
                         <i class="fas fa-box-archive"></i>
                         <span>只导入为新预设</span>
                     </button>
-                    <button id="blai-import-switch" type="button" class="blai-primary-btn blai-import-choice-btn">
+                    <button id="vrm-import-switch" type="button" class="vrm-primary-btn vrm-import-choice-btn">
                         <i class="fas fa-right-left"></i>
                         <span>导入并切换使用</span>
                     </button>
-                    <button id="blai-import-preview" type="button" class="blai-secondary-btn blai-import-choice-btn">
+                    <button id="vrm-import-preview" type="button" class="vrm-secondary-btn vrm-import-choice-btn">
                         <i class="fas fa-eye"></i>
                         <span>仅临时预览</span>
                     </button>
@@ -498,168 +498,168 @@
         </div>
 
 
-        <div id="blai-rule-search-modal" class="blai-modal-shell">
-            <div class="blai-modal-card blai-rule-search-card">
-                <div class="blai-rule-search-header">
-                    <button id="blai-rule-search-back" type="button" class="blai-icon-btn blai-rule-search-back" title="返回搜索页上一级">
+        <div id="vrm-rule-search-modal" class="vrm-modal-shell">
+            <div class="vrm-modal-card vrm-rule-search-card">
+                <div class="vrm-rule-search-header">
+                    <button id="vrm-rule-search-back" type="button" class="vrm-icon-btn vrm-rule-search-back" title="返回搜索页上一级">
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <div class="blai-rule-search-field">
-                        <i class="fas fa-magnifying-glass blai-rule-search-field-icon"></i>
-                        <input type="text" id="blai-rule-search-input" class="blai-input blai-rule-search-input" placeholder="搜索内容">
-                        <button id="blai-rule-search-clear" type="button" class="blai-icon-btn blai-rule-search-clear" title="清空关键词" hidden>
+                    <div class="vrm-rule-search-field">
+                        <i class="fas fa-magnifying-glass vrm-rule-search-field-icon"></i>
+                        <input type="text" id="vrm-rule-search-input" class="vrm-input vrm-rule-search-input" placeholder="搜索内容">
+                        <button id="vrm-rule-search-clear" type="button" class="vrm-icon-btn vrm-rule-search-clear" title="清空关键词" hidden>
                             <i class="fas fa-circle-xmark"></i>
                         </button>
                     </div>
-                    <button id="blai-rule-search-submit" type="button" class="blai-rule-search-submit">搜索</button>
+                    <button id="vrm-rule-search-submit" type="button" class="vrm-rule-search-submit">搜索</button>
                 </div>
-                <div id="blai-rule-search-body" class="blai-rule-search-body"></div>
+                <div id="vrm-rule-search-body" class="vrm-rule-search-body"></div>
             </div>
         </div>
 
 
-        <div id="blai-scope-tag-editor-modal" class="blai-modal-shell blai-scope-tag-editor-modal" aria-hidden="true">
-            <div class="blai-modal-card blai-scope-tag-editor-card" role="dialog" aria-modal="true" aria-labelledby="blai-scope-tag-editor-title">
-                <h3 id="blai-scope-tag-editor-title" class="blai-scope-tag-editor-title">新增标签</h3>
-                <div class="blai-scope-tag-editor-field">
-                    <label class="blai-field-label" for="blai-scope-tag-group-select">所属分组</label>
-                    <select id="blai-scope-tag-group-select" class="blai-input blai-scope-tag-input"></select>
+        <div id="vrm-scope-tag-editor-modal" class="vrm-modal-shell vrm-scope-tag-editor-modal" aria-hidden="true">
+            <div class="vrm-modal-card vrm-scope-tag-editor-card" role="dialog" aria-modal="true" aria-labelledby="vrm-scope-tag-editor-title">
+                <h3 id="vrm-scope-tag-editor-title" class="vrm-scope-tag-editor-title">新增标签</h3>
+                <div class="vrm-scope-tag-editor-field">
+                    <label class="vrm-field-label" for="vrm-scope-tag-group-select">所属分组</label>
+                    <select id="vrm-scope-tag-group-select" class="vrm-input vrm-scope-tag-input"></select>
                 </div>
-                <div class="blai-scope-tag-editor-field">
-                    <label class="blai-field-label" for="blai-scope-tag-input">输入标签</label>
-                    <input type="text" id="blai-scope-tag-input" class="blai-input blai-scope-tag-input" placeholder="如：状态 或 <UpdateVariable>" autocomplete="off">
-                    <div class="blai-scope-tag-field-help">填写标签名或完整起始标签，会自动补齐；支持中文标签名，不支持带属性的起始标签。</div>
+                <div class="vrm-scope-tag-editor-field">
+                    <label class="vrm-field-label" for="vrm-scope-tag-input">输入标签</label>
+                    <input type="text" id="vrm-scope-tag-input" class="vrm-input vrm-scope-tag-input" placeholder="如：状态 或 <UpdateVariable>" autocomplete="off">
+                    <div class="vrm-scope-tag-field-help">填写标签名或完整起始标签，会自动补齐；支持中文标签名，不支持带属性的起始标签。</div>
                 </div>
-                <div class="blai-scope-tag-editor-field">
-                    <label class="blai-field-label" for="blai-scope-tag-label-input">输入备注</label>
-                    <input type="text" id="blai-scope-tag-label-input" class="blai-input blai-scope-tag-input" placeholder="如：选项（选填）" autocomplete="off">
+                <div class="vrm-scope-tag-editor-field">
+                    <label class="vrm-field-label" for="vrm-scope-tag-label-input">输入备注</label>
+                    <input type="text" id="vrm-scope-tag-label-input" class="vrm-input vrm-scope-tag-input" placeholder="如：选项（选填）" autocomplete="off">
                 </div>
-                <div id="blai-scope-tag-error" class="blai-field-error" aria-live="polite"></div>
-                <div class="blai-scope-tag-editor-actions">
-                    <button id="blai-scope-tag-reset" type="button" class="blai-scope-tag-cancel">取消</button>
-                    <button id="blai-scope-tag-save" type="button" class="blai-scope-tag-confirm">确认</button>
+                <div id="vrm-scope-tag-error" class="vrm-field-error" aria-live="polite"></div>
+                <div class="vrm-scope-tag-editor-actions">
+                    <button id="vrm-scope-tag-reset" type="button" class="vrm-scope-tag-cancel">取消</button>
+                    <button id="vrm-scope-tag-save" type="button" class="vrm-scope-tag-confirm">确认</button>
                 </div>
             </div>
         </div>
 
 
 
-        <div id="blai-diff-modal" style="display:none;">
-            <div class="blai-diff-modal-card">
-                <div class="blai-diff-modal-header">
-                    <h3 class="blai-diff-modal-title"><i class="fa-solid fa-eye"></i><span class="blai-diff-title-text">净化前文透视</span></h3>
-                    <div class="blai-diff-header-actions">
-                        <button id="blai-diff-revert-toggle" type="button" class="blai-icon-btn blai-diff-header-btn" title="撤回净化并保护原文">
-                            <i id="blai-diff-revert-icon" class="fas fa-rotate-left"></i> <span id="blai-diff-revert-text">撤回</span>
+        <div id="vrm-diff-modal" style="display:none;">
+            <div class="vrm-diff-modal-card">
+                <div class="vrm-diff-modal-header">
+                    <h3 class="vrm-diff-modal-title"><i class="fa-solid fa-eye"></i><span class="vrm-diff-title-text">净化前文透视</span></h3>
+                    <div class="vrm-diff-header-actions">
+                        <button id="vrm-diff-revert-toggle" type="button" class="vrm-icon-btn vrm-diff-header-btn" title="撤回净化并保护原文">
+                            <i id="vrm-diff-revert-icon" class="fas fa-rotate-left"></i> <span id="vrm-diff-revert-text">撤回</span>
                         </button>
-                        <button id="blai-diff-ai-rewrite" type="button" class="blai-icon-btn blai-diff-header-btn" title="对当前消息手动执行 AI 改写">
+                        <button id="vrm-diff-ai-rewrite" type="button" class="vrm-icon-btn vrm-diff-header-btn" title="对当前消息手动执行 AI 改写">
                             <i class="fa-solid fa-wand-magic-sparkles"></i> <span>AI 改写</span>
                         </button>
-                        <button id="blai-diff-mode-toggle" type="button" class="blai-icon-btn blai-diff-header-btn" title="切换到全文模式" aria-label="切换到全文模式">
-                            <i id="blai-diff-mode-icon" class="fa-solid fa-file-lines"></i> <span id="blai-diff-mode-text">全文模式</span>
+                        <button id="vrm-diff-mode-toggle" type="button" class="vrm-icon-btn vrm-diff-header-btn" title="切换到全文模式" aria-label="切换到全文模式">
+                            <i id="vrm-diff-mode-icon" class="fa-solid fa-file-lines"></i> <span id="vrm-diff-mode-text">全文模式</span>
                         </button>
-                        <div class="blai-diff-menu-wrap">
-                            <button id="blai-diff-menu-toggle" type="button" class="blai-icon-btn blai-diff-header-btn blai-diff-menu-toggle" title="更多操作" aria-label="更多操作" aria-haspopup="true" aria-expanded="false">
+                        <div class="vrm-diff-menu-wrap">
+                            <button id="vrm-diff-menu-toggle" type="button" class="vrm-icon-btn vrm-diff-header-btn vrm-diff-menu-toggle" title="更多操作" aria-label="更多操作" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa-solid fa-ellipsis"></i>
                             </button>
-                            <div id="blai-diff-actions-menu" class="blai-diff-actions-menu" hidden>
-                                <button id="blai-diff-related-mode-toggle" type="button" class="blai-diff-actions-item" title="点击差异文本后推测相关规则">
-                                    <i id="blai-diff-related-mode-icon" class="fa-solid fa-crosshairs"></i>
-                                    <span id="blai-diff-related-mode-text">相关规则：关闭</span>
+                            <div id="vrm-diff-actions-menu" class="vrm-diff-actions-menu" hidden>
+                                <button id="vrm-diff-related-mode-toggle" type="button" class="vrm-diff-actions-item" title="点击差异文本后推测相关规则">
+                                    <i id="vrm-diff-related-mode-icon" class="fa-solid fa-crosshairs"></i>
+                                    <span id="vrm-diff-related-mode-text">相关规则：关闭</span>
                                 </button>
-                                <button id="blai-diff-menu-pos-toggle" type="button" class="blai-diff-actions-item" title="将顶部按钮收纳进菜单">
-                                    <i id="blai-diff-menu-pos-icon" class="fa-solid fa-ellipsis"></i>
-                                    <span id="blai-diff-menu-pos-text">顶部按钮：收纳</span>
+                                <button id="vrm-diff-menu-pos-toggle" type="button" class="vrm-diff-actions-item" title="将顶部按钮收纳进菜单">
+                                    <i id="vrm-diff-menu-pos-icon" class="fa-solid fa-ellipsis"></i>
+                                    <span id="vrm-diff-menu-pos-text">顶部按钮：收纳</span>
                                 </button>
-                                <button id="blai-diff-menu-bottom-toggle" type="button" class="blai-diff-actions-item" title="隐藏消息尾部按钮">
-                                    <i id="blai-diff-menu-bottom-icon" class="fa-solid fa-eye-slash"></i>
-                                    <span id="blai-diff-menu-bottom-text">尾部按钮：隐藏</span>
+                                <button id="vrm-diff-menu-bottom-toggle" type="button" class="vrm-diff-actions-item" title="隐藏消息尾部按钮">
+                                    <i id="vrm-diff-menu-bottom-icon" class="fa-solid fa-eye-slash"></i>
+                                    <span id="vrm-diff-menu-bottom-text">尾部按钮：隐藏</span>
                                 </button>
                             </div>
                         </div>
-                        <button id="blai-diff-modal-close" type="button" class="blai-diff-modal-close" aria-label="关闭">&times;</button>
+                        <button id="vrm-diff-modal-close" type="button" class="vrm-diff-modal-close" aria-label="关闭">&times;</button>
                     </div>
                 </div>
-                <div class="blai-diff-legend" aria-label="改写阶段颜色说明">
-                    <span class="blai-diff-legend-item" data-source="original"><i></i>原文本</span>
-                    <span class="blai-diff-legend-item" data-source="program"><i></i>程序改写</span>
-                    <span class="blai-diff-legend-item" data-source="ai"><i></i>AI 改写</span>
-                    <span class="blai-diff-legend-item" data-source="manual"><i></i>手动改写</span>
+                <div class="vrm-diff-legend" aria-label="改写阶段颜色说明">
+                    <span class="vrm-diff-legend-item" data-source="original"><i></i>原文本</span>
+                    <span class="vrm-diff-legend-item" data-source="program"><i></i>程序改写</span>
+                    <span class="vrm-diff-legend-item" data-source="ai"><i></i>AI 改写</span>
+                    <span class="vrm-diff-legend-item" data-source="manual"><i></i>手动改写</span>
                 </div>
-                <div id="blai-diff-modal-content" class="blai-diff-modal-content"></div>
+                <div id="vrm-diff-modal-content" class="vrm-diff-modal-content"></div>
             </div>
         </div>
 
 
-        <div id="blai-diff-related-modal" class="blai-modal-shell">
-            <div class="blai-modal-card blai-diff-related-card">
-                <div class="blai-diff-related-modal-header">
-                    <h3 class="blai-edit-modal-title blai-diff-related-title"><i class="fa-solid fa-crosshairs"></i> 可能相关规则</h3>
-                    <button id="blai-diff-related-close" type="button" class="blai-icon-btn" title="关闭"><i class="fas fa-times"></i></button>
+        <div id="vrm-diff-related-modal" class="vrm-modal-shell">
+            <div class="vrm-modal-card vrm-diff-related-card">
+                <div class="vrm-diff-related-modal-header">
+                    <h3 class="vrm-edit-modal-title vrm-diff-related-title"><i class="fa-solid fa-crosshairs"></i> 可能相关规则</h3>
+                    <button id="vrm-diff-related-close" type="button" class="vrm-icon-btn" title="关闭"><i class="fas fa-times"></i></button>
                 </div>
-                <div id="blai-diff-related-body" class="blai-diff-related-body"></div>
+                <div id="vrm-diff-related-body" class="vrm-diff-related-body"></div>
             </div>
         </div>
 
 
-        <div id="blai-subrule-edit-modal" class="blai-modal-shell" style="z-index: 10000005;">
-            <div class="blai-modal-card blai-edit-modal-card blai-subrule-modal-card" style="padding: 20px !important;">
-                <div class="blai-subrule-modal-header">
-                    <div class="blai-subrule-mode-block">
-                        <div class="blai-subrule-mode-select-wrap">
-                            <select id="blai-modal-sub-mode" class="blai-input blai-subrule-mode-select">
+        <div id="vrm-subrule-edit-modal" class="vrm-modal-shell" style="z-index: 10000005;">
+            <div class="vrm-modal-card vrm-edit-modal-card vrm-subrule-modal-card" style="padding: 20px !important;">
+                <div class="vrm-subrule-modal-header">
+                    <div class="vrm-subrule-mode-block">
+                        <div class="vrm-subrule-mode-select-wrap">
+                            <select id="vrm-modal-sub-mode" class="vrm-input vrm-subrule-mode-select">
                                 <option value="simple">🧩 简易组合</option>
                                 <option value="text">📝 普通文本</option>
                                 <option value="regex">⚙️ 正则表达式</option>
                             </select>
-                            <i class="fas fa-chevron-down blai-subrule-mode-arrow"></i>
+                            <i class="fas fa-chevron-down vrm-subrule-mode-arrow"></i>
                         </div>
-                        <div id="blai-modal-sub-mode-hint" class="blai-subrule-mode-hint" aria-live="polite"></div>
+                        <div id="vrm-modal-sub-mode-hint" class="vrm-subrule-mode-hint" aria-live="polite"></div>
                     </div>
-                    <button id="blai-modal-sub-cancel" type="button" class="blai-icon-btn blai-subrule-close-btn" title="关闭"><i class="fas fa-times"></i></button>
+                    <button id="vrm-modal-sub-cancel" type="button" class="vrm-icon-btn vrm-subrule-close-btn" title="关闭"><i class="fas fa-times"></i></button>
                 </div>
 
-                <div class="blai-subrule-modal-body">
-                    <div class="blai-subrule-field" style="margin-bottom: 12px;">
-                        <label class="blai-field-label" style="margin-bottom: 6px; font-weight: 600;">备注说明 (可选)</label>
-                        <input type="text" id="blai-modal-sub-remark" class="blai-input" placeholder="例如：处理特定角色的口头禅" style="background: var(--blai-bg-button) !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; padding: 10px 14px !important;">
+                <div class="vrm-subrule-modal-body">
+                    <div class="vrm-subrule-field" style="margin-bottom: 12px;">
+                        <label class="vrm-field-label" style="margin-bottom: 6px; font-weight: 600;">备注说明 (可选)</label>
+                        <input type="text" id="vrm-modal-sub-remark" class="vrm-input" placeholder="例如：处理特定角色的口头禅" style="background: var(--vrm-bg-button) !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; padding: 10px 14px !important;">
                     </div>
 
-                    <div class="blai-subrule-field" style="margin-bottom: 12px;">
-                        <label class="blai-field-label" style="margin-bottom: 6px; font-weight: 600;">处理方式</label>
-                        <select id="blai-modal-sub-rewrite-mode" class="blai-input">
+                    <div class="vrm-subrule-field" style="margin-bottom: 12px;">
+                        <label class="vrm-field-label" style="margin-bottom: 6px; font-weight: 600;">处理方式</label>
+                        <select id="vrm-modal-sub-rewrite-mode" class="vrm-input">
                             <option value="program">程序替换</option>
                             <option value="ai">AI 改写</option>
                         </select>
-                        <div id="blai-modal-sub-rewrite-hint" class="blai-subrule-mode-hint" aria-live="polite"></div>
+                        <div id="vrm-modal-sub-rewrite-hint" class="vrm-subrule-mode-hint" aria-live="polite"></div>
                     </div>
 
-                    <div id="blai-modal-sub-ai-prompt-field" class="blai-subrule-field" style="margin-bottom: 12px;" hidden>
-                        <label class="blai-field-label" style="margin-bottom: 6px; font-weight: 600;">单条改写要求 (可选)</label>
-                        <textarea id="blai-modal-sub-ai-prompt" class="blai-textarea" rows="4" placeholder="只写这条规则命中时的特殊处理。可分情况说明：命中 A 组时只弱化不删除；命中 B 组时保留语气词；留空则只使用 AI 设置里的全局提示词。" style="background: var(--blai-bg-button) !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; padding: 10px 14px !important;"></textarea>
-                        <div id="blai-modal-sub-ai-prompt-hint" class="blai-subrule-mode-hint" aria-live="polite"></div>
+                    <div id="vrm-modal-sub-ai-prompt-field" class="vrm-subrule-field" style="margin-bottom: 12px;" hidden>
+                        <label class="vrm-field-label" style="margin-bottom: 6px; font-weight: 600;">单条改写要求 (可选)</label>
+                        <textarea id="vrm-modal-sub-ai-prompt" class="vrm-textarea" rows="4" placeholder="只写这条规则命中时的特殊处理。可分情况说明：命中 A 组时只弱化不删除；命中 B 组时保留语气词；留空则只使用 AI 设置里的全局提示词。" style="background: var(--vrm-bg-button) !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; padding: 10px 14px !important;"></textarea>
+                        <div id="vrm-modal-sub-ai-prompt-hint" class="vrm-subrule-mode-hint" aria-live="polite"></div>
                     </div>
 
-                    <div class="blai-subrule-field" style="margin-bottom: 12px;">
-                        <label class="blai-field-label" style="margin-bottom: 6px; font-weight: 600;">查找内容</label>
-                        <div id="blai-modal-sub-target-error" class="blai-field-error" aria-live="polite"></div>
-                        <textarea id="blai-modal-sub-target" class="blai-textarea" rows="4" style="background: var(--blai-bg-button) !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; padding: 10px 14px !important;"></textarea>
+                    <div class="vrm-subrule-field" style="margin-bottom: 12px;">
+                        <label class="vrm-field-label" style="margin-bottom: 6px; font-weight: 600;">查找内容</label>
+                        <div id="vrm-modal-sub-target-error" class="vrm-field-error" aria-live="polite"></div>
+                        <textarea id="vrm-modal-sub-target" class="vrm-textarea" rows="4" style="background: var(--vrm-bg-button) !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; padding: 10px 14px !important;"></textarea>
                     </div>
 
-                    <div class="blai-subrule-field" style="margin-bottom: 15px;">
-                        <div class="blai-subrule-replacement-head">
-                            <label id="blai-modal-sub-rep-label" class="blai-field-label" style="margin-bottom: 0; font-weight: 600;">替换为</label>
-                            <div id="blai-modal-sub-regex-actions" class="blai-regex-replacement-actions" hidden>
-                                <button id="blai-modal-sub-regex-recognize" type="button" class="blai-subrule-mini-btn">按行识别</button>
+                    <div class="vrm-subrule-field" style="margin-bottom: 15px;">
+                        <div class="vrm-subrule-replacement-head">
+                            <label id="vrm-modal-sub-rep-label" class="vrm-field-label" style="margin-bottom: 0; font-weight: 600;">替换为</label>
+                            <div id="vrm-modal-sub-regex-actions" class="vrm-regex-replacement-actions" hidden>
+                                <button id="vrm-modal-sub-regex-recognize" type="button" class="vrm-subrule-mini-btn">按行识别</button>
                             </div>
                         </div>
-                        <textarea id="blai-modal-sub-rep" class="blai-textarea" rows="4" style="background: var(--blai-bg-button) !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; padding: 10px 14px !important;"></textarea>
-                        <div id="blai-modal-sub-regex-list" class="blai-regex-replacement-list" hidden></div>
+                        <textarea id="vrm-modal-sub-rep" class="vrm-textarea" rows="4" style="background: var(--vrm-bg-button) !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; padding: 10px 14px !important;"></textarea>
+                        <div id="vrm-modal-sub-regex-list" class="vrm-regex-replacement-list" hidden></div>
                     </div>
                 </div>
 
-                <div class="blai-subrule-footer">
-                    <button id="blai-modal-sub-save" type="button" class="blai-primary-btn blai-subrule-footer-save">保存条目</button>
+                <div class="vrm-subrule-footer">
+                    <button id="vrm-modal-sub-save" type="button" class="vrm-primary-btn vrm-subrule-footer-save">保存条目</button>
                 </div>
             </div>
         </div>

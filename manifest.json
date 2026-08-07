@@ -1,9 +1,9 @@
 {
-    "display_name": "屏蔽词净化助手 AI 改写版",
+    "display_name": "Veridis Rewrite Modified",
     "loading_order": 10,
     "js": "index.js",
     "css": "style.css",
     "author": "Assistant",
-    "version": "2.2",
-    "description": "在关键词净化基础上增加可选 OpenAI 兼容局部改写。"
+    "version": "2.3-modified",
+    "description": "Veridis Rewrite 的独立改版，包含 AI 改写持久化、手动编辑保护和 HTML/XML 注释保护。"
 }

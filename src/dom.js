@@ -28,9 +28,9 @@ const excludedMessageContentSelector = [
     '.swipe_left',
     '.swipe_right',
     '.swipeRightBlock',
-    '.blai-diff-btn',
+    '.vrm-diff-btn',
     '.TH-collapse-code-block-button',
-    '[class*="blai-diff"]',
+    '[class*="vrm-diff"]',
 ].join(', ');
 
 const streamingPresentationByMessageId = new Map();
@@ -98,31 +98,31 @@ export function syncPersonaDescriptionProtectionControl() {
         button.classList.toggle('is-active', enabled);
         button.setAttribute('aria-pressed', enabled ? 'true' : 'false');
         button.setAttribute('title', enabled ? '已保护用户设定描述，点击取消保护' : '点击保护用户设定描述');
-        const text = button.querySelector('.blai-persona-protect-text');
-        const isPanelControl = Boolean(button.closest('#blai-purifier-popup'));
+        const text = button.querySelector('.vrm-persona-protect-text');
+        const isPanelControl = Boolean(button.closest('#vrm-purifier-popup'));
         if (text) text.textContent = isPanelControl ? (enabled ? '开启' : '关闭') : (enabled ? '已保护' : '保护');
         const icon = button.querySelector('i');
         if (icon) icon.className = enabled ? 'fa-solid fa-shield-halved' : 'fa-solid fa-shield';
     };
 
     document
-        .querySelectorAll('.blai-persona-description-protect-toggle')
+        .querySelectorAll('.vrm-persona-description-protect-toggle')
         .forEach(updateButton);
 
     const anchor = document.querySelector('[data-for="persona_description"]');
     const textarea = document.querySelector('#persona_description, [name="persona_description"]');
     const heading = anchor?.closest?.('h4') || textarea?.previousElementSibling;
-    if (!heading || heading.querySelector?.('.blai-persona-description-protect-toggle')) {
+    if (!heading || heading.querySelector?.('.vrm-persona-description-protect-toggle')) {
         return;
     }
 
     const enabled = settings.protectPersonaDescription === true;
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `blai-persona-description-protect-toggle${enabled ? ' is-active' : ''}`;
+    button.className = `vrm-persona-description-protect-toggle${enabled ? ' is-active' : ''}`;
     button.setAttribute('aria-pressed', enabled ? 'true' : 'false');
     button.setAttribute('title', enabled ? '已保护用户设定描述，点击取消保护' : '点击保护用户设定描述');
-    button.innerHTML = `<i class="${enabled ? 'fa-solid fa-shield-halved' : 'fa-solid fa-shield'}"></i><span class="blai-persona-protect-text">${enabled ? '已保护' : '保护'}</span>`;
+    button.innerHTML = `<i class="${enabled ? 'fa-solid fa-shield-halved' : 'fa-solid fa-shield'}"></i><span class="vrm-persona-protect-text">${enabled ? '已保护' : '保护'}</span>`;
     heading.appendChild(button);
     updateButton(button);
 }
@@ -151,7 +151,7 @@ export function isProtectedNode(node) {
     if (node.closest('.name_text')) return true;
     if (isPersonaDescriptionNode(node)) return true;
     if (shouldProtectReasoningNode(node)) return true;
-    if (node.closest('#blai-purifier-popup, #blai-batch-popup, #blai-confirm-modal, #blai-zh-dictionary-modal, #blai-rule-edit-modal, #blai-rule-transfer-modal, #blai-preset-import-choice-modal, #blai-rule-search-modal, #blai-scope-tags-modal, #blai-diff-modal, #blai-subrule-edit-modal, #blai-loading-overlay')) return true;
+    if (node.closest('#vrm-purifier-popup, #vrm-batch-popup, #vrm-confirm-modal, #vrm-zh-dictionary-modal, #vrm-rule-edit-modal, #vrm-rule-transfer-modal, #vrm-preset-import-choice-modal, #vrm-rule-search-modal, #vrm-scope-tags-modal, #vrm-diff-modal, #vrm-subrule-edit-modal, #vrm-loading-overlay')) return true;
     if (shouldProtectSkipUserNode(node)) return true;
     if (isKnownPluginContainerNode(node)) return true;
     if (isScriptEditorDialogNode(node)) return true;
@@ -180,7 +180,7 @@ export function isRevertedMessageDomNode(node) {
     const index = resolveMessageIndexFromDomNode(mesNode);
     const { chat } = getAppContext();
     const msg = Array.isArray(chat) ? chat[index] : null;
-    return msg?.__blai_is_reverted === true;
+    return msg?.__vrm_is_reverted === true;
 }
 
 export function isManualFinalMessageDomNode(node) {
@@ -442,7 +442,7 @@ export function beginAtomicMessageDisplaySwap(index) {
     const rect = messageNode.getBoundingClientRect();
     const snapshot = messageNode.cloneNode(true);
     removeSnapshotIdentifiers(snapshot);
-    snapshot.setAttribute('data-blai-atomic-message-snapshot', 'true');
+    snapshot.setAttribute('data-vrm-atomic-message-snapshot', 'true');
     snapshot.setAttribute('aria-hidden', 'true');
     if ('inert' in snapshot) snapshot.inert = true;
 

@@ -1,12 +1,37 @@
-# Veridis Rewrite
+# Veridis Rewrite Modified
 
-Veridis Rewrite 是一个面向 SillyTavern 的文本净化与局部改写扩展。它在传统屏蔽词替换的基础上，加入了规则预设、范围标签保护、净化前文透视，以及可选的 OpenAI 兼容 AI 局部改写能力，用来在聊天生成、历史记录和相关数据中稳定处理不想保留的词句、句式或表达。
+Veridis Rewrite Modified 是基于上游 Veridis Rewrite 的独立改版，面向 SillyTavern 提供文本净化与局部改写。它保留上游的规则预设、范围标签保护、净化前文透视和 OpenAI 兼容 AI 局部改写，并加入改写结果持久化、手动编辑保护、HTML/XML 注释保护等修复。
 
-当前版本：`2.2`
+当前版本：`2.3-modified`
 
 使用、修改或再发布前，请阅读[许可与版权](#许可与版权)。
 
 ---
+
+## 2.3-modified 版本更新
+
+- 独立插件命名：改版使用独立的 SillyTavern 设置键和 `vrm-*` UI 命名空间，不再与上游版本共用设置、DOM ID 或事件命名空间。
+- AI 改写持久化：已经完成的 AI 改写正文会写入消息元数据；刷新、重载、切换预设或重启酒馆后，历史楼层仍保持改写后的版本。
+- 手动编辑保护：手动编辑 AI 改写结果后会记录为手动终稿，不会在后续净化或刷新时恢复成改写前文本。
+- HTML/XML 注释保护：AI 设置中新增「HTML/XML 注释保护」开关。开启后，`<!-- ... -->` 注释不会作为 AI 改写目标，提示词和本地兜底改写也会保留注释原文。
+- 验证工具：新增注释保护、AI 终稿持久化和改写目标身份验证脚本。
+
+## 与上游版本并存
+
+本改版可以和作者的原版同时安装。安装时请使用不同的目录名：
+
+- 上游版本：`Veridis-Rewrite`
+- 本改版：`Veridis-Rewrite-Modified`
+
+两个版本拥有独立设置和界面命名空间，可以分别更新。建议同一时间只启用其中一个版本处理聊天正文；如果同时启用，两套规则可能会连续作用于同一楼层。
+
+如果从 GitHub 安装，为了让 SillyTavern 自动创建不同的扩展目录，请将本仓库名称改为 `Veridis-Rewrite-Modified`。GitHub 操作路径为 `Settings` -> `General` -> `Repository name`。改名后本地远端地址应更新为：
+
+```powershell
+git remote set-url origin https://github.com/Power12345678/Veridis-Rewrite-Modified.git
+```
+
+如果改版安装前已经使用过旧的同名 AI 版本，请先导出规则和预设，再导入到改版中。改版不会自动读取上游 AI 版本的设置，避免两个插件共享配置。
 
 ## 2.2 版本更新
 
@@ -129,8 +154,8 @@ Veridis Rewrite 是一个面向 SillyTavern 的文本净化与局部改写扩展
 
 安装扩展后，SillyTavern 页面会出现两个入口：
 
-- 顶部或工具区域的“词汇映射”按钮，用于打开 Veridis Rewrite 工作台。
-- 扩展设置面板中的“屏蔽词净化助手 AI版”抽屉入口。
+- 顶部或工具区域的“词汇映射”按钮，用于打开 Veridis Rewrite Modified 工作台。
+- 扩展设置面板中的“Veridis Rewrite Modified”抽屉入口。
 
 工作台内主要页面包括：
 

@@ -256,7 +256,7 @@ export function hasRealDiffCache(index) {
 
     const hasSnippets = hasRenderedSnippetDiff(cached.snippets);
     const hasFullModified = typeof cached.fullDiff === 'string'
-        && cached.fullDiff.includes('blai-diff-full-modified');
+        && cached.fullDiff.includes('vrm-diff-full-modified');
 
     return hasSnippets || hasFullModified;
 }
@@ -302,7 +302,7 @@ export function writeReadyDiffCache(index, signature, cacheData = {}, options = 
 
     const nextSnippets = Array.isArray(cacheData?.snippets) ? cacheData.snippets : [];
     const nextFullDiff = typeof cacheData?.fullDiff === 'string' ? cacheData.fullDiff : '';
-    const nextHasRealDiff = nextSnippets.length > 0 || nextFullDiff.includes('blai-diff-full-modified');
+    const nextHasRealDiff = nextSnippets.length > 0 || nextFullDiff.includes('vrm-diff-full-modified');
 
     const existing = runtimeState.diffSnippetsCache.get(index);
     const existingHasRealDiff = hasRealDiffCache(index);
@@ -595,14 +595,14 @@ function renderDiffOperation(operation) {
     if (!operation || !operation.text) return '';
     if (operation.type === 'delete' || operation.type === 'insert') {
         const attrs = [
-            `class="blai-diff-change"`,
-            `data-blai-diff-type="${operation.type === 'delete' ? 'delete' : 'insert'}"`,
+            `class="vrm-diff-change"`,
+            `data-vrm-diff-type="${operation.type === 'delete' ? 'delete' : 'insert'}"`,
         ];
         if (operation.type === 'insert' && ['program', 'ai', 'manual'].includes(operation.source)) {
-            attrs.push(`data-blai-diff-source="${operation.source}"`);
+            attrs.push(`data-vrm-diff-source="${operation.source}"`);
         }
         ['oldStart', 'oldEnd', 'newStart', 'newEnd'].forEach((key) => {
-            if (Number.isFinite(Number(operation[key]))) attrs.push(`data-blai-${key.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)}="${Number(operation[key])}"`);
+            if (Number.isFinite(Number(operation[key]))) attrs.push(`data-vrm-${key.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)}="${Number(operation[key])}"`);
         });
         const tag = operation.type === 'delete' ? 'del' : 'ins';
         return `<${tag} ${attrs.join(' ')}>${escapeHtml(operation.text)}</${tag}>`;
@@ -874,7 +874,7 @@ function renderDiffWindow(annotatedOperations = [], window) {
     if (window.hasSuffixEllipsis) parts.push('...');
     const html = parts.join('');
     if (!html.trim() || !/<(?:del|ins)\b/.test(html)) return '';
-    return `<div class="blai-diff-snippet">${html}</div>`;
+    return `<div class="vrm-diff-snippet">${html}</div>`;
 }
 
 function buildDiffSnippetsFromOperations(operations = [], originalText = '') {
@@ -897,7 +897,7 @@ function extractDiffDisplayText(rawText = '') {
 }
 
 function hasRenderedFullDiff(value = '') {
-    return typeof value === 'string' && value.includes('blai-diff-full-modified');
+    return typeof value === 'string' && value.includes('vrm-diff-full-modified');
 }
 
 function hasRenderedSnippetDiff(snippets = []) {
@@ -1005,7 +1005,7 @@ function buildNormalFullDiffBlocks(value = '') {
         .split('\n')
         .map(part => part.trim())
         .filter(Boolean)
-        .map(part => `<div class="blai-diff-full-normal">${escapeHtml(part)}</div>`)
+        .map(part => `<div class="vrm-diff-full-normal">${escapeHtml(part)}</div>`)
         .join('');
 }
 
@@ -1022,7 +1022,7 @@ function buildFullDiffBlocksFromOperations(operations = []) {
             return;
         }
 
-        const className = currentHasChange ? 'blai-diff-full-modified' : 'blai-diff-full-normal';
+        const className = currentHasChange ? 'vrm-diff-full-modified' : 'vrm-diff-full-normal';
         blocks.push(`<div class="${className}">${html}</div>`);
         currentParts = [];
         currentHasChange = false;
@@ -1116,7 +1116,7 @@ export function refreshDiffCacheIfStale(index) {
     if (!Number.isInteger(index) || index < 0 || !Array.isArray(chat)) return false;
 
     const msg = chat[index];
-    if (!isAssistantMessage(msg) || msg.__blai_is_reverted === true) return false;
+    if (!isAssistantMessage(msg) || msg.__vrm_is_reverted === true) return false;
 
     const signature = computeMessageSignature(msg);
     const state = runtimeState.diffMessageStates.get(index);
@@ -1174,13 +1174,13 @@ export function ensureMessageDiffButton(index, messageNode) {
     const msg = Array.isArray(chat) ? chat[index] : null;
 
     if (!isAssistantMessage(msg) || !isTrackableMessageDomNode(messageNode)) {
-        messageNode.querySelectorAll?.('.blai-diff-btn').forEach(btn => btn.remove());
+        messageNode.querySelectorAll?.('.vrm-diff-btn').forEach(btn => btn.remove());
         return;
     }
 
     const nodeIndex = resolveMessageIndexFromDomNode(messageNode);
     if (nodeIndex !== index) {
-        messageNode.querySelectorAll?.('.blai-diff-btn').forEach(btn => btn.remove());
+        messageNode.querySelectorAll?.('.vrm-diff-btn').forEach(btn => btn.remove());
         return;
     }
 
@@ -1192,7 +1192,7 @@ export function ensureMessageDiffButton(index, messageNode) {
 
     const buttonArea = messageNode.querySelector('.mes_buttons');
     if (buttonArea) {
-        let existing = buttonArea.querySelector('.blai-diff-btn-top');
+        let existing = buttonArea.querySelector('.vrm-diff-btn-top');
         const extraMenu = buttonArea.querySelector('.extraMesButtons');
         const targetContainer = (isTopInExtra && extraMenu) ? extraMenu : buttonArea;
 
@@ -1205,7 +1205,7 @@ export function ensureMessageDiffButton(index, messageNode) {
             if (existing) existing.remove();
         } else if (!existing) {
             const button = document.createElement('div');
-            button.className = 'mes_button blai-diff-btn blai-diff-btn-top fa-solid fa-clock-rotate-left interactable';
+            button.className = 'mes_button vrm-diff-btn vrm-diff-btn-top fa-solid fa-clock-rotate-left interactable';
             button.title = '溯源净化前文';
             button.setAttribute('data-index', String(index));
             button.setAttribute('tabindex', '0');
@@ -1226,13 +1226,13 @@ export function ensureMessageDiffButton(index, messageNode) {
     const swipeBlock = messageNode.querySelector('.swipeRightBlock');
     if (swipeBlock) {
         const parent = swipeBlock.parentNode;
-        const existingBottom = parent?.querySelector('.blai-diff-btn-bottom');
+        const existingBottom = parent?.querySelector('.vrm-diff-btn-bottom');
 
         if (!shouldShow || !showBottomButton) {
             if (existingBottom) existingBottom.remove();
         } else if (!existingBottom && parent) {
             const btnBottom = document.createElement('div');
-            btnBottom.className = 'blai-diff-btn blai-diff-btn-bottom fa-solid fa-clock-rotate-left interactable';
+            btnBottom.className = 'vrm-diff-btn vrm-diff-btn-bottom fa-solid fa-clock-rotate-left interactable';
             btnBottom.title = '溯源净化前文 (尾部触发)';
             btnBottom.setAttribute('data-index', String(index));
             btnBottom.setAttribute('tabindex', '0');
@@ -1245,7 +1245,7 @@ export function ensureMessageDiffButton(index, messageNode) {
 }
 
 function cleanupStrayDiffButtons(trackedSet) {
-    document.querySelectorAll('.blai-diff-btn[data-index]').forEach((button) => {
+    document.querySelectorAll('.vrm-diff-btn[data-index]').forEach((button) => {
         const index = Number(button.getAttribute('data-index'));
         const mesNode = button.closest('.mes');
         const nodeIndex = resolveMessageIndexFromDomNode(mesNode);

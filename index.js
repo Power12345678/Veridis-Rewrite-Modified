@@ -150,7 +150,7 @@ function maybeCopyLegacySettings() {
     settings.aiRewrite = { ...defaultAiRewriteSettings };
     settings.legacySettingsCopied = true;
     runtimeState.legacySettingsCopiedThisBoot = true;
-    logger.info('[屏蔽词净化助手 AI 改写版] 已复制旧版设置到独立命名空间');
+    logger.info('[Veridis Rewrite Modified] 已复制旧版设置到独立命名空间');
 }
 
 function ensureSettingsShape() {
