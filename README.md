@@ -1,16 +1,22 @@
 # Veridis Rewrite Modified
 
-Veridis Rewrite Modified 是基于上游 Veridis Rewrite 的独立改版，面向 SillyTavern 提供文本净化与局部改写。它保留上游的规则预设、范围标签保护、净化前文透视和 OpenAI 兼容 AI 局部改写，并加入改写结果持久化、手动编辑保护、HTML/XML 注释保护等修复。
+Veridis Rewrite Modified 是基于上游 Veridis Rewrite 的改版，面向 SillyTavern 提供文本净化与局部改写。它保留上游的规则预设、范围标签保护、净化前文透视和 OpenAI 兼容 AI 局部改写，并加入改写结果持久化、手动编辑保护、HTML/XML 注释保护等修复。规则、预设和 AI 配置继续使用上游的共享设置命名空间，方便在原版与改版之间切换。
 
-当前版本：`2.3-modified`
+当前版本：`2.4-modified`
 
 使用、修改或再发布前，请阅读[许可与版权](#许可与版权)。
 
 ---
 
+## 2.4-modified 版本更新
+
+- 共享上游配置：改版直接读取和保存 `ultimate_purifier_ai_rewrite` 下的规则、预设和 AI 设置，原版与改版可以使用同一份配置。
+- 旧改版设置迁移：如果本机已有 `ultimate_purifier_ai_rewrite_modified` 设置，首次启动时会在共享设置为空时导入；原有设置不会被删除。
+- 保持运行隔离：改版仍使用独立目录、`vrm-*` 界面与事件命名空间、`__vrm_*` 消息元数据和改版专用缓存，避免两个版本互相解绑 UI 或覆盖运行状态。
+
 ## 2.3-modified 版本更新
 
-- 独立插件命名：改版使用独立的 SillyTavern 设置键和 `vrm-*` UI 命名空间，不再与上游版本共用设置、DOM ID 或事件命名空间。
+- 独立插件命名：改版使用独立目录和 `vrm-*` UI 命名空间；规则、预设和 AI 设置继续使用上游共享设置键。
 - AI 改写持久化：已经完成的 AI 改写正文会写入消息元数据；刷新、重载、切换预设或重启酒馆后，历史楼层仍保持改写后的版本。
 - 手动编辑保护：手动编辑 AI 改写结果后会记录为手动终稿，不会在后续净化或刷新时恢复成改写前文本。
 - HTML/XML 注释保护：AI 设置中新增「HTML/XML 注释保护」开关。开启后，`<!-- ... -->` 注释不会作为 AI 改写目标，提示词和本地兜底改写也会保留注释原文。
@@ -23,7 +29,7 @@ Veridis Rewrite Modified 是基于上游 Veridis Rewrite 的独立改版，面�
 - 上游版本：`Veridis-Rewrite`
 - 本改版：`Veridis-Rewrite-Modified`
 
-两个版本拥有独立设置和界面命名空间，可以分别更新。建议同一时间只启用其中一个版本处理聊天正文；如果同时启用，两套规则可能会连续作用于同一楼层。
+两个版本拥有独立目录、界面和运行元数据，但规则、预设和 AI 设置是共享的：在任意一个版本中保存配置，另一个版本都可以读取。建议同一时间只启用其中一个版本处理聊天正文；如果同时启用，两套规则可能会连续作用于同一楼层。
 
 如果从 GitHub 安装，为了让 SillyTavern 自动创建不同的扩展目录，请将本仓库名称改为 `Veridis-Rewrite-Modified`。GitHub 操作路径为 `Settings` -> `General` -> `Repository name`。改名后本地远端地址应更新为：
 
@@ -31,7 +37,9 @@ Veridis Rewrite Modified 是基于上游 Veridis Rewrite 的独立改版，面�
 git remote set-url origin https://github.com/Power12345678/Veridis-Rewrite-Modified.git
 ```
 
-如果改版安装前已经使用过旧的同名 AI 版本，请先导出规则和预设，再导入到改版中。改版不会自动读取上游 AI 版本的设置，避免两个插件共享配置。
+如果改版安装前已经使用过旧的同名 AI 版本，改版会直接读取 `ultimate_purifier_ai_rewrite` 中的规则、预设和 AI 设置。此前改版专用命名空间中的数据只会在共享设置为空时自动导入，原数据不会删除。
+
+作者后续移植功能时，建议按功能提交或 Pull Request 移植代码；只需要跳过本改版的目录、UI 命名空间和运行元数据隔离改动，不需要手工重命名每一行代码。
 
 ## 2.2 版本更新
 

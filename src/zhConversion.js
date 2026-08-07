@@ -1,10 +1,10 @@
-import { extensionName, getAppContext, runtimeState } from './state.js';
+import { modifiedExtensionName, extensionName, getAppContext, runtimeState } from './state.js';
 import { logger } from './log.js';
 
 const OPENCC_DICTIONARY_COMMIT = '2736adb0f27d8c2e2747ea58dfaa016c41503cc4';
 export const ZH_DICTIONARY_PACKAGE_VERSION = `opencc-${OPENCC_DICTIONARY_COMMIT.slice(0, 12)}-zh-variant-v1`;
 const OPENCC_DICTIONARY_BASE_URL = `https://cdn.jsdelivr.net/gh/BYVoid/OpenCC@${OPENCC_DICTIONARY_COMMIT}/data/dictionary`;
-const CACHE_KEY = `${extensionName}:zh-variant-dictionary:${ZH_DICTIONARY_PACKAGE_VERSION}`;
+const CACHE_KEY = `${modifiedExtensionName}:zh-variant-dictionary:${ZH_DICTIONARY_PACKAGE_VERSION}`;
 const MAX_VARIANTS_PER_TARGET = 96;
 
 const DICTIONARY_FILES = [

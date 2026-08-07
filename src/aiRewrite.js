@@ -1,4 +1,4 @@
-import { defaultAiRewriteSettings, extensionName, getAppContext, runtimeState } from './state.js';
+import { defaultAiRewriteSettings, extensionName, modifiedExtensionName, getAppContext, runtimeState } from './state.js';
 import { logger } from './log.js';
 import {
     applyScopedReplacements,
@@ -26,8 +26,8 @@ const responseGuard = `输出必须是一个 JSON 对象，键必须恰好为本
 
 let readyNoticeTimer = null;
 const automaticRunPromiseByGenerationId = new Map();
-const debugLogStorageKey = `${extensionName}_ai_rewrite_debug_events`;
-const criticalDebugLogStorageKey = `${extensionName}_ai_rewrite_critical_debug_events`;
+const debugLogStorageKey = `${modifiedExtensionName}_ai_rewrite_debug_events`;
+const criticalDebugLogStorageKey = `${modifiedExtensionName}_ai_rewrite_critical_debug_events`;
 const debugLogDomAttribute = 'data-veridis-ai-rewrite-debug-events';
 const debugLogLimit = 60;
 const criticalDebugLogLimit = 160;

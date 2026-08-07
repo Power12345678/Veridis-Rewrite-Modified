@@ -1,6 +1,9 @@
 export const legacyExtensionName = "ultimate_purifier";
-export const extensionName = "ultimate_purifier_ai_rewrite_modified";
-export const diffMetadataKey = `${extensionName}_diff_state_v3`;
+// Rules, presets, and AI settings intentionally use the upstream namespace so
+// the modified build can be used as a drop-in implementation of that data.
+export const extensionName = "ultimate_purifier_ai_rewrite";
+export const modifiedExtensionName = "ultimate_purifier_ai_rewrite_modified";
+export const diffMetadataKey = `${modifiedExtensionName}_diff_state_v3`;
 export const minTrackedDiffMessages = 1;
 export const defaultTrackedDiffMessages = 3;
 export const maxTrackedDiffMessages = 20;
@@ -133,6 +136,7 @@ export const runtimeState = {
     chatSaveDelayCount: 0,
     isBooted: false,
     legacySettingsCopiedThisBoot: false,
+    sharedSettingsImportedThisBoot: false,
     diffSnippetsCache: new Map(),
     diffRawSourceCache: new Map(),
     nonStreamingRawMessageCache: new Map(),

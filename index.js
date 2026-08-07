@@ -2,7 +2,7 @@ import * as extensionsModule from "../../../extensions.js";
 import * as scriptModule from "../../../../script.js";
 import { saveSettingsDebounced, eventSource, event_types, chat_metadata, chat } from "../../../../script.js";
 
-import { aiRewritePromptProtocolVersion, defaultAiRewriteSettings, defaultSettings, extensionName, legacyExtensionName, initAppContext, runtimeState, markRulesDataDirty, normalizeDiffTrackedMessageLimit } from './src/state.js';
+import { aiRewritePromptProtocolVersion, defaultAiRewriteSettings, defaultSettings, extensionName, modifiedExtensionName, legacyExtensionName, initAppContext, runtimeState, markRulesDataDirty, normalizeDiffTrackedMessageLimit } from './src/state.js';
 import { logger } from './src/log.js';
 import { bindEvents, initRealtimeInterceptor } from './src/events.js';
 import { setupUI, updateToolbarUI, applyCharacterPresetBinding, cleanupInvalidPresetBindings, showToast } from './src/ui.js';
@@ -105,11 +105,72 @@ function normalizeAiRewriteSettings(settings) {
     settings.aiRewrite = next;
 }
 
+function hasConfiguredAiRewrite(settings) {
+    const aiSettings = settings?.aiRewrite;
+    if (!aiSettings || typeof aiSettings !== 'object') return false;
+    return Object.entries(defaultAiRewriteSettings).some(([key, defaultValue]) => (
+        JSON.stringify(aiSettings[key]) !== JSON.stringify(defaultValue)
+    ));
+}
+
 function isSettingsEffectivelyEmpty(settings) {
     if (!settings || typeof settings !== 'object') return true;
     const hasRules = Array.isArray(settings.rules) && settings.rules.length > 0;
     const hasPresets = settings.presets && typeof settings.presets === 'object' && Object.keys(settings.presets).length > 0;
-    return !hasRules && !hasPresets && !settings.activePreset;
+    return !hasRules && !hasPresets && !settings.activePreset && !hasConfiguredAiRewrite(settings);
+}
+
+function maybeImportModifiedSettingsIntoSharedNamespace() {
+    const sharedSettings = extension_settings[extensionName];
+    const modifiedSettings = extension_settings[modifiedExtensionName];
+    if (!sharedSettings || !modifiedSettings || sharedSettings === modifiedSettings) return false;
+
+    if (isSettingsEffectivelyEmpty(sharedSettings) && !isSettingsEffectivelyEmpty(modifiedSettings)) {
+        extension_settings[extensionName] = clonePlain(modifiedSettings);
+        runtimeState.sharedSettingsImportedThisBoot = true;
+        logger.info('[Veridis Rewrite Modified] imported previous modified settings into the shared upstream namespace');
+        return true;
+    }
+
+    let changed = false;
+    [
+        'rules',
+        'presets',
+        'activePreset',
+        'defaultPreset',
+        'characterBindings',
+        'chatCompletionPresetBindings',
+        'scopeTags',
+        'scopeTagGroups',
+        'scopeTagCollapsedGroups',
+        'scopeTagBuiltinDismissed',
+        'scopeTagMode',
+        'enableVisualDiff',
+        'diffViewMode',
+        'diffButtonInExtraMenu',
+        'showBottomDiffButton',
+        'diffTrackedMessageLimit',
+        'themeMode',
+        'logLevel',
+        'skipUserMessages',
+        'realtimeMaskMode',
+        'zhVariantCompatEnabled',
+        'zhVariantCompatOptions',
+        'zhVariantDictionary',
+        'protectPersonaDescription',
+        'aiRewrite',
+    ].forEach((key) => {
+        if (sharedSettings[key] === undefined && modifiedSettings[key] !== undefined) {
+            sharedSettings[key] = clonePlain(modifiedSettings[key]);
+            changed = true;
+        }
+    });
+
+    if (changed) {
+        runtimeState.sharedSettingsImportedThisBoot = true;
+        logger.info('[Veridis Rewrite Modified] filled missing shared settings from the previous modified namespace');
+    }
+    return changed;
 }
 
 function maybeCopyLegacySettings() {
@@ -150,7 +211,7 @@ function maybeCopyLegacySettings() {
     settings.aiRewrite = { ...defaultAiRewriteSettings };
     settings.legacySettingsCopied = true;
     runtimeState.legacySettingsCopiedThisBoot = true;
-    logger.info('[Veridis Rewrite Modified] 已复制旧版设置到独立命名空间');
+    logger.info('[Veridis Rewrite Modified] 已将旧版设置复制到共享 AI 设置命名空间');
 }
 
 function ensureSettingsShape() {
@@ -274,6 +335,7 @@ jQuery(() => {
     if (runtimeState.isBooted) return;
     extension_settings[extensionName] = extension_settings[extensionName] || createDefaultSettings();
 
+    maybeImportModifiedSettingsIntoSharedNamespace();
     maybeCopyLegacySettings();
     migrateOldData();
     ensureSettingsShape();
@@ -287,7 +349,9 @@ jQuery(() => {
         if (isBaiBaiToolkitInstalled()) logger.info('[屏蔽词净化助手] 已启用柏宝箱兼容层');
         if (isLoreFrameInstalled()) logger.info('[屏蔽词净化助手] 已启用 LoreFrame 兼容层');
         await setupUI(extensionsModule.renderExtensionTemplateAsync);
-        if (runtimeState.legacySettingsCopiedThisBoot === true) {
+        if (runtimeState.sharedSettingsImportedThisBoot === true) {
+            setTimeout(() => showToast('已读取原版插件的规则与 AI 配置'), 250);
+        } else if (runtimeState.legacySettingsCopiedThisBoot === true) {
             setTimeout(() => showToast('已复制旧版规则与预设到 AI 改写版'), 250);
         }
         bindEvents();
