@@ -2,11 +2,15 @@
 
 Veridis Rewrite Modified 是基于上游 Veridis Rewrite 的改版，面向 SillyTavern 提供文本净化与局部改写。它保留上游的规则预设、范围标签保护、净化前文透视和 OpenAI 兼容 AI 局部改写，并加入改写结果持久化、手动编辑保护、HTML/XML 注释保护等修复。规则、预设和 AI 配置继续使用上游的共享设置命名空间，方便在原版与改版之间切换。
 
-当前版本：`2.4-modified`
+当前版本：`2.5-modified`
 
 使用、修改或再发布前，请阅读[许可与版权](#许可与版权)。
 
 ---
+
+## 2.5-modified 版本更新
+
+- AI 生成参数：AI 设置支持温度、Top P、Top K、频率惩罚、存在惩罚、重复惩罚和最大输出 token；参数会随 API 预设和净化预设保存。
 
 ## 2.4-modified 版本更新
 
@@ -98,7 +102,7 @@ git remote set-url origin https://github.com/Power12345678/Veridis-Rewrite-Modif
 
 ### AI 局部改写
 
-- AI 请求通过 `TavernHelper.generateRaw` 的自定义 API 链路非流式发送，使用插件内配置的 Base URL、API Key、模型与温度，不占用 SillyTavern 当前主模型；结果通过校验后再原子写回。
+- AI 请求通过 `TavernHelper.generateRaw` 的自定义 API 链路非流式发送，使用插件内配置的 Base URL、API Key、模型和生成参数，不占用 SillyTavern 当前主模型；结果通过校验后再原子写回。
 - AI 改写只处理命中 AI 改写规则的局部片段，不要求整段消息重写。
 - 默认只扫描完整的 `<content>...</content>` 范围，避免把非正文区域误送给 AI。
 - 支持按规则配置独立的 AI 提示词，让不同命中片段使用不同改写指令。
@@ -142,7 +146,7 @@ git remote set-url origin https://github.com/Power12345678/Veridis-Rewrite-Modif
 ### 预设与绑定
 
 - 支持多个净化预设，每个预设可以拥有独立规则和 AI 改写配置。
-- 支持保存、切换和删除多套 AI API 预设；预设包含接口地址、密钥、模型、模型列表、温度与 XML 范围。
+- 支持保存、切换和删除多套 AI API 预设；预设包含接口地址、密钥、模型、模型列表、生成参数与 XML 范围。
 - 支持设置全局默认预设。
 - 支持将当前净化预设绑定到角色，或绑定到 SillyTavern 当前对话补全预设。
 - 支持规则合集在不同预设之间复制或移动。

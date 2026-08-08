@@ -4,6 +4,6 @@
     "js": "index.js",
     "css": "style.css",
     "author": "Assistant",
-    "version": "2.4-modified",
+    "version": "2.5-modified",
     "description": "Veridis Rewrite 的改版，直接共享原版规则、预设和 AI 配置，并包含 AI 改写持久化、手动编辑保护和 HTML/XML 注释保护。"
 }

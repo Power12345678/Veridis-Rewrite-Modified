@@ -812,6 +812,12 @@ function syncPresetAiRewriteGenerationSettingsUI(settings) {
     };
     $('#vrm-ai-protect-comments').prop('checked', aiSettings.protectXmlComments === true);
     setValueIfNotFocused('#vrm-ai-temperature', aiSettings.temperature);
+    setValueIfNotFocused('#vrm-ai-top-p', aiSettings.topP);
+    setValueIfNotFocused('#vrm-ai-top-k', aiSettings.topK);
+    setValueIfNotFocused('#vrm-ai-frequency-penalty', aiSettings.frequencyPenalty);
+    setValueIfNotFocused('#vrm-ai-presence-penalty', aiSettings.presencePenalty);
+    setValueIfNotFocused('#vrm-ai-repetition-penalty', aiSettings.repetitionPenalty);
+    setValueIfNotFocused('#vrm-ai-max-tokens', aiSettings.maxTokens);
     setValueIfNotFocused('#vrm-ai-timeout', getAiTimeoutSeconds(aiSettings.timeoutMs));
     setValueIfNotFocused('#vrm-ai-max-retries', aiSettings.maxRetries);
     setValueIfNotFocused('#vrm-ai-max-items', aiSettings.maxItemsPerRequest);

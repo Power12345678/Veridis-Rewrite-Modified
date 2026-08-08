@@ -1,4 +1,4 @@
-import { defaultAiRewriteSettings, extensionName, getAppContext, runtimeState, markRulesDataDirty, markPresetsUiDirty, minTrackedDiffMessages, maxTrackedDiffMessages, normalizeDiffTrackedMessageLimit } from './state.js';
+import { defaultAiRewriteSettings, extensionName, getAppContext, normalizeAiSamplingSettings, runtimeState, markRulesDataDirty, markPresetsUiDirty, minTrackedDiffMessages, maxTrackedDiffMessages, normalizeDiffTrackedMessageLimit } from './state.js';
 import { logger } from './log.js';
 import { DEFAULT_SCOPE_TAG_GROUP_ID, buildPresetEntry, buildRuleActivationConfirmMessage, createScopeTagGroupId, createScopeTagId, deepClone, formatScopeTagInput, getBuiltinScopeTagKeyForStartTag, getCotScopeTagBuiltinKeys, getCurrentChatCompletionPresetName, getCurrentCharacterContext, getCurrentPresetAiRewriteSettings, getPresetAiRewriteSettings, getPresetBindingUsage, getPresetRules, getRuleActivationWarning, isCotScopeTagEntry, isRuleActivationWarningEnabled, mergeScopeTagsWithBuiltins, normalizeImportedRulesPayload, normalizeOptionalXmlTagNameInput, normalizePresetAiRewriteSettings, normalizeRuleActivationSafety, normalizeScopeTagBuiltinDismissedList, normalizeScopeTagCollapsedGroupList, normalizeScopeTagGroupList, normalizeScopeTagList, parseInputToWords, parseScopeTagInput, resolveAiModelListBaseUrl, validateRegexTargetInput } from './utils.js';
 import {
@@ -1329,9 +1329,7 @@ export function bindEvents() {
         apiKey: String(value.apiKey || ''),
         model: String(value.model || '').trim(),
         modelOptions: normalizeAiModelOptions(value.modelOptions),
-        temperature: Number.isFinite(Number(value.temperature))
-            ? Math.min(Math.max(Number(value.temperature), 0), 2)
-            : defaultAiRewriteSettings.temperature,
+        ...normalizeAiSamplingSettings(value),
         xmlScopeTag: normalizeOptionalXmlTagNameInput(value.xmlScopeTag, defaultAiRewriteSettings.xmlScopeTag),
     });
     const getCurrentAiApiPresetSnapshot = (aiSettings = ensureAiRewriteSettings()) => normalizeAiApiPresetSnapshot(aiSettings);
@@ -1451,6 +1449,12 @@ export function bindEvents() {
         syncAiApiPresetSelect(aiSettings);
         syncAiModelSelect(aiSettings);
         setValueIfNotFocused('#vrm-ai-temperature', aiSettings.temperature);
+        setValueIfNotFocused('#vrm-ai-top-p', aiSettings.topP);
+        setValueIfNotFocused('#vrm-ai-top-k', aiSettings.topK);
+        setValueIfNotFocused('#vrm-ai-frequency-penalty', aiSettings.frequencyPenalty);
+        setValueIfNotFocused('#vrm-ai-presence-penalty', aiSettings.presencePenalty);
+        setValueIfNotFocused('#vrm-ai-repetition-penalty', aiSettings.repetitionPenalty);
+        setValueIfNotFocused('#vrm-ai-max-tokens', aiSettings.maxTokens);
         setValueIfNotFocused('#vrm-ai-timeout', getAiTimeoutSeconds(aiSettings.timeoutMs));
         setValueIfNotFocused('#vrm-ai-max-retries', aiSettings.maxRetries);
         setValueIfNotFocused('#vrm-ai-max-items', aiSettings.maxItemsPerRequest);
@@ -1689,21 +1693,31 @@ export function bindEvents() {
         updateAiRewriteSetting('model', String($(this).val() || '').trim(), { markRulesDirty: false });
     });
 
-    $(document).off('input change', '#vrm-ai-temperature, #vrm-ai-timeout, #vrm-ai-max-retries, #vrm-ai-max-items, #vrm-ai-max-context, #vrm-ai-max-rewrite').on('input change', '#vrm-ai-temperature, #vrm-ai-timeout, #vrm-ai-max-retries, #vrm-ai-max-items, #vrm-ai-max-context, #vrm-ai-max-rewrite', function() {
+    $(document).off('input change', '#vrm-ai-temperature, #vrm-ai-top-p, #vrm-ai-top-k, #vrm-ai-frequency-penalty, #vrm-ai-presence-penalty, #vrm-ai-repetition-penalty, #vrm-ai-max-tokens, #vrm-ai-timeout, #vrm-ai-max-retries, #vrm-ai-max-items, #vrm-ai-max-context, #vrm-ai-max-rewrite').on('input change', '#vrm-ai-temperature, #vrm-ai-top-p, #vrm-ai-top-k, #vrm-ai-frequency-penalty, #vrm-ai-presence-penalty, #vrm-ai-repetition-penalty, #vrm-ai-max-tokens, #vrm-ai-timeout, #vrm-ai-max-retries, #vrm-ai-max-items, #vrm-ai-max-context, #vrm-ai-max-rewrite', function() {
         const id = String(this.id || '');
         const value = Number($(this).val());
         const keyMap = {
             'vrm-ai-temperature': 'temperature',
+            'vrm-ai-top-p': 'topP',
+            'vrm-ai-top-k': 'topK',
+            'vrm-ai-frequency-penalty': 'frequencyPenalty',
+            'vrm-ai-presence-penalty': 'presencePenalty',
+            'vrm-ai-repetition-penalty': 'repetitionPenalty',
+            'vrm-ai-max-tokens': 'maxTokens',
             'vrm-ai-timeout': 'timeoutMs',
             'vrm-ai-max-retries': 'maxRetries',
             'vrm-ai-max-items': 'maxItemsPerRequest',
             'vrm-ai-max-context': 'maxContextChars',
             'vrm-ai-max-rewrite': 'maxRewriteCharsPerItem',
         };
-        const normalizedValue = id === 'vrm-ai-timeout'
+        const key = keyMap[id];
+        const samplingKeys = new Set(['temperature', 'topP', 'topK', 'frequencyPenalty', 'presencePenalty', 'repetitionPenalty', 'maxTokens']);
+        const normalizedValue = samplingKeys.has(key)
+            ? normalizeAiSamplingSettings({ [key]: value })[key]
+            : id === 'vrm-ai-timeout'
             ? Math.min(Math.max(Math.round(value || 0), 1), 120) * 1000
             : value;
-        updateAiRewriteSetting(keyMap[id], normalizedValue, { markRulesDirty: false });
+        updateAiRewriteSetting(key, normalizedValue, { markRulesDirty: false });
     });
 
     $(document).off('input change', '#vrm-ai-prompt').on('input change', '#vrm-ai-prompt', function() {

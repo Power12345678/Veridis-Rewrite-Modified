@@ -2,7 +2,7 @@ import * as extensionsModule from "../../../extensions.js";
 import * as scriptModule from "../../../../script.js";
 import { saveSettingsDebounced, eventSource, event_types, chat_metadata, chat } from "../../../../script.js";
 
-import { aiRewritePromptProtocolVersion, defaultAiRewriteSettings, defaultSettings, extensionName, modifiedExtensionName, legacyExtensionName, initAppContext, runtimeState, markRulesDataDirty, normalizeDiffTrackedMessageLimit } from './src/state.js';
+import { aiRewritePromptProtocolVersion, defaultAiRewriteSettings, defaultSettings, extensionName, modifiedExtensionName, legacyExtensionName, initAppContext, runtimeState, markRulesDataDirty, normalizeAiSamplingSettings, normalizeDiffTrackedMessageLimit } from './src/state.js';
 import { logger } from './src/log.js';
 import { bindEvents, initRealtimeInterceptor } from './src/events.js';
 import { setupUI, updateToolbarUI, applyCharacterPresetBinding, cleanupInvalidPresetBindings, showToast } from './src/ui.js';
@@ -44,9 +44,7 @@ function normalizeAiApiPresetEntry(value) {
         modelOptions: Array.isArray(value.modelOptions)
             ? [...new Set(value.modelOptions.map((model) => String(model || '').trim()).filter(Boolean))]
             : [],
-        temperature: Number.isFinite(Number(value.temperature))
-            ? Math.min(Math.max(Number(value.temperature), 0), 2)
-            : defaultAiRewriteSettings.temperature,
+        ...normalizeAiSamplingSettings(value),
         xmlScopeTag: normalizeOptionalXmlTagNameInput(value.xmlScopeTag, defaultAiRewriteSettings.xmlScopeTag),
     };
 }
@@ -86,7 +84,7 @@ function normalizeAiRewriteSettings(settings) {
         ? defaultAiRewriteSettings.promptTemplate
         : String(next.promptTemplate || defaultAiRewriteSettings.promptTemplate);
     next.promptProtocolVersion = aiRewritePromptProtocolVersion;
-    next.temperature = Number.isFinite(Number(next.temperature)) ? Math.min(Math.max(Number(next.temperature), 0), 2) : defaultAiRewriteSettings.temperature;
+    Object.assign(next, normalizeAiSamplingSettings(next));
     const normalizedTimeoutMs = Number.isFinite(Number(next.timeoutMs)) ? Math.min(Math.max(Math.round(Number(next.timeoutMs)), 1000), 120000) : defaultAiRewriteSettings.timeoutMs;
     next.timeoutMs = current.timeoutDefault120sApplied !== true && normalizedTimeoutMs === 20000
         ? defaultAiRewriteSettings.timeoutMs

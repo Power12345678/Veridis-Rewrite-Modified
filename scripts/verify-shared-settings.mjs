@@ -20,6 +20,6 @@ assert.match(indexSource, /extension_settings\[extensionName\] = clonePlain\(mod
 assert.match(indexSource, /hasConfiguredAiRewrite\(settings\)/u);
 assert.match(indexSource, /maybeImportModifiedSettingsIntoSharedNamespace\(\)/u);
 assert.match(readmeSource, /ultimate_purifier_ai_rewrite.*共享设置/u);
-assert.equal(manifest.version, '2.4-modified');
+assert.equal(manifest.version, '2.5-modified');
 
 console.log('共享上游规则、预设与 AI 设置策略验证通过');

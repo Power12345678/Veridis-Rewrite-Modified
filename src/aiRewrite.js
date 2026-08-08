@@ -1,4 +1,4 @@
-import { defaultAiRewriteSettings, extensionName, modifiedExtensionName, getAppContext, runtimeState } from './state.js';
+import { defaultAiRewriteSettings, extensionName, modifiedExtensionName, getAppContext, normalizeAiSamplingSettings, runtimeState } from './state.js';
 import { logger } from './log.js';
 import {
     applyScopedReplacements,
@@ -21,6 +21,7 @@ import { getCurrentChatIdentity, markHostChatDirtyFromIndex } from './platform.j
 import { generationLifecycle, parseStableMessagePayload } from './generationLifecycle.js';
 import { showToast } from './ui.js';
 import { applyWithXmlCommentsProtected, collectXmlCommentRanges, maskXmlCommentRanges } from './aiCommentProtection.js';
+import { buildAiRewriteGenerateRawConfig } from './aiGeneration.js';
 
 const responseGuard = `输出必须是一个 JSON 对象，键必须恰好为本次全部 rewrite_target 的 id，值必须是可直接替换对应标签内容的字符串；空字符串表示删除。禁止 markdown、解释和额外包装。`;
 
@@ -507,6 +508,12 @@ function buildAiRewriteVersionToken(settings) {
             apiKeyFingerprint: hashString(aiSettings.apiKey || ''),
             model: aiSettings.model || '',
             temperature: aiSettings.temperature,
+            topP: aiSettings.topP,
+            topK: aiSettings.topK,
+            frequencyPenalty: aiSettings.frequencyPenalty,
+            presencePenalty: aiSettings.presencePenalty,
+            repetitionPenalty: aiSettings.repetitionPenalty,
+            maxTokens: aiSettings.maxTokens,
             timeoutMs: aiSettings.timeoutMs,
             maxItemsPerRequest: aiSettings.maxItemsPerRequest,
             maxContextChars: aiSettings.maxContextChars,
@@ -2045,6 +2052,8 @@ async function requestAiRewrite(prompt, aiSettings, signal, task = null) {
     const tavernHelper = getTavernHelperApi();
     if (!tavernHelper) throw new Error('TavernHelper.generateRaw 不可用');
     const generationId = `veridis-ai-rewrite-${hashString(`${Date.now()}:${task?.dedupeKey || prompt.length}`)}`;
+    const requestConfig = buildAiRewriteGenerateRawConfig(prompt, aiSettings, generationId);
+    const sampling = normalizeAiSamplingSettings(aiSettings);
     const startedAt = Date.now();
     recordAiRewriteDebug('fetch-start', {
         endpoint: 'TavernHelper.generateRaw',
@@ -2052,6 +2061,15 @@ async function requestAiRewrite(prompt, aiSettings, signal, task = null) {
         model: aiSettings.model,
         apiSource: 'custom',
         responseFormat: 'json_object',
+        sampling: {
+            temperature: sampling.temperature,
+            topP: sampling.topP,
+            topK: sampling.topK,
+            frequencyPenalty: sampling.frequencyPenalty,
+            presencePenalty: sampling.presencePenalty,
+            repetitionPenalty: sampling.repetitionPenalty,
+            maxTokens: sampling.maxTokens,
+        },
         promptLength: String(prompt || '').length,
         timeoutMs: aiSettings.timeoutMs,
         generationId: task?.generationId || '',
@@ -2069,21 +2087,7 @@ async function requestAiRewrite(prompt, aiSettings, signal, task = null) {
     };
     signal?.addEventListener?.('abort', stopGeneration, { once: true });
     try {
-        const response = await tavernHelper.generateRaw({
-            generation_id: generationId,
-            ordered_prompts: [{ role: 'user', content: prompt }],
-            should_stream: false,
-            custom_api: {
-                apiurl: String(aiSettings.baseUrl || '').trim(),
-                key: String(aiSettings.apiKey || ''),
-                model: String(aiSettings.model || '').trim(),
-                source: 'custom',
-                temperature: Number(aiSettings.temperature),
-                custom_include_body: {
-                    response_format: { type: 'json_object' },
-                },
-            },
-        });
+        const response = await tavernHelper.generateRaw(requestConfig);
         if (signal?.aborted) {
             const abortError = new Error('请求已取消');
             abortError.name = 'AbortError';
